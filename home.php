@@ -12,6 +12,7 @@
   ?>
   <div class="card">
         <div class="title"><h1>Módulos:</h1></div>
+        <a class="button" href="http://localhost/ProyectoPhp/baseDeDatos.php">Base de datos</a>
         <a class="button" href="http://localhost/ProyectoPhp/desercion.php">Deserción estudiantil</a>
         <a class="button1" href="http://localhost/ProyectoPhp/permanencia.php">Permanencia estudiantil</a>
     </div>
