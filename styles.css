@@ -3,8 +3,8 @@
 }
 
 body {
-  background-color: rgb(2, 0, 0);
-  color: white;
+  background-color: white;
+  color: black;
   font-family: Arial, sans-serif;
   text-align: center;
   margin-top: 100px;
@@ -66,6 +66,20 @@ body {
   margin-top: 30px;
 
 }
+.buttonBD {
+  display: block;
+  width: 250px;
+  height: 40px;
+  background-color: rgb(90, 94, 97);
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  line-height: 40px;
+  margin-bottom: 10px;
+  border-radius: 9px;
+  margin-top: 30px;
+
+}
 
 .arrow-button {
   position: absolute;
@@ -85,3 +99,39 @@ body {
 #chart-type {
   margin-right: 320px;
 }
+a{
+color: black;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  height: 50%;
+  border-radius: 20px;
+
+}
+
+th, td {
+border: 1px solid black;
+padding: 8px;
+}
+
+th {
+background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+background-color: #dddddd;
+}
+.tables {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  }
+.subtitles{
+color: black;
+font-size: 2rem;
+margin-top: 1rem;
+margin-bottom: 1rem;
+  }

@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body>
+<body class="bd">
   <div class="card">
     <div class="title">
       <h1>Datos Generales</h1>
