@@ -37,10 +37,11 @@ for ($i = 1; $i < count($data_matrix); $i++) {
     $tipo_inscripcion = $data_matrix[$i][8]; // Se obtiene el valor de la columna "Detalle Estado"
 
     $ultimo_nombre = array_slice(explode(" ", $nombres), -1)[0];
-    $url = "https://api.genderize.io/?name=" . urlencode($ultimo_nombre);
-    $response = file_get_contents($url);
-    $data = json_decode($response, true);
-    $genero = isset($data['gender']) ? $data['gender'] : null;
+    //DESCOMENTAR API
+    //$url = "https://api.genderize.io/?name=" . urlencode($ultimo_nombre);
+   // $response = file_get_contents($url);
+   // $data = json_decode($response, true);
+   // $genero = isset($data['gender']) ? $data['gender'] : null;
 
     // Obtener el estado del estudiante a partir del valor del "Detalle Estado"
     #$estado = ($detalle_estado === "ESTUDIANTE MATRICULADO") ? "A" : "";
@@ -68,4 +69,3 @@ for ($i = 1; $i < count($data_matrix); $i++) {
 echo "Datos insertados en la tabla 'estudiante'.";
 
 ?>
-

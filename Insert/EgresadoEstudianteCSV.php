@@ -32,12 +32,12 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $carrera = $data_matrix[$i][2];
     $documento = $data_matrix[$i][5];
     $id_programa = $data_matrix[$i][1];
-
-    $ultimo_nombre = array_slice(explode(" ", $nombres), -1)[0];
-    $url = "https://api.genderize.io/?name=" . urlencode($ultimo_nombre);
-    $response = file_get_contents($url);
-    $data = json_decode($response, true);
-    $genero = isset($data['gender']) ? $data['gender'] : null;
+//DESCOMENTAR API
+    //$ultimo_nombre = array_slice(explode(" ", $nombres), -1)[0];
+  //  $url = "https://api.genderize.io/?name=" . urlencode($ultimo_nombre);
+  //  $response = file_get_contents($url);
+   // $data = json_decode($response, true);
+   // $genero = isset($data['gender']) ? $data['gender'] : null;
 
     // Preparar la consulta SQL
     $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
