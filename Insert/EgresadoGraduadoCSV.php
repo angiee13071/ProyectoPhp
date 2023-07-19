@@ -29,10 +29,10 @@ foreach ($file_data as $line) {
 // Insertar los datos en la tabla 'graduado'
 for ($i = 1; $i < count($data_matrix); $i++) {
     $id_graduado = $i;
-    $id_estudiante = $data_matrix[$i][3];
+    $id_estudiante = $data_matrix[$i][6];
     $id_periodo = 1; // Asigna el ID del periodo correspondiente
-    $fecha_grado = $data_matrix[$i][6];
-    $promedio = $data_matrix[$i][12];
+    $fecha_grado = $data_matrix[$i][9];
+    $promedio = $data_matrix[$i][15];
 
     // Preparar la consulta SQL
     $sql = "INSERT INTO graduado (id_graduado, id_estudiante, id_periodo, fecha_grado, promedio)
