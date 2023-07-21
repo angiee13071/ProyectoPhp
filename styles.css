@@ -28,13 +28,12 @@ body {
   justify-content: center;
 }
 
-
 .title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
   color: rgb(0, 0, 0);
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
 }
 
 .button {
@@ -49,7 +48,6 @@ body {
   margin-bottom: 10px;
   border-radius: 9px;
   margin-top: 30px;
-
 }
 
 .button1 {
@@ -64,8 +62,8 @@ body {
   margin-bottom: 10px;
   border-radius: 9px;
   margin-top: 30px;
-
 }
+
 .buttonBD {
   display: block;
   width: 250px;
@@ -78,7 +76,6 @@ body {
   margin-bottom: 10px;
   border-radius: 9px;
   margin-top: 30px;
-
 }
 
 .arrow-button {
@@ -99,39 +96,42 @@ body {
 #chart-type {
   margin-right: 320px;
 }
-a{
-color: black;
+a {
+  color: black;
 }
 table {
   border-collapse: collapse;
   width: 100%;
   height: 50%;
   border-radius: 20px;
-
 }
 
-th, td {
-border: 1px solid black;
-padding: 8px;
+th,
+td {
+  border: 1px solid black;
+  padding: 8px;
 }
 
 th {
-background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 tr:nth-child(even) {
-background-color: #dddddd;
+  background-color: #dddddd;
 }
 .tables {
-  display:flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   font-size: 0.8rem;
-  }
-.subtitles{
-color: black;
-font-size: 2rem;
-margin-top: 1rem;
-margin-bottom: 1rem;
-  }
+}
+.subtitles {
+  color: black;
+  font-size: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.oculto {
+  display: none;
+}
