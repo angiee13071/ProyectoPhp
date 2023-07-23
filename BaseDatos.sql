@@ -39,10 +39,8 @@ CREATE TABLE estudiante (
 -- Crear la tabla 'retirado'
 CREATE TABLE retirado (
   id_retiro INT PRIMARY KEY,
-  id_estudiante BIGINT,
   id_periodo INT,
-  estado VARCHAR(255),
-  FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
+  total INT,
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
 );
 
@@ -78,10 +76,10 @@ CREATE TABLE matriculado (
 -- Crear la tabla 'total'
 CREATE TABLE total (
   id_cohorte_total INT PRIMARY KEY auto_increment,
-  total_primiparos INT,
-  total_matriculados INT,
-  total_graduados INT,
-  total_retirados INT,
+  primiparos INT,
+  matriculados INT,
+  graduados INT,
+  retirados INT,
   id_periodo INT,
   id_programa INT,
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo),
@@ -91,12 +89,17 @@ CREATE TABLE total (
 DELIMITER $$
 CREATE PROCEDURE fill_total()
 BEGIN
-  DECLARE total_prim INT DEFAULT 0;
-  DECLARE total_matric INT DEFAULT 0;
-  DECLARE total_grad INT DEFAULT 0;
-  DECLARE total_retir INT DEFAULT 0;
   DECLARE periodo_id INT;
   DECLARE programa_id INT;
+  DECLARE matriculados INT DEFAULT 0;
+  DECLARE primiparos INT DEFAULT 0;
+  DECLARE graduados INT DEFAULT 0;
+  DECLARE retirados INT DEFAULT 0;
+  DECLARE total_matriculados_periodo_anterior INT DEFAULT 0;
+  DECLARE total_graduados_periodo_anterior INT DEFAULT 0;
+  DECLARE total_retirados INT DEFAULT 0;
+ 
+  
   DECLARE done INT DEFAULT FALSE;
   
   DECLARE cur CURSOR FOR
@@ -111,13 +114,30 @@ BEGIN
         LEAVE read_loop;
     END IF;
     
-    SELECT COUNT(*) INTO total_prim FROM primiparo WHERE id_periodo = periodo_id;
-    SELECT COUNT(*) INTO total_matric FROM matriculado WHERE id_periodo = periodo_id;
-    SELECT COUNT(*) INTO total_grad FROM graduado WHERE id_periodo = periodo_id;
-    SELECT COUNT(*) INTO total_retir FROM retirado WHERE id_periodo = periodo_id;
+
+    SELECT COUNT(*) INTO primiparos FROM primiparo WHERE id_periodo = periodo_id;
+    SELECT COUNT(*) INTO matriculados FROM matriculado WHERE id_periodo = periodo_id;
+    SELECT COUNT(*) INTO graduados FROM graduado WHERE id_periodo = periodo_id;
+    SELECT COUNT(*) INTO retirados FROM retirado WHERE id_periodo = periodo_id;
+   -- Verificar si el período anterior existe
+    SET total_matriculados_periodo_anterior = 0;
+    SET total_graduados_periodo_anterior = 0;
+    SELECT COUNT(*) INTO total_matriculados_periodo_anterior FROM matriculado WHERE id_periodo = periodo_id - 1;
+    SELECT COUNT(*) INTO total_graduados_periodo_anterior FROM graduado WHERE id_periodo = periodo_id - 1;
     
-    INSERT INTO total (total_primiparos, total_matriculados, total_graduados, total_retirados, id_periodo, id_programa) 
-    VALUES (total_prim, total_matric, total_grad, total_retir, periodo_id, programa_id);
+    IF total_matriculados_periodo_anterior > 0 AND total_graduados_periodo_anterior > 0 THEN
+        -- Calcular el valor de total_retirados solo si el período anterior existe
+        SET total_retirados = ((total_matriculados_periodo_anterior - total_graduados_periodo_anterior) + primiparos - retirados);
+        INSERT INTO retirado (id_periodo, total) VALUES (periodo_id, retirados);
+    ELSE
+        -- Si el período anterior no existe, asignar 0 al valor de total_retirados
+        SET total_retirados = 0;
+    END IF;
+    
+    INSERT INTO total (primiparos, matriculados, graduados, retirados, id_periodo, id_programa) 
+    VALUES (primiparos, matriculados, graduados, retirados, periodo_id, programa_id);
+   
+  
   END LOOP;
   
   CLOSE cur;
@@ -140,13 +160,7 @@ INSERT INTO periodo (anio, semestre, cohorte)
 VALUES
 (2023, 2, 2 );
 
--- Agregar datos a la tabla 'programa'
-INSERT INTO programa (id_programa, nombre)
-VALUES
-(578, 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)');
-INSERT INTO programa (id_programa, nombre)
-VALUES
-(678, 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)');
+
 
 -- Llamar al procedimiento almacenado para llenar la tabla 'total'
 CALL fill_total();

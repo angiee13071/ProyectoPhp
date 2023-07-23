@@ -118,9 +118,8 @@ $conn = getDBConnection();
             <table>
                 <tr>
                     <th>id_retiro</th>
-                    <th>id_estudiante</th>
                     <th>id_periodo</th>
-                    <th>id_estado</th>
+                    <th>total</th>
                 </tr>
                 <?php
 
@@ -132,9 +131,8 @@ $conn = getDBConnection();
   while ($row = mysqli_fetch_assoc($resultRetirado)) {
     echo "<tr>";
     echo "<td>" . $row['id_retiro'] . "</td>";
-    echo "<td>" . $row['id_estudiante'] . "</td>";
     echo "<td>" . $row['id_periodo'] . "</td>";
-    echo "<td>" . $row['estado'] . "</td>";
+    echo "<td>" . $row['total'] . "</td>";
     echo "</tr>";
   }
 
