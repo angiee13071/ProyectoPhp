@@ -12,7 +12,6 @@ CREATE TABLE programa (
   nombre VARCHAR(255)
 );
 
-
 -- Crear la tabla 'periodo'
 CREATE TABLE periodo (
   id_periodo INT PRIMARY KEY auto_increment,
@@ -20,12 +19,6 @@ CREATE TABLE periodo (
   semestre INT,
   cohorte INT
 );
-
-
--- Inserting period data
-INSERT INTO periodo (anio, semestre, cohorte)
-VALUES
-(2022, 1, 578);
 
 -- Crear la tabla 'estudiante'
 CREATE TABLE estudiante (
@@ -43,8 +36,6 @@ CREATE TABLE estudiante (
   FOREIGN KEY (id_programa) REFERENCES programa(id_programa)
 );
 
-select * from estudiante;
-
 -- Crear la tabla 'retirado'
 CREATE TABLE retirado (
   id_retiro INT PRIMARY KEY,
@@ -54,8 +45,6 @@ CREATE TABLE retirado (
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
 );
-
-
 
 -- Crear la tabla 'graduado'
 CREATE TABLE graduado (
@@ -67,9 +56,6 @@ CREATE TABLE graduado (
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
 );
-
-
-
 -- Crear la tabla 'primiparo'
 CREATE TABLE primiparo (
   id_primiparo INT PRIMARY KEY,
@@ -78,8 +64,6 @@ CREATE TABLE primiparo (
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
 );
-
-
 
 -- Crear la tabla 'matriculado'
 CREATE TABLE matriculado (
@@ -103,8 +87,7 @@ CREATE TABLE total (
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo),
   FOREIGN KEY (id_programa) REFERENCES programa(id_programa)
 );
-
-
+-- Procedimiento almacenado para calcular totales:
 DELIMITER $$
 CREATE PROCEDURE fill_total()
 BEGIN
@@ -142,61 +125,45 @@ BEGIN
 END$$
 
 DELIMITER ;
-
+-- INSERTAR DATOS-----------------------------------------------------------------------------
+-- Inserting period data
+INSERT INTO periodo (anio, semestre, cohorte)
+VALUES
+(2022, 2, 2);
+INSERT INTO periodo (anio, semestre, cohorte)
+VALUES
+(2022, 1, 1);
+INSERT INTO periodo (anio, semestre, cohorte)
+VALUES
+(2023, 1, 1);
+INSERT INTO periodo (anio, semestre, cohorte)
+VALUES
+(2023, 2, 2 );
 
 -- Agregar datos a la tabla 'programa'
 INSERT INTO programa (id_programa, nombre)
 VALUES
-(1, 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)');
-
--- Agregar datos a la tabla 'periodo'
-INSERT INTO periodo (anio, semestre, cohorte)
+(578, 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)');
+INSERT INTO programa (id_programa, nombre)
 VALUES
-(2022, 1, 578);
-
--- Agregar datos a la tabla 'estudiante'
-INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa)
-VALUES
-(20112345678, 'GARCIA PEREZ JUAN ANTONIO', 'male', 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)', '101234567890', 2, 'No registra', 'male', 'CREDITOS', 'ESTUDIANTE MATRICULADO', 1),
-(20123456789, 'LOPEZ RODRIGUEZ MARIA ISABEL', 'female', 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)', '102345678901', 2, 'CIUDAD BOLIVAR', 'female', 'CREDITOS', 'ESTUDIANTE MATRICULADO', 1),
-(20134567890, 'MARTINEZ GOMEZ LUIS MIGUEL', 'male', 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)', '103456789012', 2, 'No registra', 'male', 'CREDITOS', 'ESTUDIANTE MATRICULADO', 1);
-
--- Agregar datos a la tabla 'retirado'
-INSERT INTO retirado (id_retiro, id_estudiante, id_periodo, estado)
-VALUES
-(1, 20134567890, 1, 'RETIRADO');
-
--- Agregar datos a la tabla 'graduado'
-INSERT INTO graduado (id_graduado, id_estudiante, id_periodo, fecha_grado, promedio)
-VALUES
-(1002, 20112345678, 1, '2022-05-05', 4.6),
-(1001, 20123456789, 1, '2022-05-05', 4.2);
-
--- Agregar datos a la tabla 'primiparo'
-INSERT INTO primiparo (id_primiparo, id_estudiante, id_periodo)
-VALUES
-(1001, 20112345678, 1),
-(2002, 20123456789, 1),
-(3003, 20134567890, 1);
-
--- Agregar datos a la tabla 'matriculado'
-INSERT INTO matriculado (id_matricula, id_estudiante, id_periodo, estado_matricula)
-VALUES
-(1123, 20112345678, 1, 'MATRICULADO'),
-(2123, 20123456789, 1, 'MATRICULADO'),
-(3123, 20134567890, 1, 'MATRICULADO');
+(678, 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)');
 
 -- Llamar al procedimiento almacenado para llenar la tabla 'total'
 CALL fill_total();
-
+-- Consultar tablas:
 SELECT * FROM total;
 SELECT * FROM total LIMIT 0, 1000;
 select * from programa;
+
 select * from periodo;
 select * from estudiante;
+SELECT * FROM estudiante WHERE estado = 'ESTUDIANTE GRADUADO';
+
 select * from estudiante where id_estudiante='20150000000';
 select * from retirado;
 select * from graduado;
 select * from primiparo;
 select * from matriculado;
+
+select * from matriculado WHERE estado_matricula = 'ESTUDIANTE GRADUADO';
 select * from total;
