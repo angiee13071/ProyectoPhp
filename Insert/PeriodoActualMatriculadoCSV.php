@@ -48,7 +48,7 @@ for ($i = 1; $i < count($data_matrix); $i++) {
 // Insertar los datos en la tabla 'matriculado'
 $id_matricula = 1; // Variable para asignar un valor único a cada registro
 for ($i = 1; $i < count($data_matrix); $i++) {
-    $id_estudiante = $data_matrix[$i][7];
+    $id_estudiante = $data_matrix[$i][5];
     $id_periodo = 1;
     $estado_matricula = $data_matrix[$i][12];
 
@@ -80,4 +80,3 @@ echo "Datos insertados en la tabla 'matriculado'.";
 
 
 ?>
-

@@ -29,15 +29,26 @@ foreach ($file_data as $line) {
 
 // Insertar los datos en la tabla 'estudiante'
 for ($i = 1; $i < count($data_matrix); $i++) {
-    $id_estudiante = $data_matrix[$i][7];
+    $id_estudiante = $data_matrix[$i][5];
     $nombres = $data_matrix[$i][6];
     $carrera = $data_matrix[$i][3];
     $documento = $data_matrix[$i][7];
     $id_programa = $data_matrix[$i][2];
     $estrato = $data_matrix[$i][15];
     $tipo_inscripcion = $data_matrix[$i][10];
-    $estado = $data_matrix[$i][11]; // Se obtiene el valor de la columna "Estado"
+    $estado = $data_matrix[$i][12]; // Se obtiene el valor de la columna "Estado"
     $localidad = $data_matrix[$i][16]; // Se obtiene el valor de la columna "Localidad"
+    if ($id_programa !== "678" && $id_programa !== "578") {
+        if ($carrera === "TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)") {
+            $id_programa = "578";
+        } elseif ($carrera === "INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)") {
+            $id_programa = "678";
+        }
+
+        // Asignar el valor de $id_programa a la posición correspondiente en $data_matrix
+        $data_matrix[$i][2] = $id_programa;
+    }
+
 //DESCOMENTAR API
   //  $ultimo_nombre = array_slice(explode(" ", $nombres), -1)[0];
    // $url = "https://api.genderize.io/?name=" . urlencode($ultimo_nombre);

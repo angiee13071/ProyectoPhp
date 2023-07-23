@@ -30,8 +30,11 @@ foreach ($file_data as $line) {
 for ($i = 1; $i < count($data_matrix); $i++) {
     $id_graduado = $i;
     $id_estudiante = $data_matrix[$i][6];
-    $id_periodo = 1; // Asigna el ID del periodo correspondiente
-    $fecha_grado = $data_matrix[$i][9];
+    $fecha_grado = $data_matrix[$i][8];
+    // Calcular el semestre según el mes y el id_periodo
+    $year = date('Y', strtotime($fecha_grado));
+    $month = date('n', strtotime($fecha_grado));
+    $semestre = ($month <= 6) ? 1 : 2;
     $promedio = $data_matrix[$i][15];
 
     // Preparar la consulta SQL
@@ -40,6 +43,22 @@ for ($i = 1; $i < count($data_matrix); $i++) {
 
     // Obtener la conexión a la base de datos
     $conn = getDBConnection();
+    //para obtener mes y semestre de periodo
+     // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
+    $year = mysqli_real_escape_string($conn, $year);
+    $semestre = mysqli_real_escape_string($conn, $semestre);
+    // Consultar el id_periodo que coincide con el año y el semestre
+    $sql_periodo = "SELECT id_periodo FROM periodo WHERE año = '$year' AND semestre = '$semestre'";
+    $result_periodo = $conn->query($sql);
+
+    // Verificar si se encontró el id_periodo
+    if ($result_periodo && $result_periodo->num_rows > 0) {
+        $row = $result_periodo->fetch_assoc();
+        $id_periodo = $row['id_periodo'];
+    } else {
+        // Si no se encontró el id_periodo, se coloca por defecto 1
+        $id_periodo = 1;
+    }
 
     // Preparar la sentencia
     $stmt = $conn->prepare($sql);
