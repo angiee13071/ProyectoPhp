@@ -163,7 +163,7 @@ VALUES
 
 
 -- Llamar al procedimiento almacenado para llenar la tabla 'total'
-CALL fill_total();
+-- CALL fill_total();
 -- Consultar tablas:
 SELECT * FROM total;
 SELECT * FROM total LIMIT 0, 1000;

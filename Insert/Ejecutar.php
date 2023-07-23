@@ -18,5 +18,8 @@ require 'EgresadoGraduadoCSV.php';
 // Llamar y ejecutar el archivo PeriodoActualMatriculadoCSV.php
 require 'PeriodoActualMatriculadoCSV.php';
 
+//Lamar y ejecutar procedimiento alamacenado para llenar tablas total y retirado
+require 'total.php'
+
 
 ?>

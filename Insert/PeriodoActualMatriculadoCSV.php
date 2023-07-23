@@ -70,7 +70,7 @@ for ($i = 1; $i < count($data_matrix); $i++) {
 
     // Incrementar el valor de $id_matricula para el siguiente registro
     $id_matricula++;
-
+   
     // Cerrar la sentencia y la conexión
     $stmt->close();
     $conn->close();
