@@ -21,7 +21,7 @@ require_once 'conexion.php';
 
     // Ejecutar la consulta
     $stmt->execute();
-    echo "Datos insertados en la tabla 'retirado'.";
+    echo "✔ Datos de estudiantes retirados insertados en la tabla RETIRADO. <br>";
  // Cerrar la sentencia y la conexión
  $stmt->close();
  $conn->close();

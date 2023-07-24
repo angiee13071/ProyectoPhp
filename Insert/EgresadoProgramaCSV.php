@@ -35,10 +35,9 @@ function obtenerIdPrograma($nombre_programa)
 {
     // Definir los nombres de los programas válidos
     $programas_validos = array(
-        "CRA. COD" => "578",
-        "CARRERA" => "678"
+        "TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)" => "578",
+        "INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)" => "678"
     );
-
     // Verificar si el nombre del programa está en el array de programas válidos
     if (array_key_exists($nombre_programa, $programas_validos)) {
         return $programas_validos[$nombre_programa];
@@ -48,30 +47,57 @@ function obtenerIdPrograma($nombre_programa)
     return null;
 }
 
-// Insertar los datos en la tabla "programa"
-$sql = "INSERT INTO programa (id_programa, nombre) VALUES (?, ?)";
-$stmt = $conn->prepare($sql);
+// Verificar si los datos de "CRA. COD" y "CARRERA" ya existen en la tabla "programa"
+$sql_check_existing = "SELECT COUNT(*) FROM programa WHERE id_programa = ? AND nombre = ?";
+$stmt_check_existing = $conn->prepare($sql_check_existing);
+$stmt_check_existing->bind_param("is", $id_programa, $carrera);
 
+// Variable para controlar si hubo algún error durante el proceso de inserción
+$insertion_error = false;
+
+// Insertar los datos en la tabla "programa"
+$sql_insert_programa = "INSERT INTO programa (id_programa, nombre) VALUES (?, ?)";
+$stmt_insert_programa = $conn->prepare($sql_insert_programa);
 // Insertar los datos de "CRA. COD" y "CARRERA" en la tabla "programa"
 foreach ($carrera_values as $carrera) {
     $id_programa = obtenerIdPrograma($carrera);
 
     // Verificar si $id_programa es null y asignar el valor adecuado según $carrera
     if ($id_programa === null) {
-        if ($carrera === "TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)") {
-            $id_programa = "578";
-        } elseif ($carrera === "INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)") {
-            $id_programa = "678";
-        } else {
-            // Si $carrera no coincide con ninguno de los programas válidos, establecer un valor predeterminado de 0
-            $id_programa = "0";
-        }
+        // El programa no es válido, continuar con la siguiente iteración
+        continue;
     }
 
-    $stmt->bind_param("is", $id_programa, $carrera);
-    $stmt->execute();
+    // Verificar si los datos ya existen en la tabla "programa"
+    $stmt_check_existing = $conn->prepare("SELECT COUNT(*) FROM programa WHERE id_programa = ? AND nombre = ?");
+    $stmt_check_existing->bind_param("is", $id_programa, $carrera);
+    $stmt_check_existing->execute();
+    $stmt_check_existing->bind_result($existing_count);
+    $stmt_check_existing->fetch();
+
+    // Cerrar la sentencia de verificación
+    $stmt_check_existing->close();
+
+    // Si los datos no existen en la tabla "programa", insertarlos
+    if ($existing_count > 0) {
+        // No es necesario hacer nada si ya existen en la tabla
+    } else {
+        $stmt_insert_programa->bind_param("is", $id_programa, $carrera);
+        if (!$stmt_insert_programa->execute()) {
+            $insertion_error = true;
+            echo "Error al insertar datos en la tabla PROGRAMA: " . $stmt_insert_programa->error, "<br>";
+        } else {
+            $insertion_error = false;
+        }
+    }
 }
 
+// Cerrar la sentencia de inserción y la conexión a la base de datos
+$stmt_insert_programa->close();
+$conn->close();
 
+if (!$insertion_error) {
+    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de programas insertados correctamente en la tabla PROGRAMA. <br>' ;
+}
 
 ?>

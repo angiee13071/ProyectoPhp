@@ -25,49 +25,85 @@ foreach ($file_data as $line) {
     // Agregar la fila a la matriz de datos
     $data_matrix[] = $row;
 }
-// Insertar los datos en la tabla "estudiante"
-for ($i = 3; $i < count($data_matrix); $i++) {
+
+// Obtener la conexión a la base de datos
+$conn = getDBConnection();
+
+// Variable para controlar si hubo algún error durante el proceso de inserción
+$insertion_error = false;
+
+// Insertar los datos en la tabla 'graduado'
+for ($i = 2; $i < count($data_matrix); $i++) {
+    $id_graduado = $i;
     $id_estudiante = $data_matrix[$i][6];
-    $nombres = $data_matrix[$i][7];
-    $carrera = $data_matrix[$i][2];
-    $documento = $data_matrix[$i][8];
-    $id_programa = $data_matrix[$i][1];
-    if ($id_programa !== "678" && $id_programa !== "578") {
-        if ($carrera === "TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)") {
-            $id_programa = "578";
-        } elseif ($carrera === "INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)") {
-            $id_programa = "678";
-        }
+    $fecha_grado = $data_matrix[$i][8];
+    // Calcular el semestre según el mes y el id_periodo
+    $year = date('Y', strtotime($fecha_grado));
+    $month = date('n', strtotime($fecha_grado));
+    $semestre = ($month <= 6) ? 1 : 2;
+    $promedio = $data_matrix[$i][15];
 
-        // Asignar el valor de $id_programa a la posición correspondiente en $data_matrix
-        $data_matrix[$i][1] = $id_programa;
-    }
+    // Verificar si el estudiante ya existe en la tabla 'estudiante'
+    $sql_check_student = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
+    $stmt_check_student = $conn->prepare($sql_check_student);
+    $stmt_check_student->bind_param("s", $id_estudiante);
+    $stmt_check_student->execute();
+    $stmt_check_student->bind_result($student_count);
+    $stmt_check_student->fetch();
+    $stmt_check_student->close();
 
-//DESCOMENTAR API
-    //$ultimo_nombre = array_slice(explode(" ", $nombres), -1)[0];
-  //  $url = "https://api.genderize.io/?name=" . urlencode($ultimo_nombre);
-  //  $response = file_get_contents($url);
-   // $data = json_decode($response, true);
-   // $genero = isset($data['gender']) ? $data['gender'] : null;
+    if ($student_count > 0) {
+        $insertion_error = true;
+        // El estudiante ya existe en la tabla 'estudiante', proceder con la inserción en 'graduado'
+               echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El egresdo con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
 
-    // Preparar la consulta SQL
-    $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+       
+    } else {
+      // Preparar la consulta SQL para insertar el estudiante
+      $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    // Obtener la conexión a la base de datos
-    $conn = getDBConnection();
+// Para obtener mes y semestre de periodo
+// Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
+$year = mysqli_real_escape_string($conn, $year);
+$semestre = mysqli_real_escape_string($conn, $semestre);
+// Consultar el id_periodo que coincide con el año y el semestre
+$sql_periodo = "SELECT id_periodo FROM periodo WHERE año = '$year' AND semestre = '$semestre'";
+$result_periodo = $conn->query($sql_periodo);
 
-    // Preparar la sentencia
-    $stmt = $conn->prepare($sql);
-
-    // Asignar los valores a los parámetros
-    $stmt->bind_param("ssssssssssi", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero, $tipo_inscripcion, $estado, $id_programa);
-
-    // Ejecutar la consulta
-    $stmt->execute();
-
-    // Cerrar la sentencia y la conexión
-    $stmt->close();
-    $conn->close();
+// Verificar si se encontró el id_periodo
+if ($result_periodo && $result_periodo->num_rows > 0) {
+  $row = $result_periodo->fetch_assoc();
+  $id_periodo = $row['id_periodo'];
+} else {
+  // Si no se encontró el id_periodo, se coloca por defecto 1
+  $id_periodo = 1;
 }
 
-echo "Datos insertados en la tabla 'estudiante'.";
+// Preparar la sentencia
+$stmt = $conn->prepare($sql);
+
+// Asignar los valores a los parámetros de la consulta
+// Ejecutar la consulta
+$stmt->bind_param("ssssssssssi", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero, $tipo_inscripcion, $estado, $id_programa);
+if (!$stmt->execute()) {
+  $insertion_error = true;
+  echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: ". $stmt->error ,"<br>";
+
+} else {
+  $insertion_error = false;
+}
+
+// Cerrar la sentencia
+$stmt->close();
+    }
+}
+
+// Cerrar la conexión a la base de datos
+$conn->close();
+
+// Mostrar mensaje de éxito si no se encontraron estudiantes duplicados
+if (!$insertion_error) {
+    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Egresados insertados en la tabla ESTUDIANTE. <br>';
+}
+
+?>
