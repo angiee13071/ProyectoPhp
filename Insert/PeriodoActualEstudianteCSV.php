@@ -45,24 +45,12 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $tipo_inscripcion = $data_matrix[$i][10];
     $estado = $data_matrix[$i][12]; // Se obtiene el valor de la columna "Estado"
     $localidad = $data_matrix[$i][16]; // Se obtiene el valor de la columna "Localidad"
-    
+
     if ($id_programa !== "678" && $id_programa !== "578") {
-        if ($carrera === "TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)") {
-            $id_programa = "578";
-        } elseif ($carrera === "INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)") {
-            $id_programa = "678";
-        }
-
-        // Asignar el valor de $id_programa a la posición correspondiente en $data_matrix
-        $data_matrix[$i][2] = $id_programa;
+        // Si no existe ninguno de los dos programas académicos, se omite la inserción del estudiante
+        $insertion_error = true;
+        continue;
     }
-
-    //DESCOMENTAR API
-    // $ultimo_nombre = array_slice(explode(" ", $nombres), -1)[0];
-    // $url = "https://api.genderize.io/?name=" . urlencode($ultimo_nombre);
-    // $response = file_get_contents($url);
-    // $data = json_decode($response, true);
-    // $genero = isset($data['gender']) ? $data['gender'] : null;
 
     // Verificar si el estudiante ya existe en la base de datos
     $sql_check_existing = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
@@ -75,8 +63,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 
     if ($existing_count > 0) {
         // El estudiante ya existe en la base de datos, mostrar una alerta o hacer otra acción si lo deseas
-      
-      // echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante matriculado actualmente con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
+        // echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante matriculado actualmente con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
         $insertion_error = true;
     } else {
         // Preparar la consulta SQL para insertar el estudiante
@@ -88,14 +75,13 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         // Asignar los valores a los parámetros
         $stmt_insert->bind_param("sssssssssss", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero, $tipo_inscripcion, $estado, $id_programa);
 
-      
         // Ejecutar la consulta
         if (!$stmt_insert->execute()) {
             // Hubo un error durante la inserción
-            $insertion_error =true;
-            echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: ". $stmt_insert->error ,"<br>";
-        }else{
-            $insertion_error =false;
+            $insertion_error = true;
+            echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: " . $stmt_insert->error, "<br>";
+        } else {
+            $insertion_error = false;
         }
         // Cerrar la sentencia (no es necesario cerrar la conexión en este punto)
         $stmt_insert->close();
@@ -107,6 +93,5 @@ $conn->close();
 
 if (!$insertion_error) {
     echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Estudiantes matriculados en el periodo actual insertados en la tabla ESTUDIANTE. <br>';
-
 }
 ?>

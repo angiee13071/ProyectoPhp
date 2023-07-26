@@ -1,11 +1,10 @@
 <?php
-
 set_time_limit(300);
 // Incluir el archivo de conexión a la base de datos
 require_once 'conexion.php';
 
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
@@ -33,28 +32,43 @@ $insertion_error = false;
 
 // Abrir la conexión a la base de datos
 $conn = getDBConnection();
-
+// echo "Datos del CSV:<br>";
+// for ($i = 2; $i < count($data_matrix); $i++) {
+//     echo "idestudiant: " . $data_matrix[$i][4] . "<br>";
+//     echo "nom: " . $data_matrix[$i][5] . "<br>";
+//     echo "carr: " . $data_matrix[$i][1] . "<br>";
+//     echo "No. Identificación: " . $data_matrix[$i][6] . "<br>";
+//     // echo "estrato: " . null . "<br>";
+//     // echo "loc: " . null. "<br>";
+//     echo "Tipo isncri: " . $data_matrix[$i][8] . "<br>";
+//     echo "estado: " . $data_matrix[$i][11] . "<br>";
+//     echo "id_programa: " . $data_matrix[$i][0] . "<br>";
+//     // echo "genero: " .null . "<br>";
+//     echo "<br>";
+// }
 // Insertar los datos en la tabla 'estudiante'
 for ($i = 2; $i < count($data_matrix); $i++) {
-    $id_estudiante = $data_matrix[$i][5];
-    $nombres = $data_matrix[$i][6];
-    $carrera = $data_matrix[$i][3];
-    $documento = $data_matrix[$i][7];
-    $id_programa = $data_matrix[$i][2];
-    $estrato = $data_matrix[$i][15];
-    $tipo_inscripcion = $data_matrix[$i][10];
-    $estado = $data_matrix[$i][12]; // Se obtiene el valor de la columna "Estado"
-    $localidad = $data_matrix[$i][16]; // Se obtiene el valor de la columna "Localidad"
-    
-    if ($id_programa !== "678" && $id_programa !== "578") {
+    $id_estudiante = $data_matrix[$i][4];
+    $nombres = $data_matrix[$i][5];
+    $carrera = $data_matrix[$i][1];
+    $documento = $data_matrix[$i][6];
+    // $estrato = null;
+    // $localidad = null; // Se obtiene el valor de la columna "Localidad"
+    $tipo_inscripcion = $data_matrix[$i][8];
+    $estado = $data_matrix[$i][11]; // Se obtiene el valor de la columna "Estado"
+    $id_programa = $data_matrix[$i][0];
+    // $genero = null; // Define la variable $genero
+
+    // Si el valor de $id_programa no es "578" ni "678", lo modificamos según la carrera
+    if ($id_programa !== "578" && $id_programa !== "678") {
         if ($carrera === "TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)") {
             $id_programa = "578";
         } elseif ($carrera === "INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)") {
             $id_programa = "678";
+        } else {
+            // Si no es ninguna de las carreras válidas, continuamos con el siguiente registro
+            continue;
         }
-
-        // Asignar el valor de $id_programa a la posición correspondiente en $data_matrix
-        $data_matrix[$i][2] = $id_programa;
     }
 
     //DESCOMENTAR API
@@ -75,7 +89,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 
     if ($existing_count > 0) {
         // El estudiante ya existe en la base de datos, mostrar una alerta o hacer otra acción si lo deseas
-       // echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante matriculado actualmente con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
+        // echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante matriculado actualmente con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
         $insertion_error = true;
     } else {
         // Preparar la consulta SQL para insertar el estudiante
@@ -86,10 +100,11 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 
         // Asignar los valores a los parámetros
         // Ejecutar la consulta
-        $stmt_insert->bind_param("sssssssssss", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero, $tipo_inscripcion, $detalle_estado, $id_programa);
+        $stmt_insert->bind_param("sssssssssss", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero, $tipo_inscripcion, $detalle_estado, $id_programa); // Se asigna $estado como valor del campo "estado"
         if (!$stmt_insert->execute()) {
-            $insertion_error = true;
-              echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante matriculado actualmente con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: " . $stmt_insert->error, "<br>";
+            //TODO:Validar los que no se suben
+            //$insertion_error = true;
+            //echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante nuevo con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: " . $stmt_insert->error, "<br>";
         } else {
             $insertion_error = false;
         }
@@ -103,7 +118,6 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 $conn->close();
 
 if (!$insertion_error) {
-    
-    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de estudiantes matriculados actualmente insertados en la tabla ESTUDIANTE.  <br>';
+    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de estudiantes nuevos insertados en la tabla ESTUDIANTE.  <br>';
 }
 ?>

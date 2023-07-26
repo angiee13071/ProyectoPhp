@@ -11,10 +11,28 @@
 </head>
 
 <body>
+    <div style="font-family: system-ui;font-size: 1.5rem;">
+        <header style="background: linear-gradient(95deg, #FEFBFB, #FFBF58, #FF8F46, #FCD96C);">
+            <nav style="color: black;">
 
+                <ul
+                    style="    display: flex; flex-direction: row;padding: 1.4rem;align-items: center;list-style: none;color: black;">
+                    <img src="Assets/images/uploads/logo_ud.png" alt="Logo" style="width: 15rem;">
+                    <li style="width: 6rem;color: black;margin-left: 2rem;"> <a href="#"
+                            style="text-decoration: none;">Inicio ▼</a></li>
+                    <li style="width: 9rem;color: black;margin-left: 2rem;"><a href="#"
+                            style="text-decoration: none;">Acerca de ▼</a>
+                    </li>
+                    <li style="width: 9rem;color: black;margin-left: 2rem;"><a href="#"
+                            style="text-decoration: none;">Contacto ▼</a></li>
+                </ul>
+            </nav>
+        </header>
+    </div>
     <div class="tables">
         <!-- PERIODOS ACADEMICOS -->
-        <div class="subtitles"><a href="#" onclick="toggleTable('table-periodo')">Periodos académicos:</a></div>
+        <div class="subtitles"><a href="#" onclick="toggleTable('table-periodo')">Periodos
+                académicos ▼</a></div>
         <div id="table-periodo" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
@@ -47,7 +65,7 @@ $conn = getDBConnection();
             </table>
         </div>
         <!-- PROGRAMAS ACADEMICOS -->
-        <div class="subtitles"><a href="#" onclick="toggleTable('table-programa')">Programas académicos:</a></div>
+        <div class="subtitles"><a href="#" onclick="toggleTable('table-programa')">Programas académicos ▼</a></div>
         <div id="table-programa" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
@@ -72,7 +90,7 @@ $conn = getDBConnection();
             </table>
         </div>
         <!--ESTUDIANTES-->
-        <div class="subtitles"><a href="#" onclick="toggleTable('table-estudiantes')">Estudiantes:</a></div>
+        <div class="subtitles"><a href="#" onclick="toggleTable('table-estudiantes')">Estudiantes ▼</a></div>
         <div id="table-estudiantes" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
@@ -113,7 +131,7 @@ $conn = getDBConnection();
             </table>
         </div>
         <!-- ESTUDIANTES RETIRADOS-->
-        <div class="subtitles"><a href="#" onclick="toggleTable('table-retirados')">Estudiantes retirados:</a></div>
+        <div class="subtitles"><a href="#" onclick="toggleTable('table-retirados')">Estudiantes retirados ▼</a></div>
         <div id="table-retirados" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
@@ -141,7 +159,7 @@ $conn = getDBConnection();
             </table>
         </div>
         <!-- ESTUDIANTES GRADUADOS-->
-        <div class="subtitles"><a href="#" onclick="toggleTable('table-graduados')">Estudiantes graduados:</a></div>
+        <div class="subtitles"><a href="#" onclick="toggleTable('table-graduados')">Estudiantes graduados ▼</a></div>
         <div id="table-graduados" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
@@ -174,7 +192,7 @@ $conn = getDBConnection();
 
 
         <!-- ESTUDIANTES PRIMIPAROS-->
-        <div class="subtitles"><a href="#" onclick="toggleTable('table-primiparos')">Estudiantes primiparos:</a></div>
+        <div class="subtitles"><a href="#" onclick="toggleTable('table-primiparos')">Estudiantes primiparos ▼</a></div>
         <div id="table-primiparos" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
@@ -201,7 +219,7 @@ $conn = getDBConnection();
             </table>
         </div>
         <!-- ESTUDIANTES MATRICULADOS-->
-        <div class="subtitles"><a href="#" onclick="toggleTable('table-matriculados')">Estudiantes matriculados:</a>
+        <div class="subtitles"><a href="#" onclick="toggleTable('table-matriculados')">Estudiantes matriculados ▼</a>
         </div>
         <div id="table-matriculados" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
@@ -249,7 +267,8 @@ $conn = getDBConnection();
     </script>
     <script>
     function goBack() {
-        window.history.back();
+        // window.history.back();
+        window.location.href = 'http://localhost/ProyectoPhp/home.php#';
     }
     </script>
 </body>

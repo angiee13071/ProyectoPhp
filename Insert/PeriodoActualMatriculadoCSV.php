@@ -33,27 +33,23 @@ foreach ($file_data as $line) {
 $insertion_error = false;
 
 // Insertar los datos en la tabla 'matriculado'
-$id_matricula = 1; // Variable para asignar un valor único a cada registro
 for ($i = 2; $i < count($data_matrix); $i++) {
+    $id_matricula = $i;
     $id_estudiante = $data_matrix[$i][5];
     $id_periodo = 1;
     $estado_matricula = $data_matrix[$i][12];
 
     // Verificar si el registro ya existe en la base de datos
-    $sql_check_existing = "SELECT COUNT(*) FROM matriculado WHERE id_estudiante = ? AND id_periodo = ?";
+    $sql_check_existing = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
     $stmt_check_existing = $conn->prepare($sql_check_existing);
-    $stmt_check_existing->bind_param("ii", $id_estudiante, $id_periodo);
+    $stmt_check_existing->bind_param("s", $id_estudiante);
     $stmt_check_existing->execute();
     $stmt_check_existing->bind_result($existing_count);
     $stmt_check_existing->fetch();
     $stmt_check_existing->close();
 
     if ($existing_count > 0) {
-        // El registro ya existe en la base de datos, mostrar una alerta o hacer otra acción si lo deseas
-        echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante matriculado actualmente con ID $id_estudiante ya existe en la tabla MATRICULADO. Se omitirá la inserción.<br>"; 
-
-        $insertion_error = true;
-    } else {
+        // El estudiante ya existe en la tabla 'estudiante', proceder con la inserción en la tabla 'matriculado'
         // Preparar la consulta SQL para insertar el registro en 'matriculado'
         $sql_insert = "INSERT INTO matriculado (id_matricula, id_estudiante, id_periodo, estado_matricula)
             VALUES (?, ?, ?, ?)";
@@ -67,10 +63,10 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         // Ejecutar la consulta
         if (!$stmt_insert->execute()) {
             // Hubo un error durante la inserción
-            $insertion_error =true;
-            echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla MATRICULADO: ". $stmt_insert->error ,"<br>";
-        }else{
-            $insertion_error =false;
+            $insertion_error = true;
+            echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla MATRICULADO: " . $stmt_insert->error, "<br>";
+        } else {
+            $insertion_error = false;
         }
 
         // Incrementar el valor de $id_matricula para el siguiente registro
@@ -78,6 +74,11 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 
         // Cerrar la sentencia
         $stmt_insert->close();
+    } else {
+        // El estudiante no existe en la tabla 'estudiante', mostrar una alerta o hacer otra acción si lo deseas
+        echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante con ID $id_estudiante no existe en la tabla ESTUDIANTE. Se omitirá la inserción en la tabla MATRICULADO.<br>";
+
+        //$insertion_error = true;
     }
 }
 
@@ -85,7 +86,6 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 $conn->close();
 
 if (!$insertion_error) {
-    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Estudiantes matriculados en el periodo actual insertados en la tabla MATRICULADOS. <br>';
-
+    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Estudiantes matriculados en el periodo actual insertados en la tabla MATRICULADO. <br>';
 }
 ?>

@@ -161,6 +161,7 @@ VALUES
 (2023, 2, 2 );
 
 
+-- Agregar datos a la tabla 'programa'
 
 -- Llamar al procedimiento almacenado para llenar la tabla 'total'
 -- CALL fill_total();

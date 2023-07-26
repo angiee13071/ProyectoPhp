@@ -11,10 +11,29 @@
 <?php
   
   ?>
+<div class="header" style="font-family: system-ui;font-size: 1.5rem;">
+    <header style="background: linear-gradient(95deg, #FEFBFB, #FFBF58, #FF8F46, #FCD96C);">
+        <nav style="color: black;">
+
+            <ul
+                style="    display: flex; flex-direction: row;padding: 1.4rem;align-items: center;list-style: none;color: black;">
+                <img src="Assets/images/uploads/logo_ud.png" alt="Logo" style="width: 15rem;">
+                <li style="width: 6rem;color: black;margin-left: 2rem;"> <a href="#"
+                        style="text-decoration: none;">Inicio ▼</a></li>
+                <li style="width: 9rem;color: black;margin-left: 2rem;"><a href="#"
+                        style="text-decoration: none;">Acerca de ▼</a>
+                </li>
+                <li style="width: 9rem;color: black;margin-left: 2rem;"><a href="#"
+                        style="text-decoration: none;">Contacto ▼</a></li>
+            </ul>
+        </nav>
+    </header>
+</div>
 <div class="card">
     <div class="title">
         <h1>Módulos:</h1>
     </div>
+    <a class="buttonETL" href="http://localhost/ProyectoPhp/Insert/Ejecutar.php">ETL</a>
     <a class="buttonBD" href="http://localhost/ProyectoPhp/baseDeDatos.php">Ver base de datos</a>
     <a class="button" href="http://localhost/ProyectoPhp/desercion.php">Deserción estudiantil</a>
     <a class="button1" href="http://localhost/ProyectoPhp/permanencia.php">Permanencia estudiantil</a>

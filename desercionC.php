@@ -1,31 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Deserción por cohorte</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="index.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deserción por cohorte</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="index.js"></script>
 </head>
 
 <body>
-  <div class="card">
-    <div class="title">
-      <h1>Deserción por cohorte:</h1>
-    </div>
-    <div class="chart-container">
-      <canvas id="desercion-chart"></canvas>
-    </div>
-    <select id="chart-type">
-      <option value="line">Gráfico de líneas</option>
-      <option value="bar">Gráfico de columnas</option>
-    </select>
-    <button class="arrow-button" onclick="goBack()">&#8592;</button>
-  </div>
+    <div class="header" style="font-family: system-ui;font-size: 1.5rem;">
+        <header style="background: linear-gradient(95deg, #FEFBFB, #FFBF58, #FF8F46, #FCD96C);">
+            <nav style="color: black;">
 
-  <script>
+                <ul
+                    style="    display: flex; flex-direction: row;padding: 1.4rem;align-items: center;list-style: none;color: black;">
+                    <img src="Assets/images/uploads/logo_ud.png" alt="Logo" style="width: 15rem;">
+                    <li style="width: 6rem;color: black;margin-left: 2rem;"> <a href="#"
+                            style="text-decoration: none;">Inicio ▼</a></li>
+                    <li style="width: 9rem;color: black;margin-left: 2rem;"><a href="#"
+                            style="text-decoration: none;">Acerca de ▼</a>
+                    </li>
+                    <li style="width: 9rem;color: black;margin-left: 2rem;"><a href="#"
+                            style="text-decoration: none;">Contacto ▼</a></li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+    <div class="card">
+        <div class="title">
+            <h1>Deserción por cohorte:</h1>
+        </div>
+        <div class="chart-container">
+            <canvas id="desercion-chart"></canvas>
+        </div>
+        <select id="chart-type">
+            <option value="line">Gráfico de líneas</option>
+            <option value="bar">Gráfico de columnas</option>
+        </select>
+        <button class="arrow-button" onclick="goBack()">&#8592;</button>
+    </div>
+
+    <script>
     // Obtener los datos de la tabla 'total'
     <?php
     include "conexion.php"; // Incluye el archivo de conexión a la base de datos
@@ -62,53 +81,54 @@
 
     // Función para crear el gráfico
     function createChart(chartType) {
-      if (chart) {
-        chart.destroy(); // Destruir el gráfico existente si ya se ha creado
-      }
+        if (chart) {
+            chart.destroy(); // Destruir el gráfico existente si ya se ha creado
+        }
 
-      var data = {
-        labels: <?php echo json_encode($cohortes); ?>,
-        datasets: [{
-          label: 'Desertores',
-          data: <?php echo json_encode($desertores); ?>,
-          backgroundColor: 'rgba(54, 162, 235, 0.5)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-        }, {
-          label: 'Primíparos',
-          data: <?php echo json_encode($primiparos); ?>,
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1
-        }]
-      };
+        var data = {
+            labels: <?php echo json_encode($cohortes); ?>,
+            datasets: [{
+                label: 'Desertores',
+                data: <?php echo json_encode($desertores); ?>,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Primíparos',
+                data: <?php echo json_encode($primiparos); ?>,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        };
 
-      var options = {
-        responsive: true,
-        maintainAspectRatio: false
-      };
+        var options = {
+            responsive: true,
+            maintainAspectRatio: false
+        };
 
-      chart = new Chart(ctx, {
-        type: chartType,
-        data: data,
-        options: options
-      });
+        chart = new Chart(ctx, {
+            type: chartType,
+            data: data,
+            options: options
+        });
     }
 
     // Evento de cambio de tipo de gráfico
     chartTypeSelect.addEventListener('change', function() {
-      var selectedType = chartTypeSelect.value;
-      createChart(selectedType);
+        var selectedType = chartTypeSelect.value;
+        createChart(selectedType);
     });
 
     // Crear el gráfico inicial
     createChart(chartTypeSelect.value);
-  </script>
+    </script>
 
-<script>
-function goBack() {
-  window.history.back();
-}
-</script>
+    <script>
+    function goBack() {
+        window.history.back();
+    }
+    </script>
 </body>
+
 </html>

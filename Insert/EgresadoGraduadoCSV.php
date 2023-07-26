@@ -36,7 +36,7 @@ $insertion_error = false;
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_graduado = $i;
     $id_estudiante = $data_matrix[$i][6];
-    $fecha_grado = $data_matrix[$i][8];
+    $fecha_grado = $data_matrix[$i][9];
     
     // Calcular el semestre según el mes y el id_periodo
     $year = date('Y', strtotime($fecha_grado));

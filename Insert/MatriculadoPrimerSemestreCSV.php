@@ -56,8 +56,9 @@ for ($i = 2; $i < count($file_data); $i++) {
         // Ejecutar la consulta
         if (!$stmt_insert->execute()) {
             // Hubo un error durante la inserción
-            $insertion_error =true;
-            echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla PRIMIPARO: ". $stmt_insert->error ,"<br>";
+            //TODO:Validar los no insertados
+           // $insertion_error =true;
+            //echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante nuevo con ID $id_estudiante no se pudo insertar en la tabla PRIMIPARO: ". $stmt_insert->error ,"<br>";
         }else{
             $insertion_error =false;
         }
@@ -72,7 +73,7 @@ $conn->close();
 
 if (!$insertion_error) {
 
-    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de estudiantes de primer ingreso insertados en la tabla PRIMIPARO.  <br>';
+    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de estudiantes nuevo insertados en la tabla PRIMIPARO.  <br>';
 }
 
 ?>
