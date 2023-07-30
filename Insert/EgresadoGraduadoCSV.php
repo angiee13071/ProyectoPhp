@@ -34,7 +34,7 @@ $insertion_error = false;
 
 // Insertar los datos en la tabla 'graduado'
 for ($i = 2; $i < count($data_matrix); $i++) {
-    $id_graduado = $i;
+    $id_graduado = $i-1;
     $id_estudiante = $data_matrix[$i][6];
     $fecha_grado = $data_matrix[$i][9];
     

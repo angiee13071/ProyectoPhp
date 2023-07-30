@@ -42,6 +42,9 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $month = date('n', strtotime($fecha_grado));
     $semestre = ($month <= 6) ? 1 : 2;
     $promedio = $data_matrix[$i][15];
+    $nombres = $data_matrix[$i][7];
+    $documento = $data_matrix[$i][8];
+    $estado = "ESTUDIANTE GRADUADO";
 
     // Verificar si el estudiante ya existe en la tabla 'estudiante'
     $sql_check_student = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
