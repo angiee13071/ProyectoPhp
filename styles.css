@@ -116,7 +116,12 @@ body {
 }
 
 #chart-type {
-  margin-right: 320px;
+  /* margin-right: 20rem; */
+
+}
+#chart-carrera{
+  /* margin-right: 13rem; */
+  
 }
 a {
   color: black;

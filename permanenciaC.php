@@ -36,10 +36,25 @@
         <div class="chart-container">
             <canvas id="permanencia-chart"></canvas>
         </div>
-        <select id="chart-type">
-            <option value="line">Gráfico de líneas</option>
-            <option value="bar">Gráfico de columnas</option>
-        </select>
+        <div>
+            <select id="chart-carrer">
+                <option value="all">Todas las carreras</option>
+                <option value="tec">Tecnología en sistematización de datos</option>
+                <option value="ing">Ingeniería telemática</option>
+            </select>
+        </div>
+        <div>
+            <select id="chart-type">
+                <option value="line">Gráfico de líneas</option>
+                <option value="bar">Gráfico de columnas</option>
+            </select>
+
+        </div>
+
+
+
+
+
         <button class="arrow-button" onclick="goBack()">&#8592;</button>
     </div>
 
@@ -57,14 +72,16 @@
     p.id_periodo,
     p.cohorte,
     COUNT(DISTINCT m.id_estudiante) AS matriculado,
-    FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia
+    FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia,
+    e.carrera 
 FROM
     periodo p
 LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
+LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante 
 WHERE
     m.estado_matricula = 'ESTUDIANTE MATRICULADO'
 GROUP BY
-    periodo_actual, periodo_anterior, p.id_periodo, p.cohorte
+    periodo_actual, periodo_anterior, p.id_periodo, p.cohorte, e.carrera 
 ORDER BY
     p.anio, p.semestre;
 ";
@@ -83,6 +100,7 @@ ORDER BY
     // Crear la gráfica inicial
     var ctx = document.getElementById('permanencia-chart').getContext('2d');
     var chartTypeSelect = document.getElementById('chart-type');
+    var chartSelectCarrer = document.getElementById('chart-carrer');
     var chart;
 
     // Función para crear el gráfico
