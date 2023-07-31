@@ -73,7 +73,7 @@ ORDER BY
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $cohortes[] = $row['periodo_actual'];
-            $permanencias[] = ($row['permanencia']);
+            $permanencias[] = floatval($row['permanencia']); // Convertir el valor a número usando floatval()
         }
     }
 
