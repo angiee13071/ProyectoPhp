@@ -14,10 +14,11 @@
         <nav style="color: black;">
 
             <ul
-                style="    display: flex; flex-direction: row;padding: 1.4rem;align-items: center;list-style: none;color: black;">
+                style="display: flex; flex-direction: row;padding: 1.4rem;align-items: center;list-style: none;color: black;">
                 <img src="Assets/images/uploads/logo_ud.png" alt="Logo" style="width: 15rem;">
                 <li style="width: 6rem;color: black;margin-left: 2rem;"> <a href="#"
-                        style="text-decoration: none;">Inicio ▼</a></li>
+                        style="text-decoration: none;">Inicio
+                        ▼</a></li>
                 <li style="width: 9rem;color: black;margin-left: 2rem;"><a href="#"
                         style="text-decoration: none;">Acerca de ▼</a>
                 </li>
@@ -36,59 +37,105 @@
         <div class="chart-container">
             <canvas id="permanencia-chart"></canvas>
         </div>
-        <select id="chart-type">
-            <option value="line">Gráfico de líneas</option>
-            <option value="bar">Gráfico de columnas</option>
-        </select>
+        <div>
+            <select id="chart-carrer">
+                <option value="all">Todas las carreras</option>
+                <option value="tec">Tecnología en sistematización de datos</option>
+                <option value="ing">Ingeniería telemática</option>
+            </select>
+        </div>
+        <div>
+            <select id="chart-type">
+                <option value="line">Gráfico de líneas</option>
+                <option value="bar">Gráfico de columnas</option>
+            </select>
+        </div>
         <button class="arrow-button" onclick="goBack()">&#8592;</button>
     </div>
 
     <script>
     // Obtener los datos de la tabla 'graduado' y 'estudiante'
     <?php
-    include "conexion.php"; // Incluye el archivo de conexión a la base de datos
+        include "conexion.php"; // Incluye el archivo de conexión a la base de datos
 
-    $semestres = [];
-    $permanencias = [];
+        $cohortes = [];
+        $permanencias = [];
 
-    $query = "SELECT
-                periodo.semestre,
-                COUNT(DISTINCT graduado.id_estudiante) AS graduados,
-                COUNT(DISTINCT estudiante.id_estudiante) AS estudiantes
-              FROM
-                graduado
-              INNER JOIN periodo ON graduado.id_periodo = periodo.id_periodo
-              INNER JOIN estudiante ON graduado.id_estudiante = estudiante.id_estudiante
-              GROUP BY
-                periodo.semestre";
-    $result = $conn->query($query);
+        // Función para obtener los datos dependiendo de la carrera seleccionada
+        function fetchData($carrera) {
+            global $conn, $cohortes, $permanencias;
 
-    if ($result->num_rows > 0) {
-      while ($row = $result->fetch_assoc()) {
-        $semestres[] = $row['semestre'];
-        $permanencias[] = ($row['graduados'] / $row['estudiantes']) * 100;
-      }
-    }
+            $query = "SELECT
+            CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
+            CONCAT(p.anio, '-', (p.semestre - 1)) AS periodo_anterior,
+            p.id_periodo,
+            p.cohorte,
+            COUNT(DISTINCT m.id_estudiante) AS matriculado,
+            FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia,
+            e.carrera 
+            FROM
+            periodo p
+            LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
+            LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante 
+            WHERE
+            m.estado_matricula = 'ESTUDIANTE MATRICULADO'";
 
-    $conn->close();
-    ?>
+            if ($carrera === 'all') {
+              
+            }elseif($carrera === 'tec'){
+                $query .= " AND e.carrera = 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)'";
+            }elseif($carrera === 'ing'){
+                $query .= " AND e.carrera = 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)'";
+            }
+
+            $query .= " GROUP BY
+            periodo_actual, periodo_anterior, p.id_periodo, p.cohorte, e.carrera 
+            ORDER BY
+            p.anio, p.semestre;";
+
+            $result = $conn->query($query);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $cohortes[] = $row['periodo_actual'];
+                    $permanencias[] = floatval($row['permanencia']);
+                }
+            }
+        }
+
+        // Obtener datos por defecto (Todas las carreras)
+        fetchData('all');
+        ?>
 
     // Crear la gráfica inicial
     var ctx = document.getElementById('permanencia-chart').getContext('2d');
     var chartTypeSelect = document.getElementById('chart-type');
+    var chartSelectCarrer = document.getElementById('chart-carrer');
     var chart;
 
+    // Función para filtrar los datos por carrera y actualizar el gráfico
+    function updateChart() {
+        var selectedCarrera = chartSelectCarrer.value;
+
+        // Obtener los datos correspondientes a la carrera seleccionada
+        fetchData(selectedCarrera);
+
+        // Actualizar la gráfica con los datos filtrados
+        createChart(chartTypeSelect.value, <?php echo json_encode($cohortes); ?>,
+            <?php echo json_encode($permanencias); ?>);
+    }
+
     // Función para crear el gráfico
-    function createChart(chartType) {
+    function createChart(chartType, cohortesData, permanenciasData) {
         if (chart) {
             chart.destroy(); // Destruir el gráfico existente si ya se ha creado
         }
 
         var data = {
-            labels: <?php echo json_encode($semestres); ?>,
+            labels: cohortesData,
             datasets: [{
                 label: 'Permanencia por Semestre',
-                data: <?php echo json_encode($permanencias); ?>,
+                data: permanenciasData,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -110,11 +157,18 @@
     // Evento de cambio de tipo de gráfico
     chartTypeSelect.addEventListener('change', function() {
         var selectedType = chartTypeSelect.value;
-        createChart(selectedType);
+        createChart(selectedType, <?php echo json_encode($cohortes); ?>,
+            <?php echo json_encode($permanencias); ?>);
+    });
+
+    // Evento de cambio de carrera
+    chartSelectCarrer.addEventListener('change', function() {
+        updateChart();
     });
 
     // Crear el gráfico inicial
-    createChart(chartTypeSelect.value);
+    createChart(chartTypeSelect.value, <?php echo json_encode($cohortes); ?>,
+        <?php echo json_encode($permanencias); ?>);
     </script>
     <script>
     function goBack() {
