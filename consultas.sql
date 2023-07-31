@@ -149,16 +149,29 @@ DELIMITER ;
 -- Inserting period data
 INSERT INTO periodo (anio, semestre, cohorte)
 VALUES
+(2023, 2, 2);
+INSERT INTO periodo (anio, semestre, cohorte)
+VALUES
+(2023, 1, 1);
+INSERT INTO periodo (anio, semestre, cohorte)
+VALUES
 (2022, 2, 2);
 INSERT INTO periodo (anio, semestre, cohorte)
 VALUES
 (2022, 1, 1);
 INSERT INTO periodo (anio, semestre, cohorte)
 VALUES
-(2023, 1, 1);
+(2021, 2, 2);
 INSERT INTO periodo (anio, semestre, cohorte)
 VALUES
-(2023, 2, 2 );
+(2021, 1, 1);
+INSERT INTO periodo (anio, semestre, cohorte)
+VALUES
+(2020, 2, 2 );
+INSERT INTO periodo (anio, semestre, cohorte)
+VALUES
+(2020, 1, 1 );
+
 
 
 -- Agregar datos a la tabla 'programa'
@@ -182,3 +195,25 @@ select * from matriculado;
 
 select * from matriculado WHERE estado_matricula = 'ESTUDIANTE GRADUADO';
 select * from total;
+
+SELECT
+    CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
+    CONCAT(p.anio, '-', (p.semestre - 1)) AS periodo_anterior,
+    p.id_periodo,
+    p.cohorte,
+    COUNT(DISTINCT m.id_estudiante) AS matriculado,
+    FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia,
+    e.carrera -- Agregar la columna "carrera" de la tabla "estudiante"
+FROM
+    periodo p
+LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
+LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante -- Agregar el JOIN con la tabla "estudiante"
+WHERE
+    m.estado_matricula = 'ESTUDIANTE MATRICULADO' 
+    AND carrera='INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)'
+GROUP BY
+    periodo_actual, periodo_anterior, p.id_periodo, p.cohorte, e.carrera -- Incluir "carrera" en la cláusula GROUP BY
+ORDER BY
+    p.anio, p.semestre;
+
+
