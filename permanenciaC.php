@@ -57,7 +57,7 @@
     p.id_periodo,
     p.cohorte,
     COUNT(DISTINCT m.id_estudiante) AS matriculado,
-    (COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100 AS permanencia
+    FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia
 FROM
     periodo p
 LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
@@ -72,7 +72,7 @@ ORDER BY
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $cohortes[] = $row['cohorte'];
+            $cohortes[] = $row['periodo_actual'];
             $permanencias[] = ($row['permanencia']);
         }
     }
