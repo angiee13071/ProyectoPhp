@@ -36,7 +36,22 @@ $insertion_error = false;
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_matricula = $i-1;
     $id_estudiante = $data_matrix[$i][5];
-    $id_periodo = 1;
+    $periodo = $data_matrix[$i][1];
+    
+    // Extraer el año y el semestre del periodo
+    $year_semester = explode('-', $periodo);
+    $anio = $year_semester[0];
+    $semestre = $year_semester[1];
+
+    // Buscar el id_periodo en la tabla 'periodo' utilizando el año y el semestre
+    $sql_get_id_periodo = "SELECT id_periodo FROM periodo WHERE anio = ? AND semestre = ?";
+    $stmt_get_id_periodo = $conn->prepare($sql_get_id_periodo);
+    $stmt_get_id_periodo->bind_param("ii", $anio, $semestre);
+    $stmt_get_id_periodo->execute();
+    $stmt_get_id_periodo->bind_result($id_periodo);
+    $stmt_get_id_periodo->fetch();
+    $stmt_get_id_periodo->close();
+    
     $estado_matricula = $data_matrix[$i][12];
 
     // Verificar si el registro ya existe en la base de datos

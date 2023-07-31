@@ -67,8 +67,8 @@
       while ($row = $result->fetch_assoc()) {
         $anios[] = $row['anio'];
         $matriculados = ($row['matriculados'] != null) ? $row['matriculados'] : 0;
-        $retirados = ($row['retirados'] != null) ? $row['retirados'] : 0;
-        $permanencias[] = ($matriculados - $retirados) * 100 / $matriculados;
+        // $retirados = ($row['retirados'] != null) ? $row['retirados'] : 0;
+        $permanencias[] = ($matriculados - 1) * 100 / $matriculados;
       }
     } else {
       echo "No se puede calcular la permanencia debido a que no hay estudiantes retirados.";
