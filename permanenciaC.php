@@ -52,22 +52,29 @@
     $permanencias = [];
 
     $query = "SELECT
-                periodo.cohorte,
-                COUNT(DISTINCT graduado.id_estudiante) AS graduados,
-                COUNT(DISTINCT estudiante.id_estudiante) AS estudiantes
-              FROM
-                graduado
-              INNER JOIN periodo ON graduado.id_periodo = periodo.id_periodo
-              INNER JOIN estudiante ON graduado.id_estudiante = estudiante.id_estudiante
-              GROUP BY
-                periodo.cohorte";
+    CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
+    CONCAT(p.anio, '-', (p.semestre - 1)) AS periodo_anterior,
+    p.id_periodo,
+    p.cohorte,
+    COUNT(DISTINCT m.id_estudiante) AS matriculado,
+    (COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100 AS permanencia
+FROM
+    periodo p
+LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
+WHERE
+    m.estado_matricula = 'ESTUDIANTE MATRICULADO'
+GROUP BY
+    periodo_actual, periodo_anterior, p.id_periodo, p.cohorte
+ORDER BY
+    p.anio, p.semestre;
+";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {
-      while ($row = $result->fetch_assoc()) {
-        $cohortes[] = $row['cohorte'];
-        $permanencias[] = ($row['graduados'] / $row['estudiantes']) * 100;
-      }
+        while ($row = $result->fetch_assoc()) {
+            $cohortes[] = $row['cohorte'];
+            $permanencias[] = ($row['permanencia']);
+        }
     }
 
     $conn->close();
