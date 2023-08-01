@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permanencia por Cohorte</title>
+    <title>Promedio Acumulado</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -35,7 +35,7 @@
 <body>
     <div class="card">
         <div class="title">
-            <h1>Permanencia por Cohorte</h1>
+            <h1>Promedio Acumulado</h1>
         </div>
         <div class="chart-container">
             <canvas id="permanencia-chart"></canvas>
@@ -52,6 +52,7 @@
                 <option value="line">Gráfico de líneas</option>
                 <option value="bar">Gráfico de columnas</option>
             </select>
+            <button class="arrow-button" onclick="goBack()">&#8592;</button>
         </div>
 
         <!-- Mostrar el promedio ponderado -->
