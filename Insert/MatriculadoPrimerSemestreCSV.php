@@ -28,8 +28,20 @@ for ($i = 2; $i < count($file_data); $i++) {
 
     $id_primiparo = $row[3];
     $id_estudiante = $row[4];
-    $id_periodo = 2; // Asigna el ID del periodo correspondiente
+    $periodo = $row[4];; // Asigna el ID del periodo correspondiente
+ // Extraer el año y el semestre del periodo
+ $year_semester = explode('-', $periodo);
+ $anio = $year_semester[0];
+ $semestre = $year_semester[1];
 
+ // Buscar el id_periodo en la tabla 'periodo' utilizando el año y el semestre
+ $sql_get_id_periodo = "SELECT id_periodo FROM periodo WHERE anio = ? AND semestre = ?";
+ $stmt_get_id_periodo = $conn->prepare($sql_get_id_periodo);
+ $stmt_get_id_periodo->bind_param("ii", $anio, $semestre);
+ $stmt_get_id_periodo->execute();
+ $stmt_get_id_periodo->bind_result($id_periodo);
+ $stmt_get_id_periodo->fetch();
+ $stmt_get_id_periodo->close();
     // Verificar si el estudiante ya existe en la tabla 'primiparo'
     $sql_check_existing = "SELECT COUNT(*) FROM primiparo WHERE id_primiparo = ?";
     $stmt_check_existing = $conn->prepare($sql_check_existing);
@@ -57,8 +69,8 @@ for ($i = 2; $i < count($file_data); $i++) {
         if (!$stmt_insert->execute()) {
             // Hubo un error durante la inserción
             //TODO:Validar los no insertados
-           // $insertion_error =true;
-            //echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante nuevo con ID $id_estudiante no se pudo insertar en la tabla PRIMIPARO: ". $stmt_insert->error ,"<br>";
+           $insertion_error =true;
+            echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante nuevo con ID $id_primiparo, $id_estudiante, $id_periodo no se pudo insertar en la tabla PRIMIPARO: ". $stmt_insert->error ,"<br>";
         }else{
             $insertion_error =false;
         }
