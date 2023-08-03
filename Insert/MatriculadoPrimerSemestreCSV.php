@@ -28,6 +28,7 @@ for ($i = 2; $i < count($file_data); $i++) {
  
     $id_primiparo = $i-1;
     $id_estudiante = $row[4];
+   
     $periodo = $row[2];; // Asigna el ID del periodo correspondiente
   
  // Extraer el año y el semestre del periodo

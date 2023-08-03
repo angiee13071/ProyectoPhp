@@ -76,7 +76,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
             $id_periodo = $row['id_periodo'];
         } else {
             // Si no se encontró el id_periodo, se coloca por defecto 1
-            $id_periodo = 1;
+            $id_periodo = 0;
         }
 
         // Preparar la sentencia
