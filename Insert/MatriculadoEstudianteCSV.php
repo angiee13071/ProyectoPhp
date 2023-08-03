@@ -102,9 +102,8 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         // Ejecutar la consulta
         $stmt_insert->bind_param("sssssssssss", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero, $tipo_inscripcion, $detalle_estado, $id_programa); // Se asigna $estado como valor del campo "estado"
         if (!$stmt_insert->execute()) {
-            //TODO:Validar los que no se suben
-            //$insertion_error = true;
-            //echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante nuevo con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: " . $stmt_insert->error, "<br>";
+             $insertion_error = true;
+            echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante primiparo con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: " . $stmt_insert->error, "<br>";
         } else {
             $insertion_error = false;
         }
@@ -118,6 +117,6 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 $conn->close();
 
 if (!$insertion_error) {
-    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de estudiantes nuevos insertados en la tabla ESTUDIANTE.  <br>';
+    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de estudiantes primipaross insertados en la tabla ESTUDIANTE.  <br>';
 }
 ?>
