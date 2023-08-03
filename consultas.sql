@@ -38,7 +38,7 @@ CREATE TABLE estudiante (
 
 -- Crear la tabla 'retirado'
 CREATE TABLE retirado (
-  id_retiro INT PRIMARY KEY,
+  id_retiro INT AUTO_INCREMENT PRIMARY KEY,
   id_periodo INT,
   total INT,
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
@@ -46,7 +46,7 @@ CREATE TABLE retirado (
 
 -- Crear la tabla 'graduado'
 CREATE TABLE graduado (
-  id_graduado INT PRIMARY KEY,
+  id_graduado INT AUTO_INCREMENT PRIMARY KEY,
   id_estudiante BIGINT,
   id_periodo INT,
   fecha_grado DATE,
@@ -56,7 +56,7 @@ CREATE TABLE graduado (
 );
 -- Crear la tabla 'primiparo'
 CREATE TABLE primiparo (
-  id_primiparo INT PRIMARY KEY,
+  id_primiparo INT AUTO_INCREMENT PRIMARY KEY,
   id_estudiante BIGINT,
   id_periodo INT,
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
@@ -65,7 +65,7 @@ CREATE TABLE primiparo (
 
 -- Crear la tabla 'matriculado'
 CREATE TABLE matriculado (
-  id_matricula INT PRIMARY KEY,
+  id_matricula INT AUTO_INCREMENT PRIMARY KEY,
   id_estudiante BIGINT,
   id_periodo INT,
   estado_matricula VARCHAR(255),
@@ -210,10 +210,31 @@ LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
 LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante -- Agregar el JOIN con la tabla "estudiante"
 WHERE
     m.estado_matricula = 'ESTUDIANTE MATRICULADO' 
-    AND carrera='INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)'
+   -- AND carrera='INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)'
 GROUP BY
     periodo_actual, periodo_anterior, p.id_periodo, p.cohorte, e.carrera -- Incluir "carrera" en la cláusula GROUP BY
 ORDER BY
     p.anio, p.semestre;
 
+           
+           SELECT
+    p.anio AS anio_actual,
+    (p.anio - 1) AS anio_anterior,
+    p.id_periodo,
+    COUNT(DISTINCT m.id_estudiante) AS matriculado,
+    FORMAT(
+        (COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100,
+        2
+    ) AS permanencia,
+    e.carrera 
+FROM
+    periodo p
+LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
+LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante
+WHERE
+    m.estado_matricula = 'ESTUDIANTE MATRICULADO'
+GROUP BY
+    p.anio, p.semestre, p.id_periodo, e.carrera
+ORDER BY
+    p.anio, p.semestre;
 
