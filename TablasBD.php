@@ -43,7 +43,7 @@
                 </tr>
                 <?php
 // Incluir el archivo de conexión a la base de datos
-include "conexion.php";
+include "ConexionBD.php";
 // Obtener la conexión a la base de datos
 $conn = getDBConnection();
 // Realizar la consulta a la base de datos
@@ -268,7 +268,7 @@ $conn = getDBConnection();
     <script>
     function goBack() {
         // window.history.back();
-        window.location.href = 'http://localhost/ProyectoPhp/home.php#';
+        window.location.href = 'http://localhost/ProyectoPhp/Home.php#';
     }
     </script>
 </body>

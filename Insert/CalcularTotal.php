@@ -1,6 +1,7 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
-require_once 'conexion.php';
+// require_once 'ConexionBD.php';
+require_once '../ConexionBD.php';
   // Obtener la conexión a la base de datos
   $conn = getDBConnection();
   //Crear procedimiento almacenado:

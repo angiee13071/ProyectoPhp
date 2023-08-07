@@ -46,7 +46,7 @@
     <script>
     // Obtener los datos de la consulta SQL
     <?php
-    include "conexion.php"; // Incluye el archivo de conexión a la base de datos
+    include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
 
     $anios = [];
     $semestres = [];

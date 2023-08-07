@@ -1,7 +1,8 @@
 <?php
 set_time_limit(300);
 // Incluir el archivo de conexión a la base de datos
-require_once 'conexion.php';
+// require_once 'ConexionBD.php';
+require_once '../ConexionBD.php';
 
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";

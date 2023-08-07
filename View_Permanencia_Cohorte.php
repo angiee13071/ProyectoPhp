@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permanencia por Año</title>
+    <title>Permanencia por Cohorte</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -32,7 +32,7 @@
 <body>
     <div class="card">
         <div class="title">
-            <h1>Permanencia por Año</h1>
+            <h1>Permanencia por Cohorte</h1>
         </div>
         <div class="chart-container">
             <canvas id="permanencia-chart"></canvas>
@@ -56,7 +56,7 @@
     <script>
     // Obtener los datos de la tabla 'graduado' y 'estudiante'
     <?php
-        include "conexion.php"; // Incluye el archivo de conexión a la base de datos
+        include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
 
         $cohortes = [];
         $permanencias = [];
@@ -66,9 +66,10 @@
             global $conn, $cohortes, $permanencias;
 
             $query = "SELECT
-            CONCAT(p.anio) AS anio_actual,
-            CONCAT(p.anio-1) AS anio_anterior,
+            CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
+            CONCAT(p.anio, '-', (p.semestre - 1)) AS periodo_anterior,
             p.id_periodo,
+            p.cohorte,
             COUNT(DISTINCT m.id_estudiante) AS matriculado,
             FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia,
             e.carrera 
@@ -88,15 +89,15 @@
             }
 
             $query .= " GROUP BY
-            p.anio, p.semestre, p.id_periodo, e.carrera
-        ORDER BY
+            periodo_actual, periodo_anterior, p.id_periodo, p.cohorte, e.carrera 
+            ORDER BY
             p.anio, p.semestre;";
 
             $result = $conn->query($query);
 
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    $cohortes[] = $row['anio_actual'];
+                    $cohortes[] = $row['periodo_actual'];
                     $permanencias[] = floatval($row['permanencia']);
                 }
             }
@@ -133,7 +134,7 @@
         var data = {
             labels: cohortesData,
             datasets: [{
-                label: 'Permanencia por Año',
+                label: 'Permanencia por Cohorte',
                 data: permanenciasData,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',

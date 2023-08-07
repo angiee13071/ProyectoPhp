@@ -33,10 +33,10 @@
     <div class="title">
         <h1>Módulos:</h1>
     </div>
-    <a class="buttonETL" href="http://localhost/ProyectoPhp/Insert/Ejecutar.php">ETL</a>
-    <a class="buttonBD" href="http://localhost/ProyectoPhp/baseDeDatos.php">Ver base de datos</a>
-    <a class="button" href="http://localhost/ProyectoPhp/desercion.php">Deserción estudiantil</a>
-    <a class="button1" href="http://localhost/ProyectoPhp/permanencia.php">Permanencia estudiantil</a>
+    <a class="buttonETL" href="http://localhost/ProyectoPhp/Insert/Ejecutar_ETL.php">ETL</a>
+    <a class="buttonBD" href="http://localhost/ProyectoPhp/TablasBD.php">Ver base de datos</a>
+    <a class="button" href="http://localhost/ProyectoPhp/View_Desercion.php">Deserción estudiantil</a>
+    <a class="button1" href="http://localhost/ProyectoPhp/View_Permanencia.php">Permanencia estudiantil</a>
 </div>
 
 </html>

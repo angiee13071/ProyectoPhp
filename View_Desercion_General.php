@@ -1,5 +1,5 @@
 <?php
-include "conexion.php"; // Incluir el archivo de conexión a la base de datos
+include "ConexionBD.php"; // Incluir el archivo de conexión a la base de datos
 $labels = [];
 $data = [];
 
@@ -31,7 +31,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permanencia - Datos generales</title>
+    <title>Deserción - Datos generales</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -68,7 +68,7 @@ $conn->close();
             <option value="tipo_inscripcion">Tipo de Inscripción</option>
             <option value="estado">Estado del Estudiante</option>
         </select>
-        <select id="chart-type" class="oculto" style="display: none;">
+        <select id="chart-type-p" class="oculto" style="display: none;">
             <option value="doughnut">Gráfico de Torta</option>
         </select>
         <button class="arrow-button" onclick="goBack()">&#8592;</button>
@@ -77,7 +77,7 @@ $conn->close();
     <script>
     // Obtener los datos generales para el gráfico de torta
     var dataTypeSelect = document.getElementById('data-type');
-    var chartTypeSelect = document.getElementById('chart-type');
+    var chartTypeSelectD = document.getElementById('chart-type-p');
     var ctx = document.getElementById('datos-generales-chart').getContext('2d');
     var chart;
 
@@ -124,37 +124,37 @@ $conn->close();
             datasets: [{
                 data: Object.values(frecuenciaDatos),
                 backgroundColor: [
-                    'rgba(228, 134, 5, 0.5)',
-                    'rgba(94, 138, 141, 0.5)',
                     'rgba(255, 99, 132, 0.5)',
                     'rgba(54, 162, 235, 0.5)',
-                    'rgba(153, 102, 255, 0.5)',
                     'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
                     'rgba(255, 159, 64, 0.5)',
                     'rgba(50, 168, 82, 0.5)',
                     'rgba(195, 61, 61, 0.5)',
                     'rgba(88, 89, 91, 0.5)',
-                    'rgba(75, 192, 192, 0.5)'
+                    'rgba(228, 134, 5, 0.5)',
+                    'rgba(94, 138, 141, 0.5)'
                 ],
                 borderColor: [
-                    'rgba(228, 134, 5, 1)',
-                    'rgba(94, 138, 141, 1)',
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
-                    'rgba(153, 102, 255, 1)',
                     'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
                     'rgba(255, 159, 64, 1)',
                     'rgba(50, 168, 82, 1)',
                     'rgba(195, 61, 61, 1)',
                     'rgba(88, 89, 91, 1)',
-                    'rgba(75, 192, 192, 1)'
+                    'rgba(228, 134, 5, 1)',
+                    'rgba(94, 138, 141, 1)'
                 ],
                 borderWidth: 1
             }]
         };
 
         // Crear el gráfico de torta
-        var chartType = chartTypeSelect.value;
+        var chartType = chartTypeSelectD.value;
         var options = {
             responsive: true,
             maintainAspectRatio: false
@@ -174,7 +174,7 @@ $conn->close();
     dataTypeSelect.addEventListener('change', createChart);
 
     // Evento de cambio de tipo de gráfico
-    chartTypeSelect.addEventListener('change', createChart);
+    chartTypeSelectD.addEventListener('change', createChart);
 
     // Crear el gráfico inicial
     createChart();

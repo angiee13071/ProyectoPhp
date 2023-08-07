@@ -33,11 +33,11 @@
     <div class="title">
         <h1>Deserción estudiantil:</h1>
     </div>
-    <a class="button" href="http://localhost/ProyectoPhp/desercionC.php">Deserción por cohorte</a>
-    <a class="button" href="http://localhost/ProyectoPhp/desercions.php">Deserción por semestre</a>
-    <a class="button" href="http://localhost/ProyectoPhp/desercionA.php">Deserción por año</a>
-    <a class="button" href="http://localhost/ProyectoPhp/promedioD.php">Promedio acumulado</a>
-    <a class="button" href="http://localhost/ProyectoPhp/datosGeneralesD.php">Datos generales</a>
+    <a class="button" href="http://localhost/ProyectoPhp/View_Desercion_Cohorte.php">Deserción por cohorte</a>
+    <a class="button" href="http://localhost/ProyectoPhp/View_Desercion_Semestre.php">Deserción por semestre</a>
+    <a class="button" href="http://localhost/ProyectoPhp/View_Desercion_Anio.php">Deserción por año</a>
+    <a class="button" href="http://localhost/ProyectoPhp/View_Desercion_Promedio.php">Promedio acumulado</a>
+    <a class="button" href="http://localhost/ProyectoPhp/View_Desercion_General.php">Datos generales</a>
     <button class="arrow-button" onclick="goBack()">&#8592;</button>
 
 </div>

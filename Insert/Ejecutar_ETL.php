@@ -52,29 +52,29 @@
         </div>
 
         <?php
-// Tomar el archivo de egresados para subir los programas academicos:
-require 'EgresadoProgramaCSV.php';
+// Tomar el archivo de egresados para subir los programas academicos y periodos:
+require 'Insert_EgresadoCSV_Programa_Periodo.php';
 
  //Tomar el archivo egresado para subirlo a la tabla estudiantes:
-require 'EgresadoEstudianteCSV.php';
+require 'Insert_EgresadoCSV_Estudiante.php';
 
 //Tomar el archivo de matriculados actualmente para subirlos a la tabla estudiante:
-require 'PeriodoActualEstudianteCSV.php';
+require 'Insert_MatriculadosCSV_Estudiante.php';
     
 // Tomar el archivo de matriculados actualmente para subirlos a la tabla matriculados:
-require 'PeriodoActualMatriculadoCSV.php';
+require 'Insert_MatriculadosCSV_Matriculado.php';
 
 // Tomar el archivo de primiparos y llenar la tabla estudiante
-require 'MatriculadoEstudianteCSV.php';
+require 'Insert_PrimiparosCSV_Estudiante.php';
 
 // Tomar el archivo de primiparos y llenar la tabla primiparo:
-require 'MatriculadoPrimerSemestreCSV.php';
+require 'Insert_PrimiparosCSV_Primiparo.php';
 
 // Llamar y ejecutar el archivo EgresadoGraduadoCSV.php
- require 'EgresadoGraduadoCSV.php';
+ require 'Insert_EgresadoCSV_Graduado.php';
 
 // Llamar y ejecutar procedimiento almacenado para llenar tablas total y retirado
-require 'total.php';
+require 'CalcularTotal.php';
 
 ?>
         <h2>Proceso de importación completado</h2>

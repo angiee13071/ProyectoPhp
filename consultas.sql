@@ -1,10 +1,10 @@
 -- Se crea el drop database 
-drop database if exists Actividadphp;
+drop database if exists Permanencia_Desercion;
 -- Crear la base de datos
-CREATE DATABASE Actividadphp;
+CREATE DATABASE Permanencia_Desercion;
 
 -- Use actividadphp
-USE Actividadphp;
+USE Permanencia_Desercion;
 
 -- Crear la tabla 'programa'
 CREATE TABLE programa (
@@ -145,37 +145,6 @@ BEGIN
 END$$
 
 DELIMITER ;
--- INSERTAR DATOS-----------------------------------------------------------------------------
--- Inserting period data
-INSERT INTO periodo (anio, semestre, cohorte)
-VALUES
-(2023, 2, 2);
-INSERT INTO periodo (anio, semestre, cohorte)
-VALUES
-(2023, 1, 1);
-INSERT INTO periodo (anio, semestre, cohorte)
-VALUES
-(2022, 2, 2);
-INSERT INTO periodo (anio, semestre, cohorte)
-VALUES
-(2022, 1, 1);
-INSERT INTO periodo (anio, semestre, cohorte)
-VALUES
-(2021, 2, 2);
-INSERT INTO periodo (anio, semestre, cohorte)
-VALUES
-(2021, 1, 1);
-INSERT INTO periodo (anio, semestre, cohorte)
-VALUES
-(2020, 2, 2 );
-INSERT INTO periodo (anio, semestre, cohorte)
-VALUES
-(2020, 1, 1 );
-
-
-
--- Agregar datos a la tabla 'programa'
-
 -- Llamar al procedimiento almacenado para llenar la tabla 'total'
 -- CALL fill_total();
 -- Consultar tablas:
@@ -185,15 +154,10 @@ select * from programa;
 
 select * from periodo;
 select * from estudiante;
-SELECT * FROM estudiante WHERE estado = 'ESTUDIANTE GRADUADO';
-
-select * from estudiante where id_estudiante='20150000000';
 select * from retirado;
 select * from graduado;
 select * from primiparo;
 select * from matriculado;
-
-select * from matriculado WHERE estado_matricula = 'ESTUDIANTE GRADUADO';
 select * from total;
 
 SELECT

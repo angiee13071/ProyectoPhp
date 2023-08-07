@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deserción por semestre</title>
+    <title>Deserción por año</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -31,7 +31,7 @@
     </div>
     <div class="card">
         <div class="title">
-            <h1>Deserción por semestre:</h1>
+            <h1>Deserción por año:</h1>
         </div>
         <div class="chart-container">
             <canvas id="desercion-chart"></canvas>
@@ -46,24 +46,24 @@
     <script>
     // Obtener los datos de la tabla 'total'
     <?php
-    include "conexion.php"; // Incluye el archivo de conexión a la base de datos
+    include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
 
-    $semestres = [];
+    $anios = [];
     $desertores = [];
     $primiparos = [];
 
-    $query = "SELECT periodo.semestre, 
+    $query = "SELECT periodo.anio, 
               ((SELECT COUNT(*) FROM matriculado WHERE id_periodo = periodo.id_periodo) - 
               (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) +
               (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)) AS desertores,
               (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos
               FROM periodo
-              ORDER BY periodo.semestre";
+              ORDER BY periodo.anio";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
-        $semestres[] = $row['semestre'];
+        $anios[] = $row['anio'];
         $desertores[] = $row['desertores'];
         $primiparos[] = $row['primiparos'];
       }
@@ -84,7 +84,7 @@
         }
 
         var data = {
-            labels: <?php echo json_encode($semestres); ?>,
+            labels: <?php echo json_encode($anios); ?>,
             datasets: [{
                 label: 'Desertores',
                 data: <?php echo json_encode($desertores); ?>,

@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deserción por año</title>
+    <title>Deserción por cohorte</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="index.js"></script>
 </head>
 
 <body>
@@ -31,14 +32,14 @@
     </div>
     <div class="card">
         <div class="title">
-            <h1>Deserción por año:</h1>
+            <h1>Deserción por cohorte:</h1>
         </div>
         <div class="chart-container">
             <canvas id="desercion-chart"></canvas>
         </div>
         <select id="chart-type">
             <option value="line">Gráfico de líneas</option>
-            <option value="bar">Gráfico de barras</option>
+            <option value="bar">Gráfico de columnas</option>
         </select>
         <button class="arrow-button" onclick="goBack()">&#8592;</button>
     </div>
@@ -46,24 +47,25 @@
     <script>
     // Obtener los datos de la tabla 'total'
     <?php
-    include "conexion.php"; // Incluye el archivo de conexión a la base de datos
+    include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
 
-    $anios = [];
+    $cohortes = [];
     $desertores = [];
     $primiparos = [];
 
-    $query = "SELECT periodo.anio, 
-              ((SELECT COUNT(*) FROM matriculado WHERE id_periodo = periodo.id_periodo) - 
-              (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) +
-              (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)) AS desertores,
-              (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos
-              FROM periodo
-              ORDER BY periodo.anio";
+    $query = "SELECT p1.anio, p1.semestre, 
+              ((SELECT COUNT(*) FROM matriculado WHERE id_periodo = p2.id_periodo) - 
+              (SELECT COUNT(*) FROM graduado WHERE id_periodo = p2.id_periodo) +
+              (SELECT COUNT(*) FROM primiparo WHERE id_periodo = p2.id_periodo)) AS desertores,
+              (SELECT COUNT(*) FROM primiparo WHERE id_periodo = p2.id_periodo) AS primiparos
+              FROM periodo AS p1
+              INNER JOIN periodo AS p2 ON p2.anio = p1.anio AND p2.semestre = p1.semestre
+              ORDER BY p1.anio, p1.semestre";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
-        $anios[] = $row['anio'];
+        $cohortes[] = $row['anio'] . "-" . $row['semestre'];
         $desertores[] = $row['desertores'];
         $primiparos[] = $row['primiparos'];
       }
@@ -84,7 +86,7 @@
         }
 
         var data = {
-            labels: <?php echo json_encode($anios); ?>,
+            labels: <?php echo json_encode($cohortes); ?>,
             datasets: [{
                 label: 'Desertores',
                 data: <?php echo json_encode($desertores); ?>,
