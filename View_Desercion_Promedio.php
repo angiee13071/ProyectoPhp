@@ -9,24 +9,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<div class="header" style="font-family: system-ui;font-size: 1.5rem;">
-    <header style="background: linear-gradient(95deg, #FEFBFB, #FFBF58, #FF8F46, #FCD96C);">
-        <nav style="color: black;">
-
-            <ul
-                style="    display: flex; flex-direction: row;padding: 1.4rem;align-items: center;list-style: none;color: black;">
-                <img src="Assets/images/uploads/logo_ud.png" alt="Logo" style="width: 15rem;">
-                <li style="width: 6rem;color: black;margin-left: 2rem;"> <a href="#"
-                        style="text-decoration: none;">Inicio ▼</a></li>
-                <li style="width: 9rem;color: black;margin-left: 2rem;"><a href="#"
-                        style="text-decoration: none;">Acerca de ▼</a>
-                </li>
-                <li style="width: 9rem;color: black;margin-left: 2rem;"><a href="#"
-                        style="text-decoration: none;">Contacto ▼</a></li>
-            </ul>
-        </nav>
-    </header>
-</div>
+<?php include 'header.html'; ?>
 
 <body>
     <div class="card">

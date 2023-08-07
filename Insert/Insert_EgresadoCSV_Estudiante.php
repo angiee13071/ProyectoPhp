@@ -59,7 +59,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     if ($student_count > 0) {
         $insertion_error = true;
         // El estudiante ya existe en la tabla 'estudiante', proceder con la inserción en 'graduado'
-               echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El egresdo con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
+               echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El egresado con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
 
        
     } else {

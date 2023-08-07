@@ -5,14 +5,55 @@
 body {
   background-color: white;
   color: black;
-  text-align: center;
+  /* text-align: center; */
   font-family: system-ui;
   font-size: 1.6rem;
   line-height: 2.5rem;
+  margin: 0;
+  padding: 0;
 }
-.header{
-  
+
+/* styles.css */
+
+
+/* Estilos para el contenedor del encabezado */
+.header-container {
+  background: linear-gradient(95deg, #FEFBFB, #FFBF58, #FF8F46, #FCD96C);
 }
+
+/* Estilos para el encabezado */
+header {
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.logo {
+  width: 15rem;
+
+}
+
+/* Estilos para la navegación */
+nav {
+  color: black;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  width: 9rem;
+  margin-left: 2rem;
+}
+
+/* Resto de tus estilos... */
+
 .card {
   display: flex;
   flex-direction: column;
@@ -44,6 +85,7 @@ body {
   width: 250px;
   height: 47px;
   background-color: rgb(10, 10, 10);
+  text-align: center;
   color: white;
   text-decoration: none;
   font-size: 18px;
@@ -59,6 +101,7 @@ body {
   width: 250px;
   height: 47px;
   background-color: rgb(10, 10, 10);
+  text-align: center;
   color: white;
   text-decoration: none;
   font-size: 18px;
@@ -74,6 +117,7 @@ body {
     width: 250px;
     height: 47px;
     background-color: rgb(255 255 255);
+    text-align: center;
     color: black;
     text-decoration: none;
     font-size: 18px;
@@ -89,6 +133,7 @@ body {
   width: 250px;
   height: 47px;
   background-color: #fdd56ade;
+  text-align: center;
   color: black;
   text-decoration: none;
   font-size: 18px;
@@ -178,6 +223,7 @@ text-decoration: none;
   width: 250px;
   height: 47px;
   background-color: rgb(255 255 255);
+  text-align: center;
   color: black;
   text-decoration: none;
   font-size: 18px;
@@ -189,4 +235,24 @@ text-decoration: none;
 }
 .oculto {
   display: none;
+}
+.ETL{
+  font-family: system-ui;margin-left: 2rem;font-size:1.6rem;line-height: 2.5rem;
+}
+.button_ETL{
+  position: absolute;
+  /* bottom: 20px;
+  right: 20px; */
+  width: 50px;
+  height: 50px;
+  background-color: rgb(5, 5, 5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  line-height: 50px;
+  cursor: pointer;
+  top: 3.5rem;
+  right: 3rem;
+
 }
