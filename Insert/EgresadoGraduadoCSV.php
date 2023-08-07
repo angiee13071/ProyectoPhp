@@ -58,26 +58,23 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         // El estudiante ya existe en la tabla 'graduado', mostrar una alerta o hacer otra acción si lo deseas
         echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante con ID $id_estudiante ya existe en la tabla GRADUADO. Se omitirá la inserción.<br>";
     } else {
+     // Consultar el id_periodo que coincide con el año y el semestre
+     $sql_periodo = "SELECT id_periodo FROM periodo WHERE anio = ? AND semestre = ?";
+     $stmt_periodo = $conn->prepare($sql_periodo);
+     if ($stmt_periodo) {
+         $stmt_periodo->bind_param("ii", $year, $semestre);
+         $stmt_periodo->execute();
+         $stmt_periodo->bind_result($id_periodo);
+         $stmt_periodo->fetch();
+         $stmt_periodo->close();
+     } else {
+         echo "Error en la consulta preparada para obtener id_periodo: " . $conn->error;
+         exit;
+     }
+
         // Preparar la consulta SQL
-    $sql = "INSERT INTO graduado (id_graduado, id_estudiante, id_periodo, fecha_grado, promedio)
-    VALUES (?, ?, ?, ?, ?)";
-
-        // Para obtener mes y semestre de periodo
-        // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
-        $year = mysqli_real_escape_string($conn, $year);
-        $semestre = mysqli_real_escape_string($conn, $semestre);
-        // Consultar el id_periodo que coincide con el año y el semestre
-        $sql_periodo = "SELECT id_periodo FROM periodo WHERE año = '$year' AND semestre = '$semestre'";
-        $result_periodo = $conn->query($sql_periodo);
-
-        // Verificar si se encontró el id_periodo
-        if ($result_periodo && $result_periodo->num_rows > 0) {
-            $row = $result_periodo->fetch_assoc();
-            $id_periodo = $row['id_periodo'];
-        } else {
-            // Si no se encontró el id_periodo, se coloca por defecto 1
-            $id_periodo = 0;
-        }
+        $sql = "INSERT INTO graduado (id_graduado, id_estudiante, id_periodo, fecha_grado, promedio)
+        VALUES (?, ?, ?, ?, ?)";
 
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
