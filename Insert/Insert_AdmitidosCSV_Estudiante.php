@@ -4,7 +4,7 @@
 require_once '../ConexionBD.php';
 
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_de_admitidos.csv";
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
@@ -35,36 +35,21 @@ $insertion_error = false;
 
 // Insertar los datos en la tabla 'graduado'
 for ($i = 2; $i < count($data_matrix); $i++) {
-    $id_estudiante = $data_matrix[$i][6];
-    $genero='NO REGISTRA';
-    $nombres = $data_matrix[$i][7];
-    $carrera= $data_matrix[$i][2];
-    $documento = $data_matrix[$i][8];
-    $estrato=null; 
-    $localidad='NO APLICA';
-    $genero_genero='NO REGISTRA';
-    $tipo_inscripcion='NO APLICA';
-    $estado = "ESTUDIANTE GRADUADO";
-    $id_programa= $data_matrix[$i][1];
-    $promedio = $data_matrix[$i][15];
-    $pasantia = $data_matrix[$i][16];
-    $fecha_grado = $data_matrix[$i][9];
+    $id_estudiante = $data_matrix[$i][5];
+    $nombres = $data_matrix[$i][7]+$data_matrix[$i][8];
+    $carrera= $data_matrix[$i][1];
+    $documento=$data_matrix[$i][6];
+    $estrato =$data_matrix[$i][13];
+    $puntaje_icfes =$data_matrix[$i][12];
+    $tipo_inscripcion =$data_matrix[$i][10];
+    $estado ='ADMITIDO';
+    $id_programa=$data_matrix[$i][0];
+    $periodo = $data_matrix[$i][4];
     // Calcular el semestre según el mes y el id_periodo
-    $year = date('Y', strtotime($fecha_grado));
-    $month = date('n', strtotime($fecha_grado));
-    $semestre = ($month <= 6) ? 1 : 2;
+    $year = date('Y', strtotime($periodo));
+    $month = date('n', strtotime($periodo));
+   
   
-    
-    if ($id_programa !== "578" && $id_programa !== "678") {
-      if ($carrera === "TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)") {
-          $id_programa = "578";
-      } elseif ($carrera === "INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)") {
-          $id_programa = "678";
-      } else {
-          // Si no es ninguna de las carreras válidas, continuamos con el siguiente registro
-          continue;
-      }
-  }
    
 
     // Verificar si el estudiante ya existe en la tabla 'estudiante'
@@ -84,7 +69,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
        
     } else {
       // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO estudiante (id_estudiante, genero, nombres, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa, promedio, pasantia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $sql = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, estrato, puntaje_icfes, tipo_inscripcion, estado, id_programa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?s)";
 
 // Para obtener mes y semestre de periodo
 // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
@@ -108,11 +93,11 @@ $stmt = $conn->prepare($sql);
 
 // Asignar los valores a los parámetros de la consulta
 // Ejecutar la consulta
-$stmt->bind_param("isssiissssids", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero_genero, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia);
+$stmt->bind_param("issssissssiis", $id_estudiante, $nombres, $carrera, $documento, $estrato, $puntaje_icfes, $tipo_inscripcion, $estado, $id_programa);
 
 if (!$stmt->execute()) {
   $insertion_error = true;
-  echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: ". $stmt->error ,"<br>";
+  echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El admitido con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: ". $stmt->error ,"<br>";
 
 } else {
   $insertion_error = false;
@@ -128,7 +113,7 @@ $conn->close();
 
 // Mostrar mensaje de éxito si no se encontraron estudiantes duplicados
 if (!$insertion_error) {
-    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Egresados insertados en la tabla ESTUDIANTE. <br>';
+    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Admitidos insertados en la tabla ESTUDIANTE. <br>';
 }
 
 ?>

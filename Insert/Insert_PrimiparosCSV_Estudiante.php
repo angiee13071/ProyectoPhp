@@ -56,7 +56,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     // $estrato = null;
     // $localidad = null; // Se obtiene el valor de la columna "Localidad"
     $tipo_inscripcion = $data_matrix[$i][8];
-    $estado = $data_matrix[$i][11]; // Se obtiene el valor de la columna "Estado"
+    $estado = $data_matrix[$i][12]; // Se obtiene el valor de la columna "Estado"
     $id_programa = $data_matrix[$i][0];
     // $genero = null; // Define la variable $genero
 
