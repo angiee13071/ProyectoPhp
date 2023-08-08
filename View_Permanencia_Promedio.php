@@ -21,31 +21,40 @@
             <canvas id="permanencia-chart"></canvas>
         </div>
         <div>
-            <select id="chart-carrer">
+            <select id="chart-type">
+                <option value="line">Gráfico de líneas</option>
+                <option value="bar">Gráfico de columnas</option>
+            </select>
+        </div>
+        <div>
+            <select id="chart-carrera">
                 <option value="all">Todas las carreras</option>
                 <option value="tec">Tecnología en sistematización de datos</option>
                 <option value="ing">Ingeniería telemática</option>
             </select>
         </div>
-        <div>
-            <select id="chart-type">
-                <option value="line">Gráfico de líneas</option>
-                <option value="bar">Gráfico de columnas</option>
-            </select>
-            <button class="arrow-button" onclick="goBack()">&#8592;</button>
-        </div>
+        <button class="arrow-button" onclick="goBack()">&#8592;</button>
+
 
         <!-- Mostrar el promedio ponderado -->
         <?php
         include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
 
-        $cohortes = [];
-        $promediosPonderados = [];
+         //grafica 1
+       $cohortes = [];
+       $permanencias = [];
+       //grafica 2
+       $cohortesTec = [];
+       $permanenciasTec = [];
+       //grafica 3
+       $cohortesIng = [];
+       $permanenciasIng = [];
 
         // Realiza la consulta con la condición de carrera
-        $carrera = isset($_GET['carrera']) ? $_GET['carrera'] : 'all';
-
-        $query = "SELECT
+        // $carrera = isset($_GET['carrera']) ? $_GET['carrera'] : 'all';
+        function fetchData($carrera) {
+            global $conn, $cohortes, $permanencias,$cohortesTec,$permanenciasTec,$cohortesIng,$permanenciasIng;
+            $query = "SELECT
             CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
             CONCAT(p.anio, '-', (p.semestre - 1)) AS periodo_anterior,
             p.id_periodo,
@@ -73,18 +82,43 @@
         if ($result->num_rows > 0) {
             $sumaPonderada = 0;
             $totalPeriodos = 0;
-        
             while ($row = $result->fetch_assoc()) {
                 $totalPeriodos++;
                 $sumaPonderada += floatval($row['permanencia']); // Suma de las permanencias
                 $promedioPonderado = ($totalPeriodos > 0) ? ($sumaPonderada / $totalPeriodos) : 0;
-        
-                $cohortes[] = $row['periodo_actual'];
-                $promediosPonderados[] = floatval($promedioPonderado); // Convertir el valor a número usando floatval()
+                if($carrera=== 'all'){
+                    $cohortes[] = $row['periodo_actual'];
+                    $permanencias[] = floatval($promedioPonderado);
+                }else if($carrera === 'tec'){
+                    $cohortesTec[] = $row['periodo_actual'];
+                    $permanenciasTec[] =floatval($promedioPonderado);
+              }else if($carrera === 'ing'){
+                $cohortesIng[] = $row['periodo_actual'];
+                $permanenciasIng[] = floatval($promedioPonderado);
             }
+               
+            }
+         
         }
+        // if ($result->num_rows > 0) {
+        //     $sumaPonderada = 0;
+        //     $totalPeriodos = 0;
+        
+        //     while ($row = $result->fetch_assoc()) {
+        //         $totalPeriodos++;
+        //         $sumaPonderada += floatval($row['permanencia']); // Suma de las permanencias
+        //         $promedioPonderado = ($totalPeriodos > 0) ? ($sumaPonderada / $totalPeriodos) : 0;
+        
+        //         $cohortes[] = $row['periodo_actual'];
+        //         $promediosPonderados[] = floatval($promedioPonderado); // Convertir el valor a número usando floatval()
+        //     }
+        // }
+        }
+        fetchData('all');
+        fetchData('tec');
+        fetchData('ing');
 
-        $conn->close();
+        // $conn->close();
         ?>
 
         <!-- Fin del bloque para mostrar el promedio ponderado -->
@@ -94,24 +128,18 @@
     // Crear la gráfica inicial
     var ctx = document.getElementById('permanencia-chart').getContext('2d');
     var chartTypeSelect = document.getElementById('chart-type');
-    var chartSelectCarrer = document.getElementById('chart-carrer');
+    var chartCarreraSelect = document.getElementById('chart-carrera');
     var chart;
 
     // Función para crear el gráfico
-    function createChart(chartType) {
+    function createChart(chartType, labels, dataset) {
         if (chart) {
             chart.destroy(); // Destruir el gráfico existente si ya se ha creado
         }
 
         var data = {
-            labels: <?php echo json_encode($cohortes); ?>,
-            datasets: [{
-                label: 'Promedio Ponderado hasta cada Período',
-                data: <?php echo json_encode($promediosPonderados); ?>,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
+            labels: labels,
+            datasets: [dataset]
         };
 
         var options = {
@@ -126,14 +154,57 @@
         });
     }
 
-    // Evento de cambio de tipo de gráfico
-    chartTypeSelect.addEventListener('change', function() {
+    // Función para actualizar el gráfico con la carrera seleccionada
+    // Función para actualizar el gráfico con la carrera seleccionada
+    function updateChart() {
         var selectedType = chartTypeSelect.value;
-        createChart(selectedType);
-    });
+        var selectedCarrera = chartCarreraSelect.value;
+        var dataset;
+
+        if (selectedCarrera === 'all') {
+            dataset = {
+                label: 'TODAS LAS CARRERAS',
+                data: <?php echo json_encode($permanencias); ?>,
+                backgroundColor: 'rgba(255, 159, 49, 0.87)',
+                borderColor: 'rgba(255, 159, 49, 0.87)',
+                borderWidth: 1
+            };
+        } else if (selectedCarrera === 'tec') {
+            dataset = {
+                label: 'TECNOLOGIA EN SISTEMATIZACION DE DATOS',
+                data: <?php echo json_encode($permanenciasTec); ?>,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            };
+        } else if (selectedCarrera === 'ing') {
+            dataset = {
+                label: 'INGENIERIA EN TELEMATICA',
+                data: <?php echo json_encode($permanenciasIng); ?>,
+                backgroundColor: 'rgba(0, 255, 0, 0.58)',
+                borderColor: 'rgba(0, 255, 0, 0.58)',
+                borderWidth: 1
+            };
+        }
+
+        createChart(selectedType, <?php echo json_encode($cohortes); ?>, dataset);
+    }
+
+
+    // Evento de cambio de tipo de gráfico
+    chartTypeSelect.addEventListener('change', updateChart);
+
+    // Evento de cambio de carrera
+    chartCarreraSelect.addEventListener('change', updateChart);
 
     // Crear el gráfico inicial
-    createChart(chartTypeSelect.value);
+    createChart(chartTypeSelect.value, <?php echo json_encode($cohortes); ?>, {
+        label: 'Todas las carreras',
+        data: <?php echo json_encode($permanencias); ?>,
+        backgroundColor: 'rgba(255, 159, 49, 0.87)',
+        borderColor: 'rgba(255, 159, 49, 0.87)',
+        borderWidth: 1
+    });
     </script>
     <script>
     function goBack() {
