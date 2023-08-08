@@ -20,16 +20,16 @@
             <canvas id="permanencia-chart"></canvas>
         </div>
         <div>
-            <select id="chart-carrer">
-                <option value="all">Todas las carreras</option>
-                <option value="tec">Tecnología en sistematización de datos</option>
-                <option value="ing">Ingeniería telemática</option>
-            </select>
-        </div>
-        <div>
             <select id="chart-type">
                 <option value="line">Gráfico de líneas</option>
                 <option value="bar">Gráfico de columnas</option>
+            </select>
+        </div>
+        <div>
+            <select id="chart-carrera">
+                <option value="all">Todas las carreras</option>
+                <option value="tec">Tecnología en sistematización de datos</option>
+                <option value="ing">Ingeniería telemática</option>
             </select>
         </div>
         <button class="arrow-button" onclick="goBack()">&#8592;</button>
@@ -40,12 +40,20 @@
     <?php
         include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
 
+        //grafica 1
         $cohortes = [];
         $permanencias = [];
+        //grafica 2
+        $cohortesTec = [];
+        $permanenciasTec = [];
+        //grafica 3
+        $cohortesIng = [];
+        $permanenciasIng = [];
+ 
 
         // Función para obtener los datos dependiendo de la carrera seleccionada
         function fetchData($carrera) {
-            global $conn, $cohortes, $permanencias;
+            global $conn, $cohortes, $permanencias,$cohortesTec,$permanenciasTec,$cohortesIng,$permanenciasIng;
 
             $query = "SELECT
             CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
@@ -77,51 +85,46 @@
 
             $result = $conn->query($query);
 
+          
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    $cohortes[] = $row['periodo_actual'];
-                    $permanencias[] = floatval($row['permanencia']);
+                    if($carrera=== 'all'){
+                        $cohortes[] = $row['periodo_actual'];
+                        $permanencias[] = floatval($row['permanencia']);
+                    }else if($carrera === 'tec'){
+                        $cohortesTec[] = $row['periodo_actual'];
+                        $permanenciasTec[] = floatval($row['permanencia']);
+                  }else if($carrera === 'ing'){
+                    $cohortesIng[] = $row['periodo_actual'];
+                    $permanenciasIng[] = floatval($row['permanencia']);
                 }
+                   
+                }
+             
             }
         }
 
         // Obtener datos por defecto (Todas las carreras)
         fetchData('all');
+        fetchData('tec');
+        fetchData('ing');
         ?>
 
     // Crear la gráfica inicial
     var ctx = document.getElementById('permanencia-chart').getContext('2d');
     var chartTypeSelect = document.getElementById('chart-type');
-    var chartSelectCarrer = document.getElementById('chart-carrer');
+    var chartCarreraSelect = document.getElementById('chart-carrera');
     var chart;
 
-    // Función para filtrar los datos por carrera y actualizar el gráfico
-    function updateChart() {
-        var selectedCarrera = chartSelectCarrer.value;
-
-        // Obtener los datos correspondientes a la carrera seleccionada
-        fetchData(selectedCarrera);
-
-        // Actualizar la gráfica con los datos filtrados
-        createChart(chartTypeSelect.value, <?php echo json_encode($cohortes); ?>,
-            <?php echo json_encode($permanencias); ?>);
-    }
-
     // Función para crear el gráfico
-    function createChart(chartType, cohortesData, permanenciasData) {
+    function createChart(chartType, labels, dataset) {
         if (chart) {
             chart.destroy(); // Destruir el gráfico existente si ya se ha creado
         }
 
         var data = {
-            labels: cohortesData,
-            datasets: [{
-                label: 'Permanencia por Semestre',
-                data: permanenciasData,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
+            labels: labels,
+            datasets: [dataset]
         };
 
         var options = {
@@ -136,21 +139,57 @@
         });
     }
 
-    // Evento de cambio de tipo de gráfico
-    chartTypeSelect.addEventListener('change', function() {
+    // Función para actualizar el gráfico con la carrera seleccionada
+    // Función para actualizar el gráfico con la carrera seleccionada
+    function updateChart() {
         var selectedType = chartTypeSelect.value;
-        createChart(selectedType, <?php echo json_encode($cohortes); ?>,
-            <?php echo json_encode($permanencias); ?>);
-    });
+        var selectedCarrera = chartCarreraSelect.value;
+        var dataset;
+
+        if (selectedCarrera === 'all') {
+            dataset = {
+                label: 'TODAS LAS CARRERAS',
+                data: <?php echo json_encode($permanencias); ?>,
+                backgroundColor: 'rgba(255, 159, 49, 0.87)',
+                borderColor: 'rgba(255, 159, 49, 0.87)',
+                borderWidth: 1
+            };
+        } else if (selectedCarrera === 'tec') {
+            dataset = {
+                label: 'TECNOLOGIA EN SISTEMATIZACION DE DATOS',
+                data: <?php echo json_encode($permanenciasTec); ?>,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            };
+        } else if (selectedCarrera === 'ing') {
+            dataset = {
+                label: 'INGENIERIA EN TELEMATICA',
+                data: <?php echo json_encode($permanenciasIng); ?>,
+                backgroundColor: 'rgba(0, 255, 0, 0.58)',
+                borderColor: 'rgba(0, 255, 0, 0.58)',
+                borderWidth: 1
+            };
+        }
+
+        createChart(selectedType, <?php echo json_encode($cohortes); ?>, dataset);
+    }
+
+
+    // Evento de cambio de tipo de gráfico
+    chartTypeSelect.addEventListener('change', updateChart);
 
     // Evento de cambio de carrera
-    chartSelectCarrer.addEventListener('change', function() {
-        updateChart();
-    });
+    chartCarreraSelect.addEventListener('change', updateChart);
 
     // Crear el gráfico inicial
-    createChart(chartTypeSelect.value, <?php echo json_encode($cohortes); ?>,
-        <?php echo json_encode($permanencias); ?>);
+    createChart(chartTypeSelect.value, <?php echo json_encode($cohortes); ?>, {
+        label: 'Todas las carreras',
+        data: <?php echo json_encode($permanencias); ?>,
+        backgroundColor: 'rgba(255, 159, 49, 0.87)',
+        borderColor: 'rgba(255, 159, 49, 0.87)',
+        borderWidth: 1
+    });
     </script>
     <script>
     function goBack() {
