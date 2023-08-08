@@ -75,13 +75,13 @@ nav {
   overflow-y: scroll;
 
 }
-/* Firefox */
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: #888888 #8b8b8b;
+  scrollbar-color: #acabab #8b8b8b;
 }
 
-/* Chrome, Edge and Safari */
+
 *::-webkit-scrollbar {
   width: 6px;
   width: 6px;
@@ -96,7 +96,7 @@ nav {
 }
 
 *::-webkit-scrollbar-track:active {
-  background-color: #000000;
+  background-color: #949494;
 }
 
 *::-webkit-scrollbar-thumb {
