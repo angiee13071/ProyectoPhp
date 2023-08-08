@@ -33,6 +33,8 @@ CREATE TABLE estudiante (
   tipo_inscripcion VARCHAR(255),
   estado VARCHAR(255),
   id_programa INT,
+  promedio FLOAT,
+  pasantia VARCHAR(255),
   FOREIGN KEY (id_programa) REFERENCES programa(id_programa)
 );
 
@@ -50,7 +52,8 @@ CREATE TABLE graduado (
   id_estudiante BIGINT,
   id_periodo INT,
   fecha_grado DATE,
-  promedio FLOAT,
+   promedio FLOAT,
+  pasantia VARCHAR(255),
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
 );
@@ -161,7 +164,7 @@ select * from matriculado;
 select * from total;
 
 select * from estudiante where estado='ESTUDIANTE MATRICULADO' and id_programa='678';
--- query para obtener permanencia
+-- query para obtener permanencia por cohorte
 SELECT
             CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
             CONCAT(p.anio, '-', (p.semestre - 1)) AS periodo_anterior,
@@ -182,3 +185,31 @@ SELECT
             periodo_actual, periodo_anterior, p.id_periodo, p.cohorte, e.carrera 
             ORDER BY
             p.anio, p.semestre;
+-- query para obtener permanencia por año
+SELECT
+            CONCAT(p.anio) AS anio_actual,
+            CONCAT(p.anio-1) AS anio_anterior,
+            p.id_periodo,
+            COUNT(DISTINCT m.id_estudiante) AS matriculado,
+            FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia,
+            e.carrera 
+            FROM
+            periodo p
+            LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
+            LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante 
+            WHERE
+            m.estado_matricula = 'ESTUDIANTE MATRICULADO' 
+			-- and e.carrera = 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)'
+           --  AND e.carrera = 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)'
+            GROUP BY
+            p.anio, p.semestre, p.id_periodo, e.carrera
+        ORDER BY
+            p.anio, p.semestre;
+-- datos generales de permanencia
+SELECT COUNT(*) AS total
+FROM estudiante
+WHERE estado = 'ESTUDIANTE MATRICULADO'
+AND id_programa = '678';
+select * from estudiante;
+SELECT localidad, genero, tipo_inscripcion, estado FROM estudiante WHERE id_programa='578';
+SELECT localidad, genero, tipo_inscripcion,estado, carrera FROM estudiante WHERE id_programa='578'

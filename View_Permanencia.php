@@ -18,7 +18,7 @@
     <a class="button1" href="http://localhost/ProyectoPhp/View_Permanencia_Semestre.php">Permanencia por Semestre</a>
     <a class="button1" href="http://localhost/ProyectoPhp/View_Permanencia_Anio.php">Permanencia por Año</a>
     <a class="button1" href="http://localhost/ProyectoPhp/View_Permanencia_Promedio.php">Promedio acumulado</a>
-    <a class="button1" href="http://localhost/ProyectoPhp/View_Permanencia_General.php">Datos generales</a>
+    <a class="button1" href="http://localhost/ProyectoPhp/View_Data_General.php">Datos generales</a>
     <button class="arrow-button" onclick="goBack()">&#8592;</button>
 
 </div>

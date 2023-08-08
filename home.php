@@ -17,6 +17,9 @@
     <a class="buttonBD" href="http://localhost/ProyectoPhp/TablasBD.php">Ver base de datos</a>
     <a class="button" href="http://localhost/ProyectoPhp/View_Desercion.php">Deserción estudiantil</a>
     <a class="button1" href="http://localhost/ProyectoPhp/View_Permanencia.php">Permanencia estudiantil</a>
+    <a class="buttonData" href="http://localhost/ProyectoPhp/View_Data_General.php">Datos generales</a>
+
+
 </div>
 
 </html>

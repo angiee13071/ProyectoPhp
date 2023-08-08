@@ -87,6 +87,8 @@ $conn = getDBConnection();
                     <th>Tipo Inscripción</th>
                     <th>Estado</th>
                     <th>ID Programa</th>
+                    <th>Promedio_grado</th>
+                    <th>Pasantía</th>
                 </tr>
                 <?php
 
@@ -107,6 +109,8 @@ $conn = getDBConnection();
     echo "<td>" . $row['tipo_inscripcion'] . "</td>";
     echo "<td>" . $row['estado'] . "</td>";
     echo "<td>" . $row['id_programa'] . "</td>";
+    echo "<td>" . $row['promedio'] . "</td>";
+    echo "<td>" . $row['pasantia'] . "</td>";
     echo "</tr>";
   }
 

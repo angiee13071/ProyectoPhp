@@ -17,7 +17,7 @@
     <a class="button" href="http://localhost/ProyectoPhp/View_Desercion_Semestre.php">Deserción por semestre</a>
     <a class="button" href="http://localhost/ProyectoPhp/View_Desercion_Anio.php">Deserción por año</a>
     <a class="button" href="http://localhost/ProyectoPhp/View_Desercion_Promedio.php">Promedio acumulado</a>
-    <a class="button" href="http://localhost/ProyectoPhp/View_Desercion_General.php">Datos generales</a>
+    <a class="button" href="http://localhost/ProyectoPhp/View_Data_General.php">Datos generales</a>
     <button class="arrow-button" onclick="goBack()">&#8592;</button>
 
 </div>

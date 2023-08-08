@@ -43,6 +43,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $month = date('n', strtotime($fecha_grado));
     $semestre = ($month <= 6) ? 1 : 2;
     $promedio = $data_matrix[$i][15];
+    $pasantia = $data_matrix[$i][16];
     $nombres = $data_matrix[$i][7];
     $documento = $data_matrix[$i][8];
     $estado = "ESTUDIANTE GRADUADO";
@@ -64,7 +65,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
        
     } else {
       // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa, promedio, pasantia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 // Para obtener mes y semestre de periodo
 // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
@@ -88,7 +89,8 @@ $stmt = $conn->prepare($sql);
 
 // Asignar los valores a los parámetros de la consulta
 // Ejecutar la consulta
-$stmt->bind_param("ssssssssssi", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero, $tipo_inscripcion, $estado, $id_programa);
+$stmt->bind_param("issssissssiis", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero_genero, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia);
+
 if (!$stmt->execute()) {
   $insertion_error = true;
   echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: ". $stmt->error ,"<br>";

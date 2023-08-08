@@ -44,7 +44,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $month = date('n', strtotime($fecha_grado));
     $semestre = ($month <= 6) ? 1 : 2;
     $promedio = $data_matrix[$i][15];
-
+    $pasantia = $data_matrix[$i][16];
     // Verificar si el estudiante ya existe en la tabla 'graduado'
     $sql_check_existing = "SELECT COUNT(*) FROM graduado WHERE id_estudiante = ?";
     $stmt_check_existing = $conn->prepare($sql_check_existing);
@@ -74,15 +74,17 @@ for ($i = 2; $i < count($data_matrix); $i++) {
      }
 
         // Preparar la consulta SQL
-        $sql = "INSERT INTO graduado (id_graduado, id_estudiante, id_periodo, fecha_grado, promedio)
-        VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO graduado (id_graduado, id_estudiante, id_periodo, fecha_grado, promedio, pasantia)
+        VALUES (?, ?, ?, ?, ?, ?)";
 
         // Preparar la sentencia
         $stmt = $conn->prepare($sql);
 
         // Asignar los valores a los parámetros de la consulta
         // Ejecutar la consulta
-        $stmt->bind_param("iiiss", $id_graduado, $id_estudiante, $id_periodo, $fecha_grado, $promedio);
+        $stmt->bind_param("iissds", $id_graduado, $id_estudiante, $id_periodo, $fecha_grado, $promedio, $pasantia);
+
+
         if (!$stmt->execute()) {
             $insertion_error = true;
             // echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante ya existe en la tabla GRADUADO. Se omitirá la inserción.<br>";
