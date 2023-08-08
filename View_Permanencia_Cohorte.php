@@ -40,7 +40,7 @@
     // Obtener los datos de la tabla 'graduado' y 'estudiante'
     <?php
         include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
-//grafica 1
+        //grafica 1
         $cohortes = [];
         $permanencias = [];
         //grafica 2
