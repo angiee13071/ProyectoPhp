@@ -4,7 +4,7 @@ $labels = [];
 $data = [];
 
 // Obtener los datos generales de la tabla estudiante
-$query = "SELECT localidad, genero, tipo_inscripcion,estado, carrera, promedio, pasantia FROM estudiante";
+$query = "SELECT localidad, genero, tipo_inscripcion,estado, carrera, promedio, pasantia, puntaje_icfes FROM estudiante";
 $result = $conn->query($query);
 
 $localidades = array();
@@ -13,6 +13,7 @@ $tiposInscripcion = array();
 $estados = array();
 $promedios = array();
 $pasantias = array();
+$puntajes = array();
 
 if ($result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
@@ -21,6 +22,7 @@ if ($result->num_rows > 0) {
     $tiposInscripcion[] = $row['tipo_inscripcion'];
     $estados[] = $row['estado'];
     $promedios[] = $row['promedio'];
+    $puntajes[] = $row['puntaje_icfes'];
     if (isset($row['pasantia'])) {
         $pasantias[] = $row['pasantia'];
     } else {
@@ -60,6 +62,7 @@ $conn->close();
             <option value="estado">Estado del Estudiante</option>
             <option value="promedios">Promedios</option>
             <option value="pasantias">Pasantías</option>
+            <option value="puntajes">Puntaje Icfes</option>
         </select>
         <select id="chart-type-p" class="oculto" style="display: none;">
             <option value="doughnut">Gráfico de Torta</option>
@@ -111,6 +114,9 @@ $conn->close();
                 break;
             case 'pasantias':
                 datos = <?php echo json_encode($pasantias); ?>;
+                break;
+            case 'puntajes':
+                datos = <?php echo json_encode($puntajes); ?>;
                 break;
         }
 

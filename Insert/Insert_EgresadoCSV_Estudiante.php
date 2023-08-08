@@ -48,6 +48,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $id_programa= $data_matrix[$i][1];
     $promedio = $data_matrix[$i][15];
     $pasantia = $data_matrix[$i][16];
+    $puntaje_icfes = 0;
     $fecha_grado = $data_matrix[$i][9];
     // Calcular el semestre según el mes y el id_periodo
     $year = date('Y', strtotime($fecha_grado));
@@ -84,7 +85,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
        
     } else {
       // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa, promedio, pasantia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa, promedio, pasantia, puntaje_icfes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 
 // Para obtener mes y semestre de periodo
 // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
@@ -108,7 +109,7 @@ $stmt = $conn->prepare($sql);
 
 // Asignar los valores a los parámetros de la consulta
 // Ejecutar la consulta
-$stmt->bind_param("isssiissssids", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero_genero, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia);
+$stmt->bind_param("isssiissssidsd", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero_genero, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia,$puntaje_icfes);
 
 if (!$stmt->execute()) {
   $insertion_error = true;

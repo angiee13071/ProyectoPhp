@@ -35,6 +35,7 @@ CREATE TABLE estudiante (
   id_programa INT,
   promedio FLOAT,
   pasantia VARCHAR(255),
+  puntaje_icfes FLOAT,
   FOREIGN KEY (id_programa) REFERENCES programa(id_programa)
 );
 

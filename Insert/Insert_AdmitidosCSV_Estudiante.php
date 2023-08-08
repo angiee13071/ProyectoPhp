@@ -36,19 +36,33 @@ $insertion_error = false;
 // Insertar los datos en la tabla 'graduado'
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_estudiante = $data_matrix[$i][5];
-    $nombres = $data_matrix[$i][7]+$data_matrix[$i][8];
+    $nombres = $data_matrix[$i][8] . " " . $data_matrix[$i][7];
+    $genero='NO REGISTRA';
     $carrera= $data_matrix[$i][1];
-    $documento=$data_matrix[$i][6];
-    $estrato =$data_matrix[$i][13];
-    $puntaje_icfes =$data_matrix[$i][12];
-    $tipo_inscripcion =$data_matrix[$i][10];
-    $estado ='ADMITIDO';
-    $id_programa=$data_matrix[$i][0];
+    $documento = $data_matrix[$i][6];
+    $estrato=$data_matrix[$i][13]; 
+    $localidad='NO APLICA';
+    $genero_genero='NO REGISTRA';
+    $tipo_inscripcion=$data_matrix[$i][10];
+    $estado = "ESTUDIANTE ADMITIDO";
+    $id_programa= $data_matrix[$i][0];
+    $promedio = 'NO APLICA';
+    $pasantia = 'NO APLICA';
+    $puntaje_icfes = $data_matrix[$i][12];
     $periodo = $data_matrix[$i][4];
     // Calcular el semestre según el mes y el id_periodo
     $year = date('Y', strtotime($periodo));
     $month = date('n', strtotime($periodo));
-   
+    if ($id_programa !== "578" && $id_programa !== "678") {
+        if ($carrera === "TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)") {
+            $id_programa = "578";
+        } elseif ($carrera === "INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)") {
+            $id_programa = "678";
+        } else {
+            // Si no es ninguna de las carreras válidas, continuamos con el siguiente registro
+            continue;
+        }
+    }
   
    
 
@@ -69,7 +83,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
        
     } else {
       // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, estrato, puntaje_icfes, tipo_inscripcion, estado, id_programa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?s)";
+      $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa, promedio, pasantia, puntaje_icfes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 // Para obtener mes y semestre de periodo
 // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
@@ -93,7 +107,7 @@ $stmt = $conn->prepare($sql);
 
 // Asignar los valores a los parámetros de la consulta
 // Ejecutar la consulta
-$stmt->bind_param("issssissssiis", $id_estudiante, $nombres, $carrera, $documento, $estrato, $puntaje_icfes, $tipo_inscripcion, $estado, $id_programa);
+$stmt->bind_param("isssiissssidsd", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero_genero, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia,$puntaje_icfes);
 
 if (!$stmt->execute()) {
   $insertion_error = true;

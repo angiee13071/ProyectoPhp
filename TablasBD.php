@@ -79,16 +79,15 @@ $conn = getDBConnection();
                 <tr>
                     <th>ID Estudiante</th>
                     <th>Nombres</th>
-                    <th>Género</th>
                     <th>Carrera</th>
                     <th>Documento</th>
                     <th>Estrato</th>
                     <th>Localidad</th>
                     <th>Tipo Inscripción</th>
                     <th>Estado</th>
-                    <th>ID Programa</th>
                     <th>Promedio_grado</th>
                     <th>Pasantía</th>
+                    <th>Icfes</th>
                 </tr>
                 <?php
 
@@ -101,16 +100,15 @@ $conn = getDBConnection();
     echo "<tr>";
     echo "<td>" . $row['id_estudiante'] . "</td>";
     echo "<td>" . $row['nombres'] . "</td>";
-    echo "<td>" . $row['genero'] . "</td>";
     echo "<td>" . $row['carrera'] . "</td>";
     echo "<td>" . $row['documento'] . "</td>";
     echo "<td>" . $row['estrato'] . "</td>";
     echo "<td>" . $row['localidad'] . "</td>";
     echo "<td>" . $row['tipo_inscripcion'] . "</td>";
     echo "<td>" . $row['estado'] . "</td>";
-    echo "<td>" . $row['id_programa'] . "</td>";
     echo "<td>" . $row['promedio'] . "</td>";
     echo "<td>" . $row['pasantia'] . "</td>";
+    echo "<td>" . $row['puntaje_icfes'] . "</td>";
     echo "</tr>";
   }
 

@@ -52,7 +52,8 @@ require 'Insert_PrimiparosCSV_Primiparo.php';
 
 // Llamar y ejecutar el archivo EgresadoGraduadoCSV.php
  require 'Insert_EgresadoCSV_Graduado.php';
-
+ //Tomar el archivo admitidos para subirlo a la tabla estudiantes:
+ require 'Insert_AdmitidosCSV_Estudiante.php';
 // Llamar y ejecutar procedimiento almacenado para llenar tablas total y retirado
 require 'CalcularTotal.php';
 
