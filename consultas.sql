@@ -65,7 +65,16 @@ CREATE TABLE primiparo (
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
 );
-
+-- Crear la tabla 'admitidos'
+CREATE TABLE admitido (
+  id_admitido INT AUTO_INCREMENT PRIMARY KEY,
+  id_estudiante BIGINT,
+  id_periodo INT,
+  tipo_inscripcion VARCHAR(255),
+  puntaje_icfes FLOAT,
+  FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
+  FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
+);
 -- Crear la tabla 'matriculado'
 CREATE TABLE matriculado (
   id_matricula INT AUTO_INCREMENT PRIMARY KEY,
@@ -212,4 +221,5 @@ WHERE estado = 'ESTUDIANTE MATRICULADO'
 AND id_programa = '678';
 select * from estudiante;
 SELECT localidad, genero, tipo_inscripcion, estado FROM estudiante WHERE id_programa='578';
-SELECT localidad, genero, tipo_inscripcion,estado, carrera FROM estudiante WHERE id_programa='578'
+SELECT localidad, genero, tipo_inscripcion,estado, carrera, promedio, pasantia FROM estudiante where estado='ESTUDIANTE GRADUADO';
+SELECT localidad, genero, tipo_inscripcion,estado, carrera, promedio, pasantia FROM estudiante WHERE id_programa='578'

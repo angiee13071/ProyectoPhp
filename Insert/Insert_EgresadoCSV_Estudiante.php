@@ -36,8 +36,8 @@ $insertion_error = false;
 // Insertar los datos en la tabla 'graduado'
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_estudiante = $data_matrix[$i][6];
-    $genero='NO REGISTRA';
     $nombres = $data_matrix[$i][7];
+    $genero='NO REGISTRA';
     $carrera= $data_matrix[$i][2];
     $documento = $data_matrix[$i][8];
     $estrato=null; 
@@ -84,7 +84,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
        
     } else {
       // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO estudiante (id_estudiante, genero, nombres, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa, promedio, pasantia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa, promedio, pasantia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 // Para obtener mes y semestre de periodo
 // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
