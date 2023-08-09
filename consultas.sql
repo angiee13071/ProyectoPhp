@@ -259,3 +259,27 @@ GROUP BY
     p.anio, p.semestre, p.id_periodo, p.cohorte, e.carrera
 ORDER BY
     p.anio, p.semestre;
+-- promedio permanencia
+-- Calcular la tasa de permanencia por periodo
+-- Calcular la cantidad de estudiantes matriculados en cada periodo y sus periodos anteriores
+SELECT
+    periodo_actual,
+    matriculado_actual,
+    matriculado_anterior,
+    ROUND((matriculado_anterior / matriculado_actual) * 100) AS promedio_tasa_permanencia
+FROM (
+    SELECT
+        CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
+        COUNT(DISTINCT m.id_estudiante) AS matriculado_actual,
+        LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre) AS matriculado_anterior
+    FROM
+        periodo p
+    LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
+    LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante 
+    GROUP BY p.anio, p.semestre
+) AS subquery
+ORDER BY periodo_actual;
+
+
+
+

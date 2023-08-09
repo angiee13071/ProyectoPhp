@@ -55,17 +55,19 @@
         function fetchData($carrera) {
             global $conn, $cohortes, $permanencias,$cohortesTec,$permanenciasTec,$cohortesIng,$permanenciasIng;
             $query = "SELECT
-            CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
-            CONCAT(p.anio, '-', (p.semestre - 1)) AS periodo_anterior,
-            p.id_periodo,
-            p.cohorte,
-            COUNT(DISTINCT m.id_estudiante) AS matriculado,
-            FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia,
-            e.carrera 
-        FROM
-            periodo p
-        LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
-        LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante ";
+            periodo_actual,
+            matriculado_actual,
+            matriculado_anterior,
+            ROUND((matriculado_anterior / matriculado_actual) * 100) AS promedio_tasa_permanencia
+        FROM (
+            SELECT
+                CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
+                COUNT(DISTINCT m.id_estudiante) AS matriculado_actual,
+                LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre) AS matriculado_anterior
+            FROM
+                periodo p
+            LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
+            LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante ";
 
         if ($carrera === 'all') {
             $query .= "WHERE m.estado_matricula = 'ESTUDIANTE MATRICULADO' ";
@@ -75,26 +77,27 @@
             $query .= "WHERE m.estado_matricula = 'ESTUDIANTE MATRICULADO' AND e.carrera = 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)' ";
         }
 
-        $query .= "GROUP BY periodo_actual, periodo_anterior, p.id_periodo, p.cohorte, e.carrera 
-            ORDER BY p.anio, p.semestre;";
+        $query .= "GROUP BY p.anio, p.semestre
+        ) AS subquery
+        ORDER BY periodo_actual;";
 
         $result = $conn->query($query);
         if ($result->num_rows > 0) {
             $sumaPonderada = 0;
             $totalPeriodos = 0;
             while ($row = $result->fetch_assoc()) {
-                $totalPeriodos++;
-                $sumaPonderada += floatval($row['permanencia']); // Suma de las permanencias
-                $promedioPonderado = ($totalPeriodos > 0) ? ($sumaPonderada / $totalPeriodos) : 0;
+                // $totalPeriodos++;
+                // $sumaPonderada += floatval($row['permanencia']); // Suma de las permanencias
+                // $promedioPonderado = ($totalPeriodos > 0) ? ($sumaPonderada / $totalPeriodos) : 0;
                 if($carrera=== 'all'){
                     $cohortes[] = $row['periodo_actual'];
-                    $permanencias[] = floatval($promedioPonderado);
+                    $permanencias[] = $row['promedio_tasa_permanencia'];
                 }else if($carrera === 'tec'){
                     $cohortesTec[] = $row['periodo_actual'];
-                    $permanenciasTec[] =floatval($promedioPonderado);
+                    $permanenciasTec[] =$row['promedio_tasa_permanencia'];
               }else if($carrera === 'ing'){
                 $cohortesIng[] = $row['periodo_actual'];
-                $permanenciasIng[] = floatval($promedioPonderado);
+                $permanenciasIng[] = $row['promedio_tasa_permanencia'];
             }
                
             }
