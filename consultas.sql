@@ -145,7 +145,7 @@ BEGIN
         
         IF total_matriculados_periodo_anterior > 0 AND total_graduados_periodo_anterior > 0 THEN
             -- Calcular el valor de total_retirados solo si el período anterior existe
-            SET total_retirados = ((total_matriculados_periodo_anterior - total_graduados_periodo_anterior + primiparos) - matriculados); -- Cambio a matriculados del periodo actual
+            SET total_retirados = GREATEST(((total_matriculados_periodo_anterior - total_graduados_periodo_anterior + primiparos) - matriculados), 0);
         ELSE
             -- Si el período anterior no existe, asignar 0 al valor de total_retirados
             SET total_retirados = 0;
