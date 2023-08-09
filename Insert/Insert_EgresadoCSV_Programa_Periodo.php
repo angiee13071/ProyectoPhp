@@ -102,6 +102,7 @@ foreach ($data_matrix as $row) {
     $year = date('Y', strtotime($fecha_grado));
     $month = date('n', strtotime($fecha_grado));
     $semestre = ($month <= 6) ? 1 : 2;
+    $cohorte = ($month <= 6) ? 1 : 3;
 
     // Verificar si el período ya existe en la tabla periodo
     $sql_check_periodo = "SELECT COUNT(*) FROM periodo WHERE anio = ? AND semestre = ?";
@@ -118,7 +119,7 @@ foreach ($data_matrix as $row) {
     }
 
     // Insertar en la tabla periodo
-    $stmt_insert_periodo->bind_param("iii", $year, $semestre, $semestre);
+    $stmt_insert_periodo->bind_param("iii", $year, $semestre, $cohorte);
     if (!$stmt_insert_periodo->execute()) {
         $insertion_error = true;
         echo "Error al insertar datos en la tabla PERIODO: " . $stmt_insert_periodo->error, "<br>";

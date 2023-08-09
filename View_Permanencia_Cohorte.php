@@ -58,15 +58,15 @@
             CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
             CONCAT(p.anio, '-', (p.semestre - 1)) AS periodo_anterior,
             p.id_periodo,
-            p.cohorte,
+            CONCAT(p.anio, '-',p.cohorte ) AS cohorte,
             COUNT(DISTINCT m.id_estudiante) AS matriculado,
-            FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia,
+            FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante), 1) OVER (ORDER BY p.anio, p.semestre)) * 100, 1) AS permanencia,
             e.carrera 
-            FROM
+        FROM
             periodo p
-            LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
-            LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante 
-            WHERE
+        LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
+        LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante 
+        WHERE
             m.estado_matricula = 'ESTUDIANTE MATRICULADO'";
 
             if ($carrera === 'all') {
@@ -78,8 +78,8 @@
             }
 
             $query .= " GROUP BY
-            periodo_actual, periodo_anterior, p.id_periodo, p.cohorte, e.carrera 
-            ORDER BY
+            p.anio, p.semestre, p.id_periodo, e.carrera
+        ORDER BY
             p.anio, p.semestre;";
 
             $result = $conn->query($query);
@@ -87,13 +87,13 @@
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     if($carrera=== 'all'){
-                        $cohortes[] = $row['periodo_actual'];
+                        $cohortes[] = $row['cohorte'];
                         $permanencias[] = floatval($row['permanencia']);
                     }else if($carrera === 'tec'){
-                        $cohortesTec[] = $row['periodo_actual'];
+                        $cohortesTec[] = $row['cohorte'];
                         $permanenciasTec[] = floatval($row['permanencia']);
                   }else if($carrera === 'ing'){
-                    $cohortesIng[] = $row['periodo_actual'];
+                    $cohortesIng[] = $row['cohorte'];
                     $permanenciasIng[] = floatval($row['permanencia']);
                 }
                    

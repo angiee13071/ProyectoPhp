@@ -58,7 +58,7 @@
             anio_actual,
             SUM(matriculado_anterior) AS suma_matriculados_anterior,
             SUM(matriculado_actual) AS suma_matriculados_actual,
-            FORMAT((SUM(matriculado_anterior) / SUM(matriculado_actual)) * 100, 2) AS promedio_permanencia,
+            FORMAT((SUM(matriculado_anterior) / SUM(matriculado_actual)) * 100, 1) AS promedio_permanencia,
             carrera 
         FROM (
             SELECT
