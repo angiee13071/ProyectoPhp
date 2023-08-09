@@ -279,6 +279,60 @@ FROM (
     GROUP BY p.anio, p.semestre
 ) AS subquery
 ORDER BY periodo_actual;
+-- deserción año:
+SELECT 
+    periodo.anio,
+    (
+        (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
+        (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
+        (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
+    ) AS desertores,
+    (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos,
+    ROUND(((SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo) / (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)) * 100, 2) AS tasa_desercion
+FROM periodo
+ORDER BY periodo.anio;
+-- deserción semestre:
+SELECT 
+    periodo.anio,
+    (
+        (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
+        (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
+        (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
+    ) AS desertores,
+    (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos,
+    ROUND(((SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo) / (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)) * 100, 2) AS tasa_desercion
+FROM periodo
+ORDER BY periodo.anio;
+-- deserción cohorte:
+SELECT 
+    CONCAT(periodo.anio, '-', periodo.cohorte) AS cohorte_anio,
+    CASE
+        WHEN (
+            (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
+            (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
+            (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
+        ) < 0 THEN 0
+        ELSE (
+            (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
+            (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
+            (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
+        )
+    END AS desertores,
+    (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos,
+    ROUND(
+        CASE
+            WHEN (
+                (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
+                (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
+                (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
+            ) < 0 THEN 0
+            ELSE (
+                (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo) / (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)
+            ) * 100
+        END
+    , 2) AS tasa_desercion
+FROM periodo
+ORDER BY cohorte_anio;
 
 
 

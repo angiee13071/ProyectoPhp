@@ -36,25 +36,38 @@
     $promedios = [];
 
     $query = "SELECT
-                periodo.anio,
-                periodo.semestre,
-                (
-                  SELECT AVG(g.promedio)
-                  FROM graduado g
-                  INNER JOIN periodo p ON g.id_periodo = p.id_periodo
-                  WHERE p.id_periodo <= periodo.id_periodo
-                ) AS promedio_acumulado
-              FROM
-                periodo
-              ORDER BY
-                periodo.anio, periodo.semestre";
+    t1.anio,
+    t1.semestre,
+    CASE
+        WHEN t2.primiparos > 0 THEN
+            ROUND((t2.retirados / t2.primiparos) * 100, 2)
+        ELSE
+            0
+    END AS tasa_desercion
+FROM
+    periodo t1
+LEFT JOIN (
+    SELECT
+        p.id_periodo,
+        COUNT(DISTINCT pr.id_primiparo) AS primiparos,
+        COUNT(DISTINCT r.id_retiro) AS retirados
+    FROM
+        periodo p
+    LEFT JOIN primiparo pr ON p.id_periodo = pr.id_periodo
+    LEFT JOIN retirado r ON p.id_periodo = r.id_periodo
+    GROUP BY
+        p.id_periodo
+) t2 ON t1.id_periodo = t2.id_periodo
+ORDER BY
+    t1.anio, t1.semestre
+LIMIT 0, 1000;";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
         $anios[] = $row['anio'];
         $semestres[] = $row['semestre'];
-        $promedios[] = $row['promedio_acumulado'];
+        $promedios[] = $row['tasa_desercion'];
       }
     }
 

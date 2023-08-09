@@ -35,22 +35,44 @@
     $cohortes = [];
     $desertores = [];
     $primiparos = [];
-
-    $query = "SELECT p1.anio, p1.semestre, 
-              ((SELECT COUNT(*) FROM matriculado WHERE id_periodo = p2.id_periodo) - 
-              (SELECT COUNT(*) FROM graduado WHERE id_periodo = p2.id_periodo) +
-              (SELECT COUNT(*) FROM primiparo WHERE id_periodo = p2.id_periodo)) AS desertores,
-              (SELECT COUNT(*) FROM primiparo WHERE id_periodo = p2.id_periodo) AS primiparos
-              FROM periodo AS p1
-              INNER JOIN periodo AS p2 ON p2.anio = p1.anio AND p2.semestre = p1.semestre
-              ORDER BY p1.anio, p1.semestre";
+    $tasa_desercion = [];
+    $query = "SELECT 
+    CONCAT(periodo.anio, '-', periodo.cohorte) AS cohorte_anio,
+    CASE
+        WHEN (
+            (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
+            (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
+            (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
+        ) < 0 THEN 0
+        ELSE (
+            (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
+            (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
+            (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
+        )
+    END AS desertores,
+    (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos,
+    ROUND(
+        CASE
+            WHEN (
+                (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
+                (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
+                (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
+            ) < 0 THEN 0
+            ELSE (
+                (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo) / (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)
+            ) * 100
+        END
+    , 2) AS tasa_desercion
+FROM periodo
+ORDER BY cohorte_anio;";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
-        $cohortes[] = $row['anio'] . "-" . $row['semestre'];
+        $cohortes[] = $row['cohorte_anio'];
         $desertores[] = $row['desertores'];
         $primiparos[] = $row['primiparos'];
+        $tasa_desercion[]=$row['tasa_desercion'];
       }
     }
 
@@ -73,12 +95,18 @@
             datasets: [{
                 label: 'Desertores',
                 data: <?php echo json_encode($desertores); ?>,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(255, 159, 49, 0.87)',
+                borderColor: 'rgba(255, 159, 49, 0.87)',
                 borderWidth: 1
             }, {
                 label: 'Primíparos',
                 data: <?php echo json_encode($primiparos); ?>,
+                backgroundColor: 'rgba(0, 255, 0, 0.58)',
+                borderColor: 'rgba(0, 255, 0, 0.58)',
+                borderWidth: 1
+            }, {
+                label: 'Tasa de deserción',
+                data: <?php echo json_encode($tasa_desercion); ?>,
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1
