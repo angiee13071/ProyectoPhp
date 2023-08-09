@@ -19,10 +19,19 @@
         <div class="chart-container">
             <canvas id="promedio-chart"></canvas>
         </div>
-        <select id="chart-type">
-            <option value="line">Gráfico de líneas</option>
-            <option value="bar">Gráfico de barras</option>
-        </select>
+        <div>
+            <select id="chart-type">
+                <option value="line">Gráfico de líneas</option>
+                <option value="bar">Gráfico de columnas</option>
+            </select>
+        </div>
+        <div>
+            <select id="chart-carrera">
+                <option value="all">Todas las carreras</option>
+                <option value="tec">Tecnología en sistematización de datos</option>
+                <option value="ing">Ingeniería telemática</option>
+            </select>
+        </div>
         <button class="arrow-button" onclick="goBack()">&#8592;</button>
     </div>
 
