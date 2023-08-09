@@ -34,11 +34,13 @@
     $anios = [];
     $desertores = [];
     $primiparos = [];
-
+//(retirados año a/matriculados año a-2)*100
     $query = "SELECT periodo.anio, 
-              ((SELECT COUNT(*) FROM matriculado WHERE id_periodo = periodo.id_periodo) - 
+              (
+                (SELECT COUNT(*) FROM matriculado WHERE id_periodo = periodo.id_periodo) - 
               (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) +
-              (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)) AS desertores,
+              (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)
+              ) AS desertores,
               (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos
               FROM periodo
               ORDER BY periodo.anio";

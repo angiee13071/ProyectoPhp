@@ -99,6 +99,8 @@ CREATE TABLE total (
   FOREIGN KEY (id_programa) REFERENCES programa(id_programa)
 );
 -- Procedimiento almacenado para calcular totales:
+-- procedimiento almacenado totales:
+-- procedimiento almacenado totales:
 DELIMITER $$
 CREATE PROCEDURE fill_total()
 BEGIN
@@ -111,7 +113,6 @@ BEGIN
   DECLARE total_matriculados_periodo_anterior INT DEFAULT 0;
   DECLARE total_graduados_periodo_anterior INT DEFAULT 0;
   DECLARE total_retirados INT DEFAULT 0;
- 
   
   DECLARE done INT DEFAULT FALSE;
   
@@ -119,45 +120,54 @@ BEGIN
     SELECT id_periodo, id_programa FROM periodo
     JOIN programa ON 1 = 1;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  
   OPEN cur;
+  
   read_loop: LOOP
     FETCH cur INTO periodo_id, programa_id;
     
     IF done THEN
         LEAVE read_loop;
     END IF;
-    
 
     SELECT COUNT(*) INTO primiparos FROM primiparo WHERE id_periodo = periodo_id;
     SELECT COUNT(*) INTO matriculados FROM matriculado WHERE id_periodo = periodo_id;
     SELECT COUNT(*) INTO graduados FROM graduado WHERE id_periodo = periodo_id;
-    SELECT COUNT(*) INTO retirados FROM retirado WHERE id_periodo = periodo_id;
-   -- Verificar si el período anterior existe
-    SET total_matriculados_periodo_anterior = 0;
-    SET total_graduados_periodo_anterior = 0;
-    SELECT COUNT(*) INTO total_matriculados_periodo_anterior FROM matriculado WHERE id_periodo = periodo_id - 1;
-    SELECT COUNT(*) INTO total_graduados_periodo_anterior FROM graduado WHERE id_periodo = periodo_id - 1;
+    SELECT COUNT(*) INTO retirados FROM matriculado WHERE id_periodo = periodo_id; -- Cambio a matriculados del periodo actual
     
-    IF total_matriculados_periodo_anterior > 0 AND total_graduados_periodo_anterior > 0 THEN
-        -- Calcular el valor de total_retirados solo si el período anterior existe
-        SET total_retirados = ((total_matriculados_periodo_anterior - total_graduados_periodo_anterior) + primiparos - retirados);
-        INSERT INTO retirado (id_periodo, total) VALUES (periodo_id, retirados);
+    -- Verificar si el período anterior existe
+    IF periodo_id > 1 THEN
+        SET total_matriculados_periodo_anterior = 0;
+        SET total_graduados_periodo_anterior = 0;
+        
+        SELECT COUNT(*) INTO total_matriculados_periodo_anterior FROM matriculado WHERE id_periodo = periodo_id - 1;
+        SELECT COUNT(*) INTO total_graduados_periodo_anterior FROM graduado WHERE id_periodo = periodo_id - 1;
+        
+        IF total_matriculados_periodo_anterior > 0 AND total_graduados_periodo_anterior > 0 THEN
+            -- Calcular el valor de total_retirados solo si el período anterior existe
+            SET total_retirados = ((total_matriculados_periodo_anterior - total_graduados_periodo_anterior + primiparos) - matriculados); -- Cambio a matriculados del periodo actual
+        ELSE
+            -- Si el período anterior no existe, asignar 0 al valor de total_retirados
+            SET total_retirados = 0;
+        END IF;
     ELSE
-        -- Si el período anterior no existe, asignar 0 al valor de total_retirados
+        -- Si estamos en el primer período, asignar 0 al valor de total_retirados
         SET total_retirados = 0;
     END IF;
     
+    -- Insertar en la tabla retirado y total (según tu lógica)
+    INSERT INTO retirado (id_periodo, total) VALUES (periodo_id, total_retirados);
     INSERT INTO total (primiparos, matriculados, graduados, retirados, id_periodo, id_programa) 
     VALUES (primiparos, matriculados, graduados, retirados, periodo_id, programa_id);
    
-  
   END LOOP;
   
   CLOSE cur;
   
 END$$
-
 DELIMITER ;
+
+
 -- Llamar al procedimiento almacenado para llenar la tabla 'total'
 -- CALL fill_total();
 -- Consultar tablas:
@@ -224,3 +234,4 @@ select * from estudiante;
 SELECT localidad, genero, tipo_inscripcion, estado FROM estudiante WHERE id_programa='578';
 SELECT localidad, genero, tipo_inscripcion,estado, carrera, promedio, pasantia FROM estudiante where estado='ESTUDIANTE GRADUADO';
 SELECT localidad, genero, tipo_inscripcion,estado, carrera, promedio, pasantia FROM estudiante WHERE id_programa='578'
+

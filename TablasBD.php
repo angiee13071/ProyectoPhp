@@ -203,6 +203,38 @@ $conn = getDBConnection();
   ?>
             </table>
         </div>
+        <!-- ESTUDIANTES ADMITIDOS-->
+        <!-- <div class="subtitles"><a href="#" onclick="toggleTable('table-graduados')">Estudiantes admitidos ▼</a></div>
+        <div id="table-graduados" style="display: none;margin-top:1rem;margin-botoom:1rem">
+            <table>
+                <tr>
+                    <th>id_graduado</th>
+                    <th>id_estudiante</th>
+                    <th>id_periodo</th>
+                    <th>fecha_grado</th>
+                    <th>promedio</th>
+                </tr>
+                <?php
+
+  // Realizar la consulta a la base de datos para estudiantes retirados
+//   $queryGraduado= "SELECT * FROM graduado";
+//   $resultGraduado = mysqli_query($conn, $queryGraduado);
+
+  // Obtener y mostrar los datos en la tabla de estudiantes retirados
+//   while ($row = mysqli_fetch_assoc($resultGraduado)) {
+//     echo "<tr>";
+//     echo "<td>" . $row['id_graduado'] . "</td>";
+//     echo "<td>" . $row['id_estudiante'] . "</td>";
+//     echo "<td>" . $row['id_periodo'] . "</td>";
+//     echo "<td>" . $row['fecha_grado'] . "</td>";
+//     echo "<td>" . $row['promedio'] . "</td>";
+//     echo "</tr>";
+//   }
+
+  ?>
+            </table>
+        </div> -->
+
         <!-- ESTUDIANTES MATRICULADOS-->
         <div class="subtitles"><a href="#" onclick="toggleTable('table-matriculados')">Estudiantes matriculados ▼</a>
         </div>
