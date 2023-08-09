@@ -55,18 +55,24 @@
             global $conn, $cohortes, $permanencias,$cohortesTec,$permanenciasTec,$cohortesIng,$permanenciasIng;
 
             $query = "SELECT
-            CONCAT(p.anio) AS anio_actual,
-            CONCAT(p.anio-1) AS anio_anterior,
-            p.id_periodo,
-            COUNT(DISTINCT m.id_estudiante) AS matriculado,
-            FORMAT((COUNT(DISTINCT m.id_estudiante) / LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre)) * 100, 2) AS permanencia,
-            e.carrera 
+            anio_actual,
+            SUM(matriculado_anterior) AS suma_matriculados_anterior,
+            SUM(matriculado_actual) AS suma_matriculados_actual,
+            FORMAT((SUM(matriculado_anterior) / SUM(matriculado_actual)) * 100, 2) AS promedio_permanencia,
+            carrera 
+        FROM (
+            SELECT
+                CONCAT(p.anio) AS anio_actual,
+                CONCAT(p.anio-1) AS anio_anterior,
+                COUNT(DISTINCT m_actual.id_estudiante) AS matriculado_actual,
+                LAG(COUNT(DISTINCT m_actual.id_estudiante)) OVER (ORDER BY p.anio, p.semestre) AS matriculado_anterior,
+                e.carrera 
             FROM
-            periodo p
-            LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
-            LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante 
+                periodo p
+            LEFT JOIN matriculado m_actual ON p.id_periodo = m_actual.id_periodo
+            LEFT JOIN estudiante e ON m_actual.id_estudiante = e.id_estudiante 
             WHERE
-            m.estado_matricula = 'ESTUDIANTE MATRICULADO'";
+                m_actual.estado_matricula = 'ESTUDIANTE MATRICULADO'";
 
             if ($carrera === 'all') {
               
@@ -76,10 +82,10 @@
                 $query .= " AND e.carrera = 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)'";
             }
 
-            $query .= " GROUP BY
-            p.anio, p.semestre, p.id_periodo, e.carrera
-        ORDER BY
-            p.anio, p.semestre;";
+            $query .= "   GROUP BY p.anio, p.semestre, e.carrera
+            ) AS subquery
+            GROUP BY anio_actual, carrera
+            ORDER BY anio_actual;";
 
             $result = $conn->query($query);
 
@@ -87,13 +93,13 @@
                 while ($row = $result->fetch_assoc()) {
                     if($carrera=== 'all'){
                         $cohortes[] = $row['anio_actual'];
-                        $permanencias[] = floatval($row['permanencia']);
+                        $permanencias[] = floatval($row['promedio_permanencia']);
                     }else if($carrera === 'tec'){
                         $cohortesTec[] = $row['anio_actual'];
-                        $permanenciasTec[] = floatval($row['permanencia']);
+                        $permanenciasTec[] = floatval($row['promedio_permanencia']);
                   }else if($carrera === 'ing'){
                     $cohortesIng[] = $row['anio_actual'];
-                    $permanenciasIng[] = floatval($row['permanencia']);
+                    $permanenciasIng[] = floatval($row['promedio_permanencia']);
                 }
                    
                 }
