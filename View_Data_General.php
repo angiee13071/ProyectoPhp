@@ -41,7 +41,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deserción - Datos generales</title>
+    <title>Deserción - Estadísticas Estudiantiles</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -50,7 +50,7 @@ $conn->close();
     <?php include 'header.html'; ?>
     <div class="card">
         <div class="title">
-            <h1>Datos Generales</h1>
+            <h1>Estadísticas Estudiantiles</h1>
         </div>
         <div class="chart-container">
             <canvas id="datos-generales-chart"></canvas>

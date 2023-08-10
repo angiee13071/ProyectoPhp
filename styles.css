@@ -312,3 +312,8 @@ text-decoration: none;
   right: 3rem;
 
 }
+.two{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

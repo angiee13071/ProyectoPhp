@@ -398,3 +398,68 @@ SELECT
  ORDER BY
      t1.anio, t1.semestre
  LIMIT 0, 1000;
+ 
+ -- tasa de retencion
+ SELECT
+    t1.id_cohorte_total,
+    t1.primiparos,
+    t1.matriculados,
+    t1.graduados,
+    t1.retirados,
+    t1.id_periodo,
+    t1.id_programa,
+    ((t1.matriculados / t2.matriculados) * 100) AS tasa_retencion,
+    ((t1.graduados / t1.matriculados) * 100) AS tasa_graduacion
+FROM
+    total t1
+JOIN
+    total t2 ON t1.id_periodo = t2.id_periodo + 1
+            AND t1.id_programa = t2.id_programa
+-- retencion y graduacion por carrera
+SELECT
+    CONCAT(p.anio, '-', p.semestre) AS periodo,
+    pr.nombre AS programa,
+    ROUND((t.matriculados / LAG(t.matriculados, 1) OVER (PARTITION BY t.id_programa ORDER BY t.id_cohorte_total)) * 100, 2) AS tasa_retencion,
+    ROUND((t.graduados / NULLIF(t.primiparos, 0)) * 100, 2) AS tasa_graduacion
+FROM
+    total t
+JOIN
+    programa pr ON t.id_programa = pr.id_programa
+JOIN
+    periodo p ON t.id_periodo = p.id_periodo
+WHERE
+    pr.nombre = 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)'
+ORDER BY
+    t.id_programa, t.id_cohorte_total;
+
+-- retencion y graduacion general
+SELECT
+    CONCAT(p.anio, '-', p.semestre) AS periodo,
+    ROUND((t.matriculados / LAG(t.matriculados, 1) OVER (PARTITION BY t.id_programa ORDER BY t.id_cohorte_total)) * 100, 2) AS tasa_retencion,
+    ROUND((t.graduados / NULLIF(t.primiparos, 0)) * 100, 2) AS tasa_graduacion
+FROM
+    total t
+JOIN
+    programa pr ON t.id_programa = pr.id_programa
+JOIN
+    periodo p ON t.id_periodo = p.id_periodo
+ORDER BY
+    t.id_programa, t.id_cohorte_total;
+    
+-- retencion graduacion en general
+SELECT
+    CONCAT(p.anio, '-', p.semestre) AS periodo,
+    'Todas las carreras' AS programa,
+    ROUND((SUM(t.matriculados) / LAG(SUM(t.matriculados), 1) OVER (ORDER BY p.id_periodo)) * 100, 2) AS tasa_retencion,
+    ROUND((SUM(t.graduados) / NULLIF(SUM(t.primiparos), 0)) * 100, 2) AS tasa_graduacion
+FROM
+    total t
+JOIN
+    periodo p ON t.id_periodo = p.id_periodo
+GROUP BY
+    p.anio, p.semestre
+ORDER BY
+    p.id_periodo;
+
+
+
