@@ -17,12 +17,18 @@
             <h1>Estado de la permanencia estudiantil</h1>
         </div>
         <div class="chart-container">
-            <canvas id="permanencia-chart"></canvas>
+            <canvas id="retencion-chart"></canvas>
         </div>
         <div>
             <select id="chart-type">
                 <option value="line">Gráfico de líneas</option>
                 <option value="bar">Gráfico de columnas</option>
+            </select>
+        </div>
+        <div>
+            <select id="chart-metric">
+                <option value="retencion">Tasa de Retención</option>
+                <option value="graduacion">Tasa de Graduación</option>
             </select>
         </div>
         <div>
@@ -133,18 +139,16 @@
         fetchData('tec');
         fetchData('ing');
   
-    
-   
-
     ?>
 
     // Crear la gráfica inicial
-    var ctx = document.getElementById('permanencia-chart').getContext('2d');
+    var ctx = document.getElementById('retencion-chart').getContext('2d');
     var chartTypeSelect = document.getElementById('chart-type');
+    var chartMetricSelect = document.getElementById('chart-metric'); // Nuevo elemento de filtro
     var chartCarreraSelect = document.getElementById('chart-carrera');
     var chart;
 
-    // Función para crear el gráfico
+    // Función para crear el gráfico de retención
     function createChart(chartType, labels, dataset) {
         if (chart) {
             chart.destroy(); // Destruir el gráfico existente si ya se ha creado
@@ -167,53 +171,86 @@
         });
     }
 
+
     // Función para actualizar el gráfico con la carrera seleccionada
     // Función para actualizar el gráfico con la carrera seleccionada
     function updateChart() {
         var selectedType = chartTypeSelect.value;
         var selectedCarrera = chartCarreraSelect.value;
-        var dataset;
-
+        var dataset = [];
+        var labels; // Agregar esta línea para definir 'labels'
+        var selectedMetric = chartMetricSelect.value;
         if (selectedCarrera === 'all') {
-
-            dataset = {
-                label: 'TODAS LAS CARRERAS',
-                data: <?php echo json_encode($retencion); ?>,
-                backgroundColor: 'rgba(255, 159, 49, 0.87)',
-                borderColor: 'rgba(255, 159, 49, 0.87)',
-                borderWidth: 1
-            };
+            labels = <?php echo json_encode($periodo); ?>;
         } else if (selectedCarrera === 'tec') {
-
-            dataset = {
-                label: 'TECNOLOGIA EN SISTEMATIZACION DE DATOS',
-                data: <?php echo json_encode($retencionTec); ?>,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            };
+            labels = <?php echo json_encode($periodoTec); ?>;
         } else if (selectedCarrera === 'ing') {
+            labels = <?php echo json_encode($periodoIng); ?>;
+        }
+        if (selectedMetric === 'retencion') {
+            if (selectedCarrera === 'all') {
+                dataset = {
+                    label: 'Retención todas las carreras',
+                    data: <?php echo json_encode($retencion); ?>,
+                    backgroundColor: 'rgba(255, 159, 49, 0.87)',
+                    borderColor: 'rgba(255, 159, 49, 0.87)',
+                    borderWidth: 1
+                };
+            } else if (selectedCarrera === 'tec') {
+                dataset = {
+                    label: 'Retención TECNOLOGIA EN SISTEMATIZACION DE DATOS',
+                    data: <?php echo json_encode($retencionTec); ?>,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                };
+            } else if (selectedCarrera === 'ing') {
+                dataset = {
+                    label: 'Retención INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)',
+                    data: <?php echo json_encode($retencionIng); ?>,
+                    backgroundColor: 'rgba(0, 255, 0, 0.58)',
+                    borderColor: 'rgba(0, 255, 0, 0.58)',
+                    borderWidth: 1
+                };
+            }
 
-            dataset = {
-                label: 'INGENIERIA EN TELEMATICA',
-                data: <?php echo json_encode($retencionIng); ?>,
-                backgroundColor: 'rgba(0, 255, 0, 0.58)',
-                borderColor: 'rgba(0, 255, 0, 0.58)',
-                borderWidth: 1
-            };
+        } else if (selectedMetric === 'graduacion') {
+            if (selectedCarrera === 'all') {
+                dataset = {
+                    label: 'Tasa de Graduación todas las carreras',
+                    data: <?php echo json_encode($graduacion); ?>,
+                    backgroundColor: 'rgba(255, 159, 49, 0.87)',
+                    borderColor: 'rgba(255, 159, 49, 0.87)',
+                    borderWidth: 1
+                };
+            } else if (selectedCarrera === 'tec') {
+                dataset = {
+                    label: 'Tasa de Graduación TECNOLOGIA EN SISTEMATIZACION DE DATOS',
+                    data: <?php echo json_encode($graduacionTec); ?>,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                };
+            } else if (selectedCarrera === 'ing') {
+                dataset = {
+                    label: 'Tasa de Graduación INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)',
+                    data: <?php echo json_encode($retencionIng); ?>,
+                    backgroundColor: 'rgba(0, 255, 0, 0.58)',
+                    borderColor: 'rgba(0, 255, 0, 0.58)',
+                    borderWidth: 1
+                };
+            }
+
+
+
         }
-        if (selectedCarrera === 'all') {
-            createChart(selectedType, <?php echo json_encode($periodo); ?>, dataset);
-        } else if (selectedCarrera === 'tec') {
-            createChart(selectedType, <?php echo json_encode($periodoTec); ?>, dataset);
-        } else if (selectedCarrera === 'ing') {
-            createChart(selectedType, <?php echo json_encode($periodoIng); ?>, dataset);
-        }
+        createChart(selectedType, labels, dataset);
 
 
     }
 
 
+    chartMetricSelect.addEventListener('change', updateChart);
     // Evento de cambio de tipo de gráfico
     chartTypeSelect.addEventListener('change', updateChart);
 
