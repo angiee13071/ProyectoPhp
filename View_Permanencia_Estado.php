@@ -56,7 +56,8 @@
         global $conn, $periodo,$retencion,$graduacion,$retencionTec,$graduacionTec,$retencionIng,$graduacionIng,$periodoTec,$periodoIng;
         if ($carrera === 'all') {
             $query .= "'Todas las carreras' AS programa,
-            ROUND((SUM(t.matriculados) / LAG(SUM(t.matriculados), 1) OVER (ORDER BY p.id_periodo)) * 100, 2) AS tasa_retencion,
+            ROUND((t.matriculados / (LAG(t.matriculados, 1) OVER (ORDER BY p.id_periodo)) * 100), 2) AS tasa_retencion,
+
             ROUND((SUM(t.graduados) / NULLIF(SUM(t.primiparos), 0)) * 100, 2) AS tasa_graduacion
         FROM
             total t
@@ -69,7 +70,8 @@
         }elseif($carrera === 'tec'){
             $query .= "
             pr.nombre AS programa,
-            ROUND((t.matriculados / LAG(t.matriculados, 1) OVER (PARTITION BY t.id_programa ORDER BY t.id_cohorte_total)) * 100, 2) AS tasa_retencion,
+            ROUND((t.matriculados / (LAG(t.matriculados, 1) OVER (ORDER BY p.id_periodo)) * 100), 2) AS tasa_retencion,
+
             ROUND((t.graduados / NULLIF(t.primiparos, 0)) * 100, 2) AS tasa_graduacion
         FROM
             total t
@@ -85,7 +87,7 @@
         }elseif($carrera === 'ing'){
             $query .=  "
             pr.nombre AS programa,
-            ROUND((t.matriculados / LAG(t.matriculados, 1) OVER (PARTITION BY t.id_programa ORDER BY t.id_cohorte_total)) * 100, 2) AS tasa_retencion,
+            ROUND((t.matriculados / (LAG(t.matriculados, 1) OVER (ORDER BY p.id_periodo)) * 100), 2) AS tasa_retencion,
             ROUND((t.graduados / NULLIF(t.primiparos, 0)) * 100, 2) AS tasa_graduacion
         FROM
             total t
