@@ -14,7 +14,7 @@
         <h1>Módulos:</h1>
     </div>
     <a class="buttonETL" href="http://localhost/ProyectoPhp/Insert/Ejecutar_ETL.php">ETL</a>
-    <a class="buttonBD" href="http://localhost/ProyectoPhp/TablasBD.php">Ver base de datos</a>
+    <a class="buttonBD" href="http://localhost/ProyectoPhp/TablasBD.php">Base de datos</a>
     <a class="button" href="http://localhost/ProyectoPhp/View_Desercion.php">Deserción estudiantil</a>
     <a class="button1" href="http://localhost/ProyectoPhp/View_Permanencia.php">Permanencia estudiantil</a>
     <a class="buttonData" href="http://localhost/ProyectoPhp/View_Data_General.php">Estadísticas Estudiantiles</a>

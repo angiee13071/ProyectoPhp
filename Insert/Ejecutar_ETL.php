@@ -32,6 +32,14 @@
         </div>
 
         <?php
+         echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
+         border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+         <span style="font-size: 2rem;color:#4CAF50">✔ LECTURA Y TRANSFORMACIÓN EXITOSA</span><br>
+         Archivos CVS leídos y transformados.
+         <div style="position: absolute;  left: 50%;">
+          <span style="font-size: 4rem;">&#8595;</span>
+         </div>
+         </div>';
 // Tomar el archivo de egresados para subir los programas academicos y periodos:
 require 'Insert_EgresadoCSV_Programa_Periodo.php';
 
@@ -59,8 +67,8 @@ require 'CalcularTotal.php';
 
 ?>
         <h2>Proceso de importación completado</h2>
-        <p>Todos los archivos CSV se han procesado exitosamente.</p>
-        <p>Los datos se han insertado en las respectivas tablas en la base de datos.</p>
+        <!-- <p>Todos los archivos CSV se han procesado exitosamente.</p>
+        <p>Los datos se han insertado en las respectivas tablas en la base de datos.</p> -->
     </div>
     <script>
     function goBack() {

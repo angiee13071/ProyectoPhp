@@ -131,7 +131,20 @@ $stmt_insert_periodo->close();
 $conn->close();
 
 if (!$insertion_error) {
-    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de programas insertados correctamente en la tabla PROGRAMA. <br>' ;
+    //echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de programas insertados correctamente en la tabla PROGRAMA. <br>' ;
+//     echo '<div style="background-color: #4CAF50; color: white; padding: 10px; text-align: center;">
+//     <span style="font-size: 24px;">✔ CARGA EXITOSA</span><br>
+//     Datos de programas insertados correctamente en la tabla PROGRAMA.
+// </div>';
+echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+<span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
+Carreras insertadas correctamente en la tabla PROGRAMA.
+<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">①</div>
+<div style="position: absolute;  left: 50%;">
+ <span style="font-size: 4rem;">&#8595;</span>
+</div>
+</div>';
 }
 
 ?>

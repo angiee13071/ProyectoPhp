@@ -129,7 +129,17 @@ $conn->close();
 
 // Mostrar mensaje de éxito si no se encontraron estudiantes duplicados
 if (!$insertion_error) {
-    echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Egresados insertados en la tabla ESTUDIANTE. <br>';
-}
+
+    //echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Egresados insertados en la tabla ESTUDIANTE. <br>';
+    echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+    border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+    <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
+    Graduados insertados correctamente en la tabla ESTUDIANTE. 
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">②</div>
+    <div style="position: absolute;  left: 50%;">
+     <span style="font-size: 4rem;">&#8595;</span>
+    </div>
+    </div>';
+  }
 
 ?>

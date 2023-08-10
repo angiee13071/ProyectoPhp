@@ -297,7 +297,14 @@ text-decoration: none;
   display: none;
 }
 .ETL{
-  font-family: system-ui;margin-left: 2rem;font-size:1.6rem;line-height: 2.5rem;
+  font-family: system-ui;
+  /* margin-left: 2rem; */
+  font-size: 1.6rem;
+  line-height: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .button_ETL{
   position: absolute;
