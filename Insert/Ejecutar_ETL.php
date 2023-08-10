@@ -34,8 +34,9 @@
         <?php
          echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
          border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
-         <span style="font-size: 2rem;color:#4CAF50">✔ LECTURA Y TRANSFORMACIÓN EXITOSA</span><br>
+         <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN EXITOSA DE LOS DATOS</span><br>
          Archivos CVS leídos y transformados.
+         <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❶</div>
          <div style="position: absolute;  left: 50%;">
           <span style="font-size: 4rem;">&#8595;</span>
          </div>

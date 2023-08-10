@@ -92,6 +92,15 @@ for ($i = 2; $i < count($data_matrix); $i++) {
                 // Hubo un error durante la inserción
                 $insertion_error = true;
                 echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla MATRICULADO: " . $stmt_insert->error, "<br>";
+                echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+                border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
+                <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
+                El estudiante con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: " . $stmt_insert->error, "<br>";
+                <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❹</div>
+                <div style="position: absolute;  left: 50%;">
+                 <span style="font-size: 4rem;">&#8595;</span>
+                </div>
+                </div>'; 
             } else {
                 $insertion_error = false;
             }
@@ -104,8 +113,16 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         } else {
             // El estudiante no existe en la tabla 'estudiante', mostrar una alerta o hacer otra acción si lo deseas
            
-            echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante con ID ($id_estudiante) no existe en la tabla ESTUDIANTE. Se omitirá la inserción en la tabla MATRICULADO.<br>";
-    
+            //echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante con ID ($id_estudiante) no existe en la tabla ESTUDIANTE. Se omitirá la inserción en la tabla MATRICULADO.<br>";
+            echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+            border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
+            <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
+            El estudiante con ID ($id_estudiante) no existe en la tabla ESTUDIANTE. Se omitirá la inserción en la tabla MATRICULADO.<br>";
+            <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❹</div>
+            <div style="position: absolute;  left: 50%;">
+             <span style="font-size: 4rem;">&#8595;</span>
+            </div>
+            </div>'; 
             //$insertion_error = true;
         }
     }
@@ -123,7 +140,7 @@ if (!$insertion_error) {
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
     Estudiantes matriculados insertados correctamente en la tabla MATRICULADO.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">④</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❹</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
