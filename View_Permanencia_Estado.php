@@ -8,6 +8,7 @@
     <title>Estado de la permanencia estudiantil</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
@@ -15,6 +16,10 @@
     <div class="card">
         <div class="title">
             <h1>Estado de la permanencia estudiantil</h1>
+        </div>
+        <div class="textSmall" style="font-size:1rem;">
+            * La retención es la capacidad de mantener a los estudiantes y evitar que abandonen sus
+            estudios y la tasa de graduación indica cuántos terminan sus estudios con éxito.
         </div>
         <div class="chart-container">
             <canvas id="retencion-chart"></canvas>
@@ -169,6 +174,7 @@
             data: data,
             options: options
         });
+
     }
 
 
@@ -180,6 +186,8 @@
         var dataset = [];
         var labels; // Agregar esta línea para definir 'labels'
         var selectedMetric = chartMetricSelect.value;
+        // Obtener el elemento del eje Y
+        var yAxis = chart.options.scales.y;
         if (selectedCarrera === 'all') {
             labels = <?php echo json_encode($periodo); ?>;
         } else if (selectedCarrera === 'tec') {
@@ -244,6 +252,7 @@
 
 
         }
+
         createChart(selectedType, labels, dataset);
 
 
