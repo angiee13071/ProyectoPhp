@@ -4,20 +4,22 @@ $labels = [];
 $data = [];
 
 // Obtener los datos generales de la tabla estudiante
-$query = "SELECT localidad, genero, tipo_inscripcion, estado FROM estudiante";
+$query = "SELECT localidad, genero, tipo_inscripcion,carrera,puntaje_icfes FROM estudiante
+WHERE estado IS NULL OR estado = 'PRUEBA ACADEMICA Y MATRICULADO'";
 $result = $conn->query($query);
 
 $localidades = array();
 $generos = array();
 $tiposInscripcion = array();
-$estados = array();
+$puntajes = array();
 
 if ($result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
     $localidades[] = $row['localidad'];
     $generos[] = $row['genero'];
     $tiposInscripcion[] = $row['tipo_inscripcion'];
-    $estados[] = $row['estado'];
+    $puntajes[] = $row['puntaje_icfes'];
+ 
   }
 }
 
@@ -31,7 +33,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deserción - Datos generales</title>
+    <title>Deserción - Estadísticas Estudiantiles</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -40,7 +42,7 @@ $conn->close();
     <?php include 'header.html'; ?>
     <div class="card">
         <div class="title">
-            <h1>Datos Generales</h1>
+            <h1>Deserción - Estadísticas Estudiantiles</h1>
         </div>
         <div class="chart-container">
             <canvas id="datos-generales-chart"></canvas>
@@ -49,7 +51,7 @@ $conn->close();
             <option value="localidad">Localidad</option>
             <option value="genero">Género</option>
             <option value="tipo_inscripcion">Tipo de Inscripción</option>
-            <option value="estado">Estado del Estudiante</option>
+            <option value="puntajes">Puntaje Icfes</option>
         </select>
         <select id="chart-type-p" class="oculto" style="display: none;">
             <option value="doughnut">Gráfico de Torta</option>
@@ -93,8 +95,8 @@ $conn->close();
             case 'tipo_inscripcion':
                 datos = <?php echo json_encode($tiposInscripcion); ?>;
                 break;
-            case 'estado':
-                datos = <?php echo json_encode($estados); ?>;
+            case 'puntajes':
+                datos = <?php echo json_encode($puntajes); ?>;
                 break;
         }
 
@@ -107,30 +109,30 @@ $conn->close();
             datasets: [{
                 data: Object.values(frecuenciaDatos),
                 backgroundColor: [
+                    'rgba(251, 253, 79, 0.74)',
+                    'rgba(67, 66, 66, 0.19)',
                     'rgba(255, 99, 132, 0.5)',
                     'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(75, 192, 192, 0.5)',
                     'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
                     'rgba(255, 159, 64, 0.5)',
                     'rgba(50, 168, 82, 0.5)',
                     'rgba(195, 61, 61, 0.5)',
                     'rgba(88, 89, 91, 0.5)',
-                    'rgba(228, 134, 5, 0.5)',
-                    'rgba(94, 138, 141, 0.5)'
+                    'rgba(75, 192, 192, 0.5)'
                 ],
                 borderColor: [
+                    'rgba(228, 134, 5, 1)',
+                    'rgba(67, 66, 66, 0.74)',
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)',
+                    'rgba(255, 206, 86, 1)',
                     'rgba(255, 159, 64, 1)',
                     'rgba(50, 168, 82, 1)',
                     'rgba(195, 61, 61, 1)',
                     'rgba(88, 89, 91, 1)',
-                    'rgba(228, 134, 5, 1)',
-                    'rgba(94, 138, 141, 1)'
+                    'rgba(75, 192, 192, 1)'
                 ],
                 borderWidth: 1
             }]

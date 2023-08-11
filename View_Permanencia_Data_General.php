@@ -4,15 +4,13 @@ $labels = [];
 $data = [];
 
 // Obtener los datos generales de la tabla estudiante
-$query = "SELECT localidad, genero, tipo_inscripcion,estado, carrera, promedio, pasantia, puntaje_icfes FROM estudiante";
+$query = "SELECT localidad, genero, tipo_inscripcion,carrera,puntaje_icfes FROM estudiante
+WHERE estado='ESTUDIANTE MATRICULADO'";
 $result = $conn->query($query);
 
 $localidades = array();
 $generos = array();
 $tiposInscripcion = array();
-$estados = array();
-$promedios = array();
-$pasantias = array();
 $puntajes = array();
 
 if ($result->num_rows > 0) {
@@ -20,14 +18,8 @@ if ($result->num_rows > 0) {
     $localidades[] = $row['localidad'];
     $generos[] = $row['genero'];
     $tiposInscripcion[] = $row['tipo_inscripcion'];
-    $estados[] = $row['estado'];
-    $promedios[] = $row['promedio'];
     $puntajes[] = $row['puntaje_icfes'];
-    if (isset($row['pasantia'])) {
-        $pasantias[] = $row['pasantia'];
-    } else {
-        $pasantias[] = ''; // O puedes asignarle un valor predeterminado en caso de que no exista.
-    }
+ 
   }
 }
 
@@ -41,7 +33,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estadísticas Estudiantiles</title>
+    <title>Permanencia - Estadísticas Estudiantiles</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -50,7 +42,7 @@ $conn->close();
     <?php include 'header.html'; ?>
     <div class="card">
         <div class="title">
-            <h1>Estadísticas Estudiantiles</h1>
+            <h1>Permanencia - Estadísticas Estudiantiles</h1>
         </div>
         <div class="chart-container">
             <canvas id="datos-generales-chart"></canvas>
@@ -59,9 +51,6 @@ $conn->close();
             <option value="localidad">Localidad</option>
             <option value="genero">Género</option>
             <option value="tipo_inscripcion">Tipo de Inscripción</option>
-            <option value="estado">Estado del Estudiante</option>
-            <option value="promedios">Promedios</option>
-            <option value="pasantias">Pasantías</option>
             <option value="puntajes">Puntaje Icfes</option>
         </select>
         <select id="chart-type-p" class="oculto" style="display: none;">
@@ -105,15 +94,6 @@ $conn->close();
                 break;
             case 'tipo_inscripcion':
                 datos = <?php echo json_encode($tiposInscripcion); ?>;
-                break;
-            case 'estado':
-                datos = <?php echo json_encode($estados); ?>;
-                break;
-            case 'promedios':
-                datos = <?php echo json_encode($promedios); ?>;
-                break;
-            case 'pasantias':
-                datos = <?php echo json_encode($pasantias); ?>;
                 break;
             case 'puntajes':
                 datos = <?php echo json_encode($puntajes); ?>;
