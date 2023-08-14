@@ -12,7 +12,11 @@ $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_prime
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
 
 // Variable para controlar si hubo algún error durante el proceso de inserción
+$errors_by_student = "";
+$alerts_by_student = "";
 $insertion_error = false;
+$insertion_alert = false;
+
 
 // Abrir la conexión a la base de datos
 $conn = getDBConnection();
@@ -63,18 +67,9 @@ for ($i = 2; $i < count($file_data); $i++) {
     $stmt_check_existing->close();
     if (!empty($id_primiparo) && !empty($id_estudiante) && !empty($periodo)) {
         if ($existing_count > 0) {
-            // El estudiante ya existe en la tabla 'primiparo', mostrar una alerta o hacer otra acción si lo deseas
-            //echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El estudiante matriculado actualmente con ID $id_estudiante ya existe en la tabla PRIMIPARO. Se omitirá la inserción.<br>"; 
-            $insertion_error = true;
-            echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-        border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
-        <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
-        El estudiante matriculado actualmente con ID ' .$id_estudiante.' ya existe en la tabla PRIMIPARO. Se omitirá la inserción.
-        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❻</div>
-        <div style="position: absolute;  left: 50%;">
-         <span style="font-size: 4rem;">&#8595;</span>
-        </div>
-        </div>'; 
+            $insertion_alert = true;
+        $alerts_by_student = $alerts_by_student.", ".$id_estudiante;
+
         } else {
             // Preparar la consulta SQL para insertar el estudiante en la tabla 'primiparo'
             $sql_insert = "INSERT INTO primiparo (id_primiparo, id_estudiante, id_periodo) VALUES (?, ?, ?)";
@@ -87,19 +82,9 @@ for ($i = 2; $i < count($file_data); $i++) {
     
             // Ejecutar la consulta
             if (!$stmt_insert->execute()) {
-                // Hubo un error durante la inserción
-                //TODO:Validar los no insertados
-               $insertion_error =true;
-                //echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante nuevo con ID $id_primiparo, $id_estudiante, $id_periodo no se pudo insertar en la tabla PRIMIPARO: ". $stmt_insert->error ,"<br>";
-                echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-                border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
-                <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
-                El estudiante nuevo con ID ' .$id_primiparo.', $id_estudiante, $id_periodo no se pudo insertar en la tabla PRIMIPARO: ". '.$stmt_insert->error.' ,"<br>";
-                <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❻</div>
-                <div style="position: absolute;  left: 50%;">
-                 <span style="font-size: 4rem;">&#8595;</span>
-                </div>
-                </div>'; 
+                $insertion_error= true;
+  $errors_by_student = $errors_by_student.", ".$id_estudiante.$stmt_insert->error ;
+     
             }else{
                 $insertion_error =false;
             }
@@ -117,7 +102,29 @@ for ($i = 2; $i < count($file_data); $i++) {
 // Cerrar la conexión a la base de datos después de haber procesado todos los datos
 $conn->close();
 
-if (!$insertion_error) {
+if($insertion_error){
+    echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+    border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
+    <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
+    Los estudiantes nuevos con los siguientes ID, no se pueden insertar en la tabla PRIMIPARO:' .$errors_by_studenty.',  ". "<br>";
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❻</div>
+    <div style="position: absolute;  left: 50%;">
+     <span style="font-size: 4rem;">&#8595;</span>
+    </div>
+    </div>'; 
+}else if($insertion_alert){
+
+    echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+    border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
+    <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
+    Los estudiantes nuevos con los siguientes ID, ya existen en la tabla PRIMIPARO. Se omitirá la inserción.: ' .$alerts_by_student.' 
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❻</div>
+    <div style="position: absolute;  left: 50%;">
+     <span style="font-size: 4rem;">&#8595;</span>
+    </div>
+    </div>'; 
+}
+else if (!$insertion_error) {
 
     //echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de estudiantes nuevo insertados en la tabla PRIMIPARO.  <br>';
     echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;

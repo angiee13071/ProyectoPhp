@@ -27,7 +27,7 @@ require_once '../ConexionBD.php';
    border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;border-radius: 0.8rem">
    <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
    Retirados insertados correctamente en la tabla RETIRADO.
-   <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❾</div>
+   <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❿</div>
    <div style="position: absolute;  left: 50%;">
     <span style="font-size: 4rem;">&#8595;</span>
    </div>

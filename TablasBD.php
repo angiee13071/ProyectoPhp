@@ -206,8 +206,8 @@ $conn = getDBConnection();
             </table>
         </div>
         <!-- ESTUDIANTES ADMITIDOS-->
-        <!-- <div class="subtitles"><a href="#" onclick="toggleTable('table-graduados')">Estudiantes admitidos ▼</a></div>
-        <div id="table-graduados" style="display: none;margin-top:1rem;margin-botoom:1rem">
+        <div class="subtitles"><a href="#" onclick="toggleTable('table-admitidos')">Estudiantes admitidos ▼</a></div>
+        <div id="table-admitidos" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
                     <th>id_graduado</th>
@@ -219,23 +219,24 @@ $conn = getDBConnection();
                 <?php
 
   // Realizar la consulta a la base de datos para estudiantes retirados
-//   $queryGraduado= "SELECT * FROM graduado";
-//   $resultGraduado = mysqli_query($conn, $queryGraduado);
+  $queryAdmitido= "SELECT * FROM admitido";
+  $resultAdmitido = mysqli_query($conn, $queryAdmitido);
 
   // Obtener y mostrar los datos en la tabla de estudiantes retirados
-//   while ($row = mysqli_fetch_assoc($resultGraduado)) {
-//     echo "<tr>";
-//     echo "<td>" . $row['id_graduado'] . "</td>";
-//     echo "<td>" . $row['id_estudiante'] . "</td>";
-//     echo "<td>" . $row['id_periodo'] . "</td>";
-//     echo "<td>" . $row['fecha_grado'] . "</td>";
-//     echo "<td>" . $row['promedio'] . "</td>";
-//     echo "</tr>";
-//   }
+  while ($row = mysqli_fetch_assoc($resultAdmitido)) {
+    echo "<tr>";
+    echo "<td>" . $row['id_admitido'] . "</td>";
+    echo "<td>" . $row['id_estudiante'] . "</td>";
+    echo "<td>" . $row['id_periodo'] . "</td>";
+    echo "<td>" . $row['tipo_incripcion'] . "</td>";
+    echo "<td>" . $row['tipo_icfes'] . "</td>";
+    echo "<td>" . $row['puntaje_icfes'] . "</td>";
+    echo "</tr>";
+  }
 
   ?>
             </table>
-        </div> -->
+        </div>
 
         <!-- ESTUDIANTES MATRICULADOS-->
         <div class="subtitles"><a href="#" onclick="toggleTable('table-matriculados')">Estudiantes matriculados ▼</a>
