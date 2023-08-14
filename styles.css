@@ -48,7 +48,8 @@ nav {
 }
 
 .nav-item {
-  width: 9rem;
+  text-align: center;
+  width: 12rem;
   margin-left: 2rem;
 }
 
