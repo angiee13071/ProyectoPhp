@@ -185,3 +185,25 @@ select * from primiparo;
 select * from matriculado;
 select * from admitido;
 select * from total;
+
+SELECT DISTINCT estado FROM estudiante;
+-- graduado
+SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
+       p.anio
+FROM estudiante e
+JOIN graduado g ON e.id_estudiante = g.id_estudiante
+JOIN periodo p ON g.id_periodo = p.id_periodo;
+-- matriculado
+SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
+       p.anio
+FROM estudiante e
+JOIN matriculado g ON e.id_estudiante = g.id_estudiante
+JOIN periodo p ON g.id_periodo = p.id_periodo;
+-- graduado
+SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
+       p.anio
+FROM estudiante e
+JOIN graduado g ON e.id_estudiante = g.id_estudiante
+JOIN periodo p ON g.id_periodo = p.id_periodo;
+
+

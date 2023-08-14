@@ -4,7 +4,24 @@ $labels = [];
 $data = [];
 
 // Obtener los datos generales de la tabla estudiante
-$query = "SELECT localidad, tipo_inscripcion,estado, carrera, promedio, pasantia, puntaje_icfes FROM estudiante";
+$query = "SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
+p.anio
+FROM estudiante e
+JOIN graduado g ON e.id_estudiante = g.id_estudiante
+JOIN periodo p ON g.id_periodo = p.id_periodo
+UNION ALL
+SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
+p.anio
+FROM estudiante e
+JOIN matriculado m ON e.id_estudiante = m.id_estudiante
+JOIN periodo p ON m.id_periodo = p.id_periodo
+UNION ALL
+SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
+p.anio
+FROM estudiante e
+JOIN admitido a ON e.id_estudiante = a.id_estudiante
+JOIN periodo p ON a.id_periodo = p.id_periodo;
+";
 $result = $conn->query($query);
 
 $localidades = array();
