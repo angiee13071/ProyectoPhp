@@ -31,8 +31,10 @@ foreach ($file_data as $line) {
 $conn = getDBConnection();
 
 // Variable para controlar si hubo algún error durante el proceso de inserción
+$errors_by_student = "";
+$alerts_by_student = "";
 $insertion_error = false;
-
+$insertion_alert = false;
 // Insertar los datos en la tabla 'graduado'
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_estudiante = $data_matrix[$i][6];
@@ -77,29 +79,9 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $stmt_check_student->close();
 
     if ($student_count > 0) {
-        $insertion_error = true;
-        // El estudiante ya existe en la tabla 'estudiante', proceder con la inserción en 'graduado'
-             //  echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El egresado con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
-              //  echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-              //  border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
-              //  <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
-              //  El egresado con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.
-              //  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❸</div>
-              //  <div style="position: absolute;  left: 50%;">
-              //   <span style="font-size: 4rem;">&#8595;</span>
-              //  </div>
-              //  </div>';   
-              echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-       border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
-       <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
-       El egresado con ID ' . $id_estudiante . ' ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.
-       <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❸</div>
-       <div style="position: absolute;  left: 50%;">
-        <span style="font-size: 4rem;">&#8595;</span>
-       </div>
-       </div>';
-
-       
+      $insertion_alert = true;
+      $alerts_by_student = $alerts_by_student.", ".$id_estudiante;
+   
     } else {
       // Preparar la consulta SQL para insertar el estudiante
       $sql = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, localidad, tipo_inscripcion, estado, id_programa, promedio, pasantia, tipo_icfes,puntaje_icfes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -130,18 +112,8 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("issssssidssd", $id_estudiante, $nombres, $carrera, $documento, $localidad, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia, $tipo_icfes, $puntaje_icfes);
 
 if (!$stmt->execute()) {
-  $insertion_error = true;
-  //echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El estudiante con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: ". $stmt->error ,"<br>";
-  echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
-  border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative; margin-bottom: 2rem;">
-  <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X ERROR</span><br>
-  El estudiante con ID ' . $id_estudiante . ' no se pudo insertar en la tabla ESTUDIANTE: ' . $stmt->error . '<br>
-  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❸</div>
-  <div style="position: absolute; left: 50%;">
-      <span style="font-size: 4rem;">&#8595;</span>
-  </div>
-</div>';
-
+  $insertion_error= true;
+  $errors_by_student = $errors_by_student.", ".$id_estudiante;
 
 
 } else {
@@ -157,6 +129,27 @@ $stmt->close();
 $conn->close();
 
 // Mostrar mensaje de éxito si no se encontraron estudiantes duplicados
+if($insertion_error){
+  echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
+  border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative; margin-bottom: 2rem;">
+  <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X ERROR</span><br>
+  Los egresados con ID:' . $errors_by_student . ' no se pueden insertar en la tabla ESTUDIANTE: ' . $stmt->error . '<br>
+  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❸</div>
+  <div style="position: absolute; left: 50%;">
+      <span style="font-size: 4rem;">&#8595;</span>
+  </div>
+</div>';
+}else if($insertion_alert){
+  echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+  border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
+  <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
+  Los egresados con ID ' . $alerts_by_student . ' ya existen en la tabla ESTUDIANTE. Se omitirá la inserción.
+  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❸</div>
+  <div style="position: absolute;  left: 50%;">
+   <span style="font-size: 4rem;">&#8595;</span>
+  </div>
+  </div>';
+}
 if (!$insertion_error) {
 
     //echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Egresados insertados en la tabla ESTUDIANTE. <br>';
