@@ -32,8 +32,40 @@
         </div>
 
         <?php
-        //Validar si existe BD
-        require_once '../ConexionBD.php';
+        
+$url1 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_de_admitidos.csv";
+$url2 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
+$url3 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
+$url4 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
+
+// paso 0 :Validar si existe BD
+require_once '../ConexionBD.php';
+
+// validar si existen los archivos
+if (file_exists($url1) && file_exists($url2) && file_exists($url3) && file_exists($url4)) {
+echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid #4CAF50;width: 63rem;
+ height: 10rem; transform: skew(150deg);margin-bottom: 0rem;">
+     <div style="font-size: 3rem; color: #4CAF50;text-align: initial;">❶</div>
+     <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
+     <div>Extracción y transformación exitosa de los datos.</div>
+     <div style="position: absolute;  left: 50%;">
+   
+    </div>
+ </div>';
+ echo' <span style="font-size: 4rem;margin-bottom: 0.5rem;">&#8595;</span>';
+} else{
+    echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid rgba(255, 99, 132, 1);width: 63rem;
+    height: 10rem; transform: skew(150deg);margin-bottom: 0rem;">
+        <div style="font-size: 3rem; color: rgba(255, 99, 132, 1);text-align: initial;">❶</div>
+        <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
+        <div>No se encuentran todos los archivos en su totalidad, por favor validar.</div>
+        <div style="position: absolute;  left: 50%;">
+      
+       </div>
+    </div>';
+    echo' <span style="font-size: 4rem;margin-bottom: 0.5rem;">&#8595;</span>';
+}
+
 // Tomar el archivo de egresados para subir los programas academicos y periodos:
 require 'Insert_EgresadoCSV_Programa_Periodo.php';
 
