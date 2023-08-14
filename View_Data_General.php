@@ -21,25 +21,34 @@ p.anio
 FROM estudiante e
 JOIN admitido a ON e.id_estudiante = a.id_estudiante
 JOIN periodo p ON a.id_periodo = p.id_periodo;
+;
 ";
-$result = $conn->query($query);
 
+$result = $conn->query($query);
+$carreras= array();
+$estratos= array();
 $localidades = array();
 // $generos = array();
 $tiposInscripcion = array();
 $estados = array();
 $promedios = array();
 $pasantias = array();
-$puntajes = array();
-
+$tiposIcfes= array();
+$puntajesIcfes= array();
+$anios= array();
 if ($result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
+    $carreras[] = $row['carrera'];
+    $estratos[] = $row['estrato'];
     $localidades[] = $row['localidad'];
     // $generos[] = $row['genero'];
     $tiposInscripcion[] = $row['tipo_inscripcion'];
     $estados[] = $row['estado'];
     $promedios[] = $row['promedio'];
-    $puntajes[] = $row['puntaje_icfes'];
+    $pasantias[] = $row['pasantia'];
+    $tipos_icfes[] = $row['tipo_icfes'];
+    $puntajesIcfes[] = $row['puntaje_icfes'];
+    $anios[] = $row['anio'];
     if (isset($row['pasantia'])) {
         $pasantias[] = $row['pasantia'];
     } else {
@@ -73,12 +82,15 @@ $conn->close();
             <canvas id="datos-generales-chart"></canvas>
         </div>
         <select id="data-type">
+            <option value="localidad">Carrera</option>
+            <option value="localidad">Estrato</option>
             <option value="localidad">Localidad</option>
             <!-- <option value="genero">Género</option> -->
             <option value="tipo_inscripcion">Tipo de Inscripción</option>
             <option value="estado">Estado del Estudiante</option>
             <option value="promedios">Promedios</option>
             <option value="pasantias">Pasantías</option>
+            <option value="pasantias">tipo_icfes</option>
             <option value="puntajes">Puntaje Icfes</option>
         </select>
         <select id="chart-type-p" class="oculto" style="display: none;">
@@ -114,6 +126,13 @@ $conn->close();
         // Obtener los datos correspondientes al tipo seleccionado
         var datos = [];
         switch (selectedDataType) {
+            case 'carrera':
+                datos = <?php echo json_encode($carreras); ?>;
+                break;
+            case 'estrato':
+                datos = <?php echo json_encode($estratos); ?>;
+                break;
+
             case 'localidad':
                 datos = <?php echo json_encode($localidades); ?>;
                 break;
@@ -129,6 +148,12 @@ $conn->close();
                 break;
             case 'pasantias':
                 datos = <?php echo json_encode($pasantias); ?>;
+                break;
+            case 'tipo_icfes':
+                datos = <?php echo json_encode($tipos_icfes); ?>;
+                break;
+            case 'puntaje_icfes':
+                datos = <?php echo json_encode($puntajesIcfes); ?>;
                 break;
             case 'puntajes':
                 datos = <?php echo json_encode($puntajes); ?>;
