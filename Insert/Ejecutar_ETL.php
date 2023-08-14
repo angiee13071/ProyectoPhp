@@ -49,7 +49,7 @@ $url3 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_períod
 $url4 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
 
 // paso 0 :Validar si existe BD
-require_once '../ConexionBD.php';
+require_once '../ComprobarBD.php';
 
 // validar si existen los archivos
 if (file_exists($url1) && file_exists($url2) && file_exists($url3) && file_exists($url4)) {
