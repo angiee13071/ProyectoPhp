@@ -69,7 +69,7 @@ for ($i = 2; $i < count($file_data); $i++) {
             echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
         border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
         <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
-        El estudiante matriculado actualmente con ID $id_estudiante ya existe en la tabla PRIMIPARO. Se omitirá la inserción.
+        El estudiante matriculado actualmente con ID ' .$id_estudiante.' ya existe en la tabla PRIMIPARO. Se omitirá la inserción.
         <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❻</div>
         <div style="position: absolute;  left: 50%;">
          <span style="font-size: 4rem;">&#8595;</span>
@@ -94,7 +94,7 @@ for ($i = 2; $i < count($file_data); $i++) {
                 echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
                 border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
                 <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
-                El estudiante nuevo con ID $id_primiparo, $id_estudiante, $id_periodo no se pudo insertar en la tabla PRIMIPARO: ". $stmt_insert->error ,"<br>";
+                El estudiante nuevo con ID ' .$id_primiparo.', $id_estudiante, $id_periodo no se pudo insertar en la tabla PRIMIPARO: ". '.$stmt_insert->error.' ,"<br>";
                 <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❻</div>
                 <div style="position: absolute;  left: 50%;">
                  <span style="font-size: 4rem;">&#8595;</span>

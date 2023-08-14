@@ -4,11 +4,11 @@ $labels = [];
 $data = [];
 
 // Obtener los datos generales de la tabla estudiante
-$query = "SELECT localidad, genero, tipo_inscripcion,estado, carrera, promedio, pasantia, puntaje_icfes FROM estudiante";
+$query = "SELECT localidad, tipo_inscripcion,estado, carrera, promedio, pasantia, puntaje_icfes FROM estudiante";
 $result = $conn->query($query);
 
 $localidades = array();
-$generos = array();
+// $generos = array();
 $tiposInscripcion = array();
 $estados = array();
 $promedios = array();
@@ -18,7 +18,7 @@ $puntajes = array();
 if ($result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
     $localidades[] = $row['localidad'];
-    $generos[] = $row['genero'];
+    // $generos[] = $row['genero'];
     $tiposInscripcion[] = $row['tipo_inscripcion'];
     $estados[] = $row['estado'];
     $promedios[] = $row['promedio'];
@@ -57,7 +57,7 @@ $conn->close();
         </div>
         <select id="data-type">
             <option value="localidad">Localidad</option>
-            <option value="genero">Género</option>
+            <!-- <option value="genero">Género</option> -->
             <option value="tipo_inscripcion">Tipo de Inscripción</option>
             <option value="estado">Estado del Estudiante</option>
             <option value="promedios">Promedios</option>
@@ -100,9 +100,7 @@ $conn->close();
             case 'localidad':
                 datos = <?php echo json_encode($localidades); ?>;
                 break;
-            case 'genero':
-                datos = <?php echo json_encode($generos); ?>;
-                break;
+
             case 'tipo_inscripcion':
                 datos = <?php echo json_encode($tiposInscripcion); ?>;
                 break;

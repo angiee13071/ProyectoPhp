@@ -37,17 +37,18 @@ $insertion_error = false;
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_estudiante = $data_matrix[$i][5];
     $nombres = $data_matrix[$i][8] . " " . $data_matrix[$i][7];
-    $genero='NO REGISTRA';
+    // $genero='NO REGISTRA';
     $carrera= $data_matrix[$i][1];
     $documento = $data_matrix[$i][6];
     $estrato=$data_matrix[$i][13]; 
-    $localidad='NO APLICA';
-    $genero_genero='NO REGISTRA';
+    $localidad='NO REGISTRA';
+    // $genero_genero='NO REGISTRA';
     $tipo_inscripcion=$data_matrix[$i][10];
     $estado = "ESTUDIANTE ADMITIDO";
     $id_programa= $data_matrix[$i][0];
     $promedio = 'NO APLICA';
     $pasantia = 'NO APLICA';
+    $tipo_icfes= $data_matrix[$i][11];
     $puntaje_icfes = $data_matrix[$i][12];
     $periodo = $data_matrix[$i][4];
     // Calcular el semestre según el mes y el id_periodo
@@ -64,7 +65,20 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         }
     }
   
-   
+    if ($tipo_icfes) {
+      if ($tipo_icfes === "A") {
+          $tipo_icfes = "ICFES Saber 11 ";
+      } elseif ($tipo_icfes === "V") {
+        $tipo_icfes= "ICFES Saber Pro (antes ECAES)";
+      }   elseif ($tipo_icfes === "N") {
+        $tipo_icfes = "ICFES Validación del Bachillerato";
+    } 
+      else {
+        $tipo_icfes = "NO REGISTRA";
+          continue;
+      }
+  }
+
 
     // Verificar si el estudiante ya existe en la tabla 'estudiante'
     $sql_check_student = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
@@ -78,20 +92,21 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     if ($student_count > 0) {
         $insertion_error = true;
         // El estudiante ya existe en la tabla 'estudiante', proceder con la inserción en 'graduado'
-              // echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El egresado con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
-              echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-              border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
-              <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
-              El egresado con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.
-              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❽</div>
-              <div style="position: absolute;  left: 50%;">
-               <span style="font-size: 4rem;">&#8595;</span>
+              // echo "<span style='font-size: 24px; color: orange;'>¡ALERTA!</span> El admitido con ID $id_estudiante ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.<br>";
+              echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
+              border: 2px solid orange; width: 70rem; position: relative; margin-bottom: 2rem;">
+              <span style="font-size: 2rem; color: orange">¡ALERTA!</span><br>
+              El admitido con ID ' . $id_estudiante . ' ya existe en la tabla ESTUDIANTE. Se omitirá la inserción.
+              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">❽</div>
+              <div style="position: absolute; left: 50%;">
+                  <span style="font-size: 4rem;">&#8595;</span>
               </div>
-              </div>';    
+         </div>';
+         
        
     } else {
       // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO estudiante (id_estudiante, nombres, genero, carrera, documento, estrato, localidad, genero_genero, tipo_inscripcion, estado, id_programa, promedio, pasantia, puntaje_icfes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $sql = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, estrato, localidad, tipo_inscripcion, estado, id_programa, promedio, pasantia, tipo_icfes, puntaje_icfes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 // Para obtener mes y semestre de periodo
 // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
@@ -115,20 +130,22 @@ $stmt = $conn->prepare($sql);
 
 // Asignar los valores a los parámetros de la consulta
 // Ejecutar la consulta
-$stmt->bind_param("isssiissssidsd", $id_estudiante, $nombres, $genero, $carrera, $documento, $estrato, $localidad, $genero_genero, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia,$puntaje_icfes);
+//i: Entero (integer),s: Cadena (string),d: Número de punto flotante (double),b: Datos binarios (blob)
+$stmt->bind_param("isssisssidssd", $id_estudiante, $nombres, $carrera, $documento, $estrato, $localidad, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia,$tipo_icfes, $puntaje_icfes);
 
 if (!$stmt->execute()) {
   $insertion_error = true;
   //echo "<span style='font-size: 24px; color: red;'>X ERROR</span> El admitido con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: ". $stmt->error ,"<br>";
- echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-        border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
-        <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
-        El admitido con ID $id_estudiante no se pudo insertar en la tabla ESTUDIANTE: ". $stmt->error ,"<br>";
-        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❽</div>
-        <div style="position: absolute;  left: 50%;">
-         <span style="font-size: 4rem;">&#8595;</span>
-        </div>
-        </div>'; 
+  echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
+  border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative; margin-bottom: 2rem;">
+  <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X ERROR</span><br>
+  El admitido con ID ' . $id_estudiante . ' no se pudo insertar en la tabla ESTUDIANTE: ' . $stmt->error . '<br>
+  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❽</div>
+  <div style="position: absolute; left: 50%;">
+      <span style="font-size: 4rem;">&#8595;</span>
+  </div>
+</div>';
+
 } else {
   $insertion_error = false;
 }

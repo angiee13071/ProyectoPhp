@@ -32,15 +32,50 @@
         </div>
 
         <?php
-         echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
-         border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
-         <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN EXITOSA DE LOS DATOS</span><br>
-         Archivos CVS leídos y transformados.
-         <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❶</div>
-         <div style="position: absolute;  left: 50%;">
-          <span style="font-size: 4rem;">&#8595;</span>
-         </div>
-         </div>';
+ echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
+ border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+ <span style="font-size: 2rem;color:#4CAF50">INICIO</span><br>
+ ✔ Conexión a base de datos exitosa
+ <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓿</div>
+ <div style="position: absolute;  left: 50%;">
+  <span style="font-size: 4rem;">&#8595;</span>
+ </div>
+ </div>';
+ 
+ echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid #4CAF50;width: 63rem;
+ height: 10rem; transform: skew(150deg);margin-bottom: 0rem;">
+     <div style="font-size: 3rem; color: #4CAF50;text-align: initial;">❶</div>
+     <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
+     <div>Extracción y transformación exitosa de los datos.</div>
+     <div style="position: absolute;  left: 50%;">
+   
+    </div>
+ </div>';
+ echo' <span style="font-size: 4rem;margin-bottom: 0.5rem;">&#8595;</span>';
+
+//  echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid #4CAF50;width: 70rem;
+//  height: 150px;
+//  transform: skew(150deg);">
+//      <div style="font-size: 3rem; color: #4CAF50;text-align: initial;">❶</div>
+//      <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
+  
+//      <div>Extracción y transformación exitosa de los datos.</div>
+//      <div style="position: absolute;  left: 50%;">
+//      <span style="font-size: 4rem;">&#8595;</span>
+//     </div>
+//  </div>';
+
+//  echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
+//  border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+//  <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
+//  Extracción y transformación exitosa de los datos.
+//  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❶</div>
+//  <div style="position: absolute;  left: 50%;">
+//   <span style="font-size: 4rem;">&#8595;</span>
+//  </div>
+//  </div>';
+
+
 // Tomar el archivo de egresados para subir los programas academicos y periodos:
 require 'Insert_EgresadoCSV_Programa_Periodo.php';
 
@@ -66,8 +101,16 @@ require 'Insert_PrimiparosCSV_Primiparo.php';
 // Llamar y ejecutar procedimiento almacenado para llenar tablas total y retirado
 require 'CalcularTotal.php';
 
+echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
+border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+<span style="font-size: 2rem;color:#4CAF50">FIN</span><br>
+✔ Proceso de importación completado
+<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❿⓫</div>
+<div style="position: absolute;  left: 50%;">
+</div>
+</div>';
 ?>
-        <h2>Proceso de importación completado</h2>
+        <!-- <h2>Proceso de importación completado</h2> -->
         <!-- <p>Todos los archivos CSV se han procesado exitosamente.</p>
         <p>Los datos se han insertado en las respectivas tablas en la base de datos.</p> -->
     </div>

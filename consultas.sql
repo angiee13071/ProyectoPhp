@@ -24,17 +24,18 @@ CREATE TABLE periodo (
 CREATE TABLE estudiante (
   id_estudiante BIGINT PRIMARY KEY,
   nombres VARCHAR(255),
-  genero VARCHAR(255),
+  -- genero VARCHAR(255),
   carrera VARCHAR(255),
   documento VARCHAR(255),
   estrato INT,
   localidad VARCHAR(255),
-  genero_genero VARCHAR(255),
+  -- genero_genero VARCHAR(255),
   tipo_inscripcion VARCHAR(255),
   estado VARCHAR(255),
   id_programa INT,
   promedio FLOAT,
   pasantia VARCHAR(255),
+  tipo_icfes VARCHAR(255),
   puntaje_icfes FLOAT,
   FOREIGN KEY (id_programa) REFERENCES programa(id_programa)
 );
@@ -72,6 +73,7 @@ CREATE TABLE admitido (
   id_estudiante BIGINT,
   id_periodo INT,
   tipo_inscripcion VARCHAR(255),
+  tipo_icfes VARCHAR(255),
   puntaje_icfes FLOAT,
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)

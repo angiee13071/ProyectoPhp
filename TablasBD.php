@@ -87,6 +87,7 @@ $conn = getDBConnection();
                     <th>Estado</th>
                     <th>Promedio_grado</th>
                     <th>Pasantía</th>
+                    <th>Tipo_Icfes</th>
                     <th>Icfes</th>
                 </tr>
                 <?php
@@ -108,6 +109,7 @@ $conn = getDBConnection();
     echo "<td>" . $row['estado'] . "</td>";
     echo "<td>" . $row['promedio'] . "</td>";
     echo "<td>" . $row['pasantia'] . "</td>";
+    echo "<td>" . $row['tipo_icfes'] . "</td>";
     echo "<td>" . $row['puntaje_icfes'] . "</td>";
     echo "</tr>";
   }
