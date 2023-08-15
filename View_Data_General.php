@@ -1,5 +1,8 @@
 <?php
 include "ConexionBD.php"; // Incluir el archivo de conexión a la base de datos
+// Crear una instancia de la clase DatabaseConnection
+$dbConnection = new DatabaseConnection();
+$conn = $dbConnection->getDBConnection();
 $labels = [];
 $data = [];
 
@@ -57,7 +60,7 @@ if ($result->num_rows > 0) {
   }
 }
 
-$conn->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -155,9 +158,7 @@ $conn->close();
             case 'puntaje_icfes':
                 datos = <?php echo json_encode($puntajesIcfes); ?>;
                 break;
-            case 'puntajes':
-                datos = <?php echo json_encode($puntajes); ?>;
-                break;
+
         }
 
         // Contar la frecuencia de cada dato
@@ -223,6 +224,7 @@ $conn->close();
 
     // Crear el gráfico inicial
     createChart();
+    //$conn->close();
     </script>
     <script>
     function goBack() {
