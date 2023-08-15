@@ -85,15 +85,15 @@ if ($result->num_rows > 0) {
             <canvas id="datos-generales-chart"></canvas>
         </div>
         <select id="data-type">
-            <option value="localidad">Carrera</option>
-            <option value="localidad">Estrato</option>
+            <option value="carrera">Carrera</option>
+            <option value="estrato">Estrato</option>
             <option value="localidad">Localidad</option>
             <!-- <option value="genero">Género</option> -->
             <option value="tipo_inscripcion">Tipo de Inscripción</option>
             <option value="estado">Estado del Estudiante</option>
             <option value="promedios">Promedios</option>
             <option value="pasantias">Pasantías</option>
-            <option value="pasantias">tipo_icfes</option>
+            <option value="tipo_icfes">tipo_icfes</option>
             <option value="puntajes">Puntaje Icfes</option>
         </select>
         <select id="chart-type-p" class="oculto" style="display: none;">
