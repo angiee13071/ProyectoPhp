@@ -27,8 +27,9 @@
                 <?php
 // Incluir el archivo de conexión a la base de datos
 include "ConexionBD.php";
-// Obtener la conexión a la base de datos
-$conn = getDBConnection();
+// Crear una instancia de la clase DatabaseConnection
+$dbConnection = new DatabaseConnection();
+$conn = $dbConnection->getDBConnection();
 // Realizar la consulta a la base de datos
   // Realizar la consulta a la base de datos para estudiantes retirados
   $queryPeriodo= "SELECT * FROM periodo";

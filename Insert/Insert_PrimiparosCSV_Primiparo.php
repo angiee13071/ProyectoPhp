@@ -3,7 +3,9 @@ set_time_limit(300);
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
 require_once '../ConexionBD.php';
-
+// Crear una instancia de la clase DatabaseConnection
+$dbConnection = new DatabaseConnection();
+$conn = $dbConnection->getDBConnection();
 
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
@@ -19,7 +21,7 @@ $insertion_alert = false;
 
 
 // Abrir la conexión a la base de datos
-$conn = getDBConnection();
+// $conn = getDBConnection();
 
 // Insertar los datos en la tabla 'primiparo'
 for ($i = 2; $i < count($file_data); $i++) {
@@ -99,8 +101,7 @@ for ($i = 2; $i < count($file_data); $i++) {
    
 }
 
-// Cerrar la conexión a la base de datos después de haber procesado todos los datos
-$conn->close();
+
 
 if($insertion_error){
     echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
@@ -137,5 +138,6 @@ else if (!$insertion_error) {
     </div>
     </div>';
 }
-
+// Cerrar la conexión a la base de datos después de haber procesado todos los datos
+$conn->close();
 ?>

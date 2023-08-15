@@ -2,7 +2,35 @@
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
 require_once '../ConexionBD.php';
+// include "conexion.php";
 
+try {
+    $db = new DatabaseConnection();
+    $conn = $db->getDBConnection();
+    echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
+        border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+        <span style="font-size: 2rem;color:#4CAF50"> ✔ INICIO</span><br>
+       Conexión a base de datos exitosa
+        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓿</div>
+        <div style="position: absolute;  left: 50%;">
+         <span style="font-size: 4rem;">&#8595;</span>
+        </div>
+    </div>';
+    
+    // Aquí puedes realizar operaciones con la base de datos
+    
+    // $db->closeConnection();
+} catch (Exception $e) {
+    echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
+    border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
+    <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X INICIO ERROR</span><br>
+    ' . $e->getMessage() . '
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">⓿</div>
+    <div style="position: absolute;  left: 50%;">
+     <span style="font-size: 4rem;">&#8595;</span>
+    </div>
+    </div>';
+}
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
 

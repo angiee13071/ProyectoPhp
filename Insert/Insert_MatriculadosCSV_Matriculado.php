@@ -2,12 +2,15 @@
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
 require_once '../ConexionBD.php';
+// Crear una instancia de la clase DatabaseConnection
+$dbConnection = new DatabaseConnection();
+$conn = $dbConnection->getDBConnection();
 
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
 
 // Obtener la conexión a la base de datos
-$conn = getDBConnection();
+// $conn = getDBConnection();
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
@@ -144,5 +147,6 @@ if($insertion_error){
     </div>
     </div>'; 
 }
-
+// Cerrar la conexión a la base de datos
+$conn->close();
 ?>

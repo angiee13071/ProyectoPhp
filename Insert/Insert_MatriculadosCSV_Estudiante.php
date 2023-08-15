@@ -4,7 +4,8 @@ set_time_limit(300);
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
 require_once '../ConexionBD.php';
-
+$dbConnection = new DatabaseConnection();
+$conn = $dbConnection->getDBConnection();
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
 
@@ -36,7 +37,7 @@ $insertion_error = false;
 $insertion_alert = false;
 
 // Abrir la conexión a la base de datos
-$conn = getDBConnection();
+// $conn = getDBConnection();
 
 // Insertar los datos en la tabla 'estudiante'
 for ($i = 2; $i < count($data_matrix); $i++) {
@@ -93,7 +94,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 }
 
 // Cerrar la conexión a la base de datos después de haber procesado todos los datos
-$conn->close();
+
 if($insertion_error){
 //         echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
 //         border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
@@ -127,4 +128,5 @@ else if (!$insertion_error) {
     </div>
     </div>';
 }
+$conn->close();
 ?>

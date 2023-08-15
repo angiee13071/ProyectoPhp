@@ -2,6 +2,12 @@
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
 require_once '../ConexionBD.php';
+// Crear una instancia de la clase DatabaseConnection
+$dbConnection = new DatabaseConnection();
+$conn = $dbConnection->getDBConnection();
+
+// Resto del código ...
+
 
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
@@ -27,8 +33,8 @@ foreach ($file_data as $line) {
     $data_matrix[] = $row;
 }
 
-// Obtener la conexión a la base de datos
-$conn = getDBConnection();
+// // Obtener la conexión a la base de datos
+// $conn = getDBConnection();
 
 // Variable para controlar si hubo algún error durante el proceso de inserción
 $errors_by_student = "";
@@ -125,8 +131,7 @@ $stmt->close();
     }
 }
 
-// Cerrar la conexión a la base de datos
-$conn->close();
+
 
 // Mostrar mensaje de éxito si no se encontraron estudiantes duplicados
 if($insertion_error){
@@ -163,5 +168,6 @@ if (!$insertion_error) {
     </div>
     </div>';
   }
-
+// Cerrar la conexión a la base de datos
+$conn->close();
 ?>
