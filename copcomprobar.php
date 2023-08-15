@@ -8,7 +8,7 @@ $password = "";
 $dbname = "Permanencia_Desercion";
 
 // Función para obtener la conexión a la base de datos
-error_reporting(0);
+// error_reporting(0);
 function getDBConnection() {
     global $host, $port, $socket, $user, $password, $dbname;
 
@@ -51,7 +51,9 @@ Proceso de importación completado
     }
 
 
+    if (!function_exists('getDBConnection')) {
+        $conn = getDBConnection();
+    }
 
-$conn = getDBConnection();
 // $conn->close(); // Elimina esta línea para evitar cerrar la conexión aquí
 ?>
