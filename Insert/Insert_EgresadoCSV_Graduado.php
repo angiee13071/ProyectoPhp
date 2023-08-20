@@ -50,6 +50,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $semestre = ($month <= 6) ? 1 : 2;
     $promedio = $data_matrix[$i][15];
     $pasantia = $data_matrix[$i][16];
+
     // Verificar si el estudiante ya existe en la tabla 'graduado'
     $sql_check_existing = "SELECT COUNT(*) FROM graduado WHERE id_estudiante = ?";
     $stmt_check_existing = $conn->prepare($sql_check_existing);
@@ -133,7 +134,7 @@ else if (!$insertion_error) {
    border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
    <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
    Graduados insertados correctamente en la tabla GRADUADO.
-   <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❼</div>
+   <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⑧</div>
    <div style="position: absolute;  left: 50%;">
     <span style="font-size: 4rem;">&#8595;</span>
    </div>
