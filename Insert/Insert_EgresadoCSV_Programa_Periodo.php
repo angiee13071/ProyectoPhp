@@ -11,7 +11,7 @@ try {
         border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
         <span style="font-size: 2rem;color:#4CAF50"> ✔ INICIO</span><br>
        Conexión a base de datos exitosa
-        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓿</div>
+        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓪</div>
         <div style="position: absolute;  left: 50%;">
          <span style="font-size: 4rem;">&#8595;</span>
         </div>
@@ -40,16 +40,17 @@ $url3 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_períod
 $url4 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
 // validar si existen los archivos
 if (file_exists($url1) && file_exists($url2) && file_exists($url3) && file_exists($url4)) {
-    echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid #4CAF50;width: 63rem;
-     height: 10rem; transform: skew(150deg);margin-bottom: 0rem;">
-         <div style="font-size: 3rem; color: #4CAF50;text-align: initial;">❶</div>
-         <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
-         <div>Extracción y transformación exitosa de los datos.</div>
-         <div style="position: absolute;  left: 50%;">
-       
-        </div>
-     </div>';
-     echo' <span style="font-size: 4rem;margin-bottom: 0.5rem;">&#8595;</span>';
+    echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+    border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+    <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
+    Extracción y transformación exitosa de los datos. 
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">①</div>
+    <div style="position: absolute;  left: 50%;">
+     <span style="font-size: 4rem;">&#8595;</span>
+    </div>
+    </div>';
+
+
     } else{
         echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid rgba(255, 99, 132, 1);width: 63rem;
         height: 10rem; transform: skew(150deg);margin-bottom: 0rem;">
@@ -67,6 +68,8 @@ $file_data = file($url, FILE_IGNORE_NEW_LINES);
 
 // Crear una matriz para almacenar los datos
 $data_matrix = [];
+$data_matrix_2 = [];
+
 
 // Iterar sobre cada línea del archivo
 foreach ($file_data as $line) {
@@ -81,11 +84,14 @@ foreach ($file_data as $line) {
 
     // Agregar la fila a la matriz de datos
     $data_matrix[] = $row;
+    $data_matrix_2[] = $row;
 }
 
 // Obtener los datos únicos de "CRA. COD" y "CARRERA"
 $cra_cod_values = array_unique(array_column(array_slice($data_matrix, 2), 1));
 $carrera_values = array_unique(array_column(array_slice($data_matrix, 2), 2));
+$periodo_values = array_unique(array_column(array_slice($data_matrix_2, 2), 9));
+
 
 // Función para validar y obtener el id_programa según el nombre del programa
 function obtenerIdPrograma($nombre_programa)
@@ -152,14 +158,20 @@ foreach ($carrera_values as $carrera) {
     }
 }
 // Ejecutar la inserción para cada fila de datos
-foreach ($data_matrix as $row) {
+
+foreach ($periodo_values as $row) {
     // Calcular el semestre según el mes y el id_periodo
-    $fecha_grado = isset($row[9]) ? $row[9] : null;
+    
+    $fecha_grado = isset($row) ? $row : null;
+    if ($fecha_grado == null) {
+        // El período ya existe, omitir la inserción
+        continue;
+    }
+    
     $year = date('Y', strtotime($fecha_grado));
     $month = date('n', strtotime($fecha_grado));
     $semestre = ($month <= 6) ? 1 : 2;
     $cohorte = ($month <= 6) ? 1 : 3;
-
     // Verificar si el período ya existe en la tabla periodo
     $sql_check_periodo = "SELECT COUNT(*) FROM periodo WHERE anio = ? AND semestre = ?";
     $stmt_check_periodo = $conn->prepare($sql_check_periodo);
@@ -196,7 +208,7 @@ echo '<div style="background-color: #efffef; color: black; padding: 10px; text-a
 border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
 <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
 Carreras insertadas correctamente en la tabla PROGRAMA.
-<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❷</div>
+<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">②</div>
 <div style="position: absolute;  left: 50%;">
  <span style="font-size: 4rem;">&#8595;</span>
 </div>

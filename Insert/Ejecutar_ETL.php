@@ -20,7 +20,7 @@
 
                     <li class="nav-item"><a href="https://www.udistrital.edu.co/inicio"
                             style="text-decoration: none;">Inicio ▼</a></li>
-                    <li class="nav-item"><a href="https://ftecnologica.udistrital.edu.co/"
+                    <li class="nav-item"><a href="https://www.udistrital.edu.co/directorio"
                             style="text-decoration: none;">Contacto ▼</a></li>
                     <li class="nav-item"><a
                             href="https://www.udistrital.edu.co/admisiones/index.php/oferta/programas/ingenieria-en-telematica-por-ciclos-propedeuticos"
@@ -65,27 +65,27 @@ require 'Insert_MatriculadosCSV_Matriculado.php';
 // Tomar el archivo de primiparos y llenar la tabla estudiante
 require 'Insert_PrimiparosCSV_Estudiante.php';
 
-// Tomar el archivo de primiparos y llenar la tabla primiparo:
+//Tomar el archivo de primiparos y llenar la tabla primiparo:
 require 'Insert_PrimiparosCSV_Primiparo.php';
 
 // Llamar y ejecutar el archivo EgresadoGraduadoCSV.php
- require 'Insert_EgresadoCSV_Graduado.php';
- //Tomar el archivo admitidos para subirlo a la tabla estudiantes:
- require 'Insert_AdmitidosCSV_Estudiante.php';
- //Tomar archivo admitidos y llenar talbla admitido
- require 'Insert_AdmitidosCVS_Admitido.php';
+require 'Insert_EgresadoCSV_Graduado.php';
+
+//Tomar el archivo admitidos para subirlo a la tabla estudiantes:
+require 'Insert_AdmitidosCSV_Estudiante.php';
+ 
+//Tomar archivo admitidos y llenar talbla admitido
+require 'Insert_AdmitidosCVS_Admitido.php';
+
 // Llamar y ejecutar procedimiento almacenado para llenar tablas total y retirado
 require 'CalcularTotal.php';
 
 
 echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
-border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
-<span style="font-size: 2rem;color:#4CAF50">✔ FIN</span><br>
-Proceso de importación completado
-<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓫</div>
-<div style="position: absolute;  left: 50%;">
-</div>
-</div>';
+        border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+        <span style="font-size: 2rem;color:#4CAF50">✔ FIN</span><br>
+        Proceso de importación completado
+        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⑫</div>';
 ?>
         <!-- <h2>Proceso de importación completado</h2> -->
         <!-- <p>Todos los archivos CSV se han procesado exitosamente.</p>

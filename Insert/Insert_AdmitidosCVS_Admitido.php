@@ -13,8 +13,7 @@ $file_data = file($url, FILE_IGNORE_NEW_LINES);
 
 // Crear una matriz para almacenar los datos
 $data_matrix = [];
-$errors_by_student = "";
-$alerts_by_student = "";
+
 // Iterar sobre cada línea del archivo
 foreach ($file_data as $line) {
     // Dividir la línea en sus elementos utilizando la coma como separador
@@ -34,29 +33,25 @@ foreach ($file_data as $line) {
 // $conn = getDBConnection();
 
 // Variable para controlar si hubo algún error durante el proceso de inserción
+$errors_by_student = "";
+$alerts_by_student = "";
 $insertion_error = false;
 $insertion_alert = false;
+
 // Insertar los datos en la tabla 'graduado'
 for ($i = 2; $i < count($data_matrix); $i++) {
-    $id_estudiante = $data_matrix[$i][5];
-    $tipo_inscripcion=$data_matrix[$i][10];
-    $tipo_icfes= $data_matrix[$i][11];
-    $puntaje_icfes = $data_matrix[$i][12];
-    $periodo = $data_matrix[$i][4];
-    // Calcular el semestre según el mes y el id_periodo
-    $year = date('Y', strtotime($periodo));
-    $month = date('n', strtotime($periodo));
-    if ($id_programa !== "578" && $id_programa !== "678") {
-        if ($carrera === "TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)") {
-            $id_programa = "578";
-        } elseif ($carrera === "INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)") {
-            $id_programa = "678";
-        } else {
-            // Si no es ninguna de las carreras válidas, continuamos con el siguiente registro
-            continue;
-        }
-    }
+  $id_admitido = $i-1;
+  $id_estudiante = $data_matrix[$i][5];
+  $periodo = $data_matrix[$i][4];
+  $tipo_inscripcion=$data_matrix[$i][10];
+  $tipo_icfes= $data_matrix[$i][11];
+  $puntaje_icfes = $data_matrix[$i][12];
+
+  // Calcular el semestre según el mes y el id_periodo
+  $year = date('Y', strtotime($periodo));
+  $semestre = date('n', strtotime($periodo));
   
+  //Identificar el Tipo de ICFES
     if ($tipo_icfes) {
       if ($tipo_icfes === "A") {
           $tipo_icfes = "ICFES Saber 11 ";
@@ -71,65 +66,53 @@ for ($i = 2; $i < count($data_matrix); $i++) {
       }
   }
 
+  // Verificar si el estudiante ya existe en la tabla 'graduado'
+  $sql_check_existing = "SELECT COUNT(*) FROM admitido WHERE id_estudiante = ?";
+  $stmt_check_existing = $conn->prepare($sql_check_existing);
+  $stmt_check_existing->bind_param("s", $id_estudiante);
+  $stmt_check_existing->execute();
+  $stmt_check_existing->bind_result($existing_count);
+  $stmt_check_existing->fetch();
+  $stmt_check_existing->close();
 
-    // Verificar si el estudiante ya existe en la tabla 'estudiante'
-    $sql_check_student = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
-    $stmt_check_student = $conn->prepare($sql_check_student);
-    $stmt_check_student->bind_param("s", $id_estudiante);
-    $stmt_check_student->execute();
-    $stmt_check_student->bind_result($student_count);
-    $stmt_check_student->fetch();
-    $stmt_check_student->close();
-
-    if ($student_count > 0) {
-        $insertion_alert = true;
-        $alerts_by_student = $alerts_by_student.", ".$id_estudiante;
-
-    } else {
-
-// Para obtener mes y semestre de periodo
-// Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
-$year = mysqli_real_escape_string($conn, $year);
-$semestre = mysqli_real_escape_string($conn, $semestre);
-// Consultar el id_periodo que coincide con el año y el semestre
-$sql_periodo = "SELECT id_periodo FROM periodo WHERE año = '$year' AND semestre = '$semestre'";
-$result_periodo = $conn->query($sql_periodo);
-
-// Verificar si se encontró el id_periodo
-if ($result_periodo && $result_periodo->num_rows > 0) {
-  $row = $result_periodo->fetch_assoc();
-  $id_periodo = $row['id_periodo'];
-} else {
-  // Si no se encontró el id_periodo, se coloca por defecto 1
-  $id_periodo = 1;
-}
-      // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO admitido (id_estudiante, id_periodo, tipo_inscripcion, tipo_icfes, puntaje_icfes) VALUES (?, ?, ?, ?, ?)";
-
-
-// Preparar la sentencia
-$stmt = $conn->prepare($sql);
-
-// Asignar los valores a los parámetros de la consulta
-// Ejecutar la consulta
-//i: Entero (integer),s: Cadena (string),d: Número de punto flotante (double),b: Datos binarios (blob)
-$stmt->bind_param("isssisssidssd", $id_estudiante, $nombres, $carrera, $documento, $estrato, $localidad, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia,$tipo_icfes, $puntaje_icfes);
-
-if (!$stmt->execute()) {
-  $insertion_error= true;
-  $errors_by_student = $errors_by_student.", ".$id_estudiante. $stmt->error;
-
-} else {
-  $insertion_error = false;
-}
-
-// Cerrar la sentencia
-$stmt->close();
-    }
-   
-}
-
-
+  if ($existing_count > 0) {
+      $insertion_alert = true;
+      $alerts_by_student = $alerts_by_student.", ".$id_estudiante;
+  
+  } else {
+    $sql_periodo = "SELECT id_periodo FROM periodo WHERE anio = ? AND semestre = ?";
+    $stmt_periodo = $conn->prepare($sql_periodo);
+          if ($stmt_periodo) {
+            $stmt_periodo->bind_param("ii", $year, $semestre);
+            $stmt_periodo->execute();
+            $stmt_periodo->bind_result($id_periodo);
+            $stmt_periodo->fetch();
+            $stmt_periodo->close();
+          } else {
+            echo "Error en la consulta preparada para obtener id_periodo: " . $conn->error;
+            exit;
+          }
+          // Preparar la consulta SQL
+          $sql = "INSERT INTO admitido (id_admitido, id_estudiante, id_periodo, tipo_inscripcion, tipo_icfes, puntaje_icfes) 
+          VALUES (?, ?, ?, ?, ?, ?)";
+          
+          // Preparar la sentencia
+          $stmt = $conn->prepare($sql);
+          
+          // Asignar los valores a los parámetros de la consulta
+          // Ejecutar la consulta
+          $stmt->bind_param("iiissd", $id_admitido, $id_estudiante, $id_periodo, $tipo_inscripcion, $tipo_icfes, $puntaje_icfes);
+          
+            if (!$stmt->execute()) {
+              $insertion_error= true;
+              $errors_by_student = $errors_by_student.", ".$id_estudiante.$stmt->error;
+            } else {
+            $insertion_error = false;
+          }
+          // Cerrar la sentencia
+          $stmt->close();
+        }
+      }
 
 // Mostrar mensaje de éxito si no se encontraron estudiantes duplicados
 if($insertion_error){
@@ -159,7 +142,7 @@ else if (!$insertion_error) {
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
     Admitidos insertados correctamente en la tabla ADMITIDOS. 
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❾</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⑩</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
@@ -167,4 +150,3 @@ else if (!$insertion_error) {
   }
 // Cerrar la conexión a la base de datos
 $conn->close();
-?>
