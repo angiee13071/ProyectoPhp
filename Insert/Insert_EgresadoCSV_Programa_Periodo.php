@@ -10,7 +10,7 @@ try {
     echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
         border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
         <span style="font-size: 2rem;color:#4CAF50"> ✔ INICIO</span><br>
-       Conexión a base de datos exitosa
+       Conexión a base de datos exitosa.
         <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓪</div>
         <div style="position: absolute;  left: 50%;">
          <span style="font-size: 4rem;">&#8595;</span>
@@ -25,12 +25,13 @@ try {
     border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X INICIO ERROR</span><br>
     ' . $e->getMessage() . '
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">⓿</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">⓪</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
     </div>';
 }
+
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
 
@@ -52,16 +53,15 @@ if (file_exists($url1) && file_exists($url2) && file_exists($url3) && file_exist
 
 
     } else{
-        echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid rgba(255, 99, 132, 1);width: 63rem;
-        height: 10rem; transform: skew(150deg);margin-bottom: 0rem;">
-            <div style="font-size: 3rem; color: rgba(255, 99, 132, 1);text-align: initial;">❶</div>
-            <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
-            <div>No se encuentran todos los archivos en su totalidad, por favor validar.</div>
-            <div style="position: absolute;  left: 50%;">
-          
-           </div>
-        </div>';
-        echo' <span style="font-size: 4rem;margin-bottom: 0.5rem;">&#8595;</span>';
+        echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+    border: 2px solid  rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
+    <span style="font-size: 2rem;color: rgba(255, 99, 132, 1)">X EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
+    No se encuentran todos los archivos en su totalidad, por favor validar.
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color: rgba(255, 99, 132, 1)">①</div>
+    <div style="position: absolute;  left: 50%;">
+     <span style="font-size: 4rem;">&#8595;</span>
+    </div>
+    </div>';
     }
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
