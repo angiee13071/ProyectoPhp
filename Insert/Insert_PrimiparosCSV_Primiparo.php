@@ -45,11 +45,8 @@ for ($i = 2; $i < count($file_data); $i++) {
     $anio = $year_semester[0];
     $semestre = $year_semester[1];
 } else {
- 
-    continue; // Saltar a la siguiente iteración del bucle
+    continue; 
 }
-//  $anio = $year_semester[0];
-//  $semestre = $year_semester[1];
 
  // Buscar el id_periodo en la tabla 'periodo' utilizando el año y el semestre
  $sql_get_id_periodo = "SELECT id_periodo FROM periodo WHERE anio = ? AND semestre = ?";
@@ -59,6 +56,7 @@ for ($i = 2; $i < count($file_data); $i++) {
  $stmt_get_id_periodo->bind_result($id_periodo);
  $stmt_get_id_periodo->fetch();
  $stmt_get_id_periodo->close();
+ 
     // Verificar si el estudiante ya existe en la tabla 'primiparo'
     $sql_check_existing = "SELECT COUNT(*) FROM primiparo WHERE id_primiparo = ?";
     $stmt_check_existing = $conn->prepare($sql_check_existing);
@@ -108,7 +106,7 @@ if($insertion_error){
     border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
     Los estudiantes nuevos con los siguientes ID, no se pueden insertar en la tabla PRIMIPARO:' .$errors_by_studenty.',  ". "<br>";
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❻</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">⑦</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
@@ -119,7 +117,7 @@ if($insertion_error){
     border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
     Los estudiantes nuevos con los siguientes ID, ya existen en la tabla PRIMIPARO. Se omitirá la inserción.: ' .$alerts_by_student.' 
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❻</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">⑦</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
