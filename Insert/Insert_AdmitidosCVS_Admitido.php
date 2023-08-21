@@ -120,7 +120,7 @@ if($insertion_error){
   border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative; margin-bottom: 2rem;">
   <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X ERROR</span><br>
   Los estudiantes admitidos con los siguientes ID, no se pueden no se pueden insertar en la tabla ADMITIDOS.' . $errors_by_student . '<br>
-  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❾</div>
+  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">⑩</div>
   <div style="position: absolute; left: 50%;">
       <span style="font-size: 4rem;">&#8595;</span>
   </div>
@@ -130,7 +130,7 @@ if($insertion_error){
               border: 2px solid orange; width: 70rem; position: relative; margin-bottom: 2rem;">
               <span style="font-size: 2rem; color: orange">¡ALERTA!</span><br>
               Los estudiantes admitidos con los siguientes ID, ya existen en la tabla ADMITIDOS. Se omitirá la inserción: ' . $alerts_by_student . '
-              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">❾</div>
+              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">⑩</div>
               <div style="position: absolute; left: 50%;">
                   <span style="font-size: 4rem;">&#8595;</span>
               </div>
