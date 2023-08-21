@@ -51,6 +51,11 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $promedio = $data_matrix[$i][15];
     $pasantia = $data_matrix[$i][16];
 
+    //Validar campos vacios
+    if ($pasantia == "") { 
+        $pasantia = 'NO APLICA';
+    }
+    
     // Verificar si el estudiante ya existe en la tabla 'graduado'
     $sql_check_existing = "SELECT COUNT(*) FROM graduado WHERE id_estudiante = ?";
     $stmt_check_existing = $conn->prepare($sql_check_existing);
@@ -112,7 +117,7 @@ if($insertion_alert){
         border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
         <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
          Los estudiantes graduados con los siguientes ID, ya existen en la tabla GRADUADO. Se omitirá la inserción.'.$alerts_by_student .'
-        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❼</div>
+        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">⑧</div>
         <div style="position: absolute;  left: 50%;">
          <span style="font-size: 4rem;">&#8595;</span>
         </div>
@@ -122,7 +127,7 @@ if($insertion_alert){
     border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
     Los estudiantes graduados con los siguientes ID, no se pueden insertar en la tabla GRADUADO.'.$errors_by_student.'  ","<br>";
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❼</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">⑧</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>

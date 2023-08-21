@@ -46,8 +46,8 @@
 // Tomar el archivo de egresados para subir los programas academicos y periodos:
 require 'Insert_EgresadoCSV_Programa_Periodo.php';
 
- //Tomar el archivo egresado para subirlo a la tabla estudiantes:
-//require 'Insert_EgresadoCSV_Estudiante.php';
+//Tomar el archivo egresado para subirlo a la tabla estudiantes:
+require 'Insert_EgresadoCSV_Estudiante.php';
 
 //Tomar el archivo de matriculados actualmente para subirlos a la tabla estudiante:
 //require 'Insert_MatriculadosCSV_Estudiante.php';
@@ -62,7 +62,7 @@ require 'Insert_EgresadoCSV_Programa_Periodo.php';
 //require 'Insert_PrimiparosCSV_Primiparo.php';
 
 // Llamar y ejecutar el archivo EgresadoGraduadoCSV.php
-//require 'Insert_EgresadoCSV_Graduado.php';
+require 'Insert_EgresadoCSV_Graduado.php';
 
 //Tomar el archivo admitidos para subirlo a la tabla estudiantes:
 //require 'Insert_AdmitidosCSV_Estudiante.php';
