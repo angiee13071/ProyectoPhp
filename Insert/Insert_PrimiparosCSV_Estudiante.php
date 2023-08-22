@@ -7,7 +7,7 @@ require_once '../ConexionBD.php';
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_a_primer_semestre.csv";
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
