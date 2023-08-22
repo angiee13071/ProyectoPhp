@@ -37,7 +37,7 @@ $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyec
 $url1 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_de_admitidos.csv";
 $url2 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
 $url3 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
-$url4 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
+$url4 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_a_primer_semestre.csv";
 
 // validar si existen los archivos
 if (file_exists($url1) && file_exists($url2) && file_exists($url3) && file_exists($url4)) {

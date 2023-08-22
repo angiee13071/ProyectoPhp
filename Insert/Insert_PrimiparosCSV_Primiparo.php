@@ -8,7 +8,7 @@ $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
 
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_a_primer_semestre.csv";
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
@@ -56,7 +56,7 @@ for ($i = 2; $i < count($file_data); $i++) {
  $stmt_get_id_periodo->bind_result($id_periodo);
  $stmt_get_id_periodo->fetch();
  $stmt_get_id_periodo->close();
- 
+
     // Verificar si el estudiante ya existe en la tabla 'primiparo'
     $sql_check_existing = "SELECT COUNT(*) FROM primiparo WHERE id_primiparo = ?";
     $stmt_check_existing = $conn->prepare($sql_check_existing);
