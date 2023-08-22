@@ -7,7 +7,7 @@ $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
 
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_periodo_actual.csv";
 
 // Obtener la conexión a la base de datos
 // $conn = getDBConnection();
