@@ -7,7 +7,7 @@ require_once '../ConexionBD.php';
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_periodo_actual.csv";
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
@@ -57,6 +57,11 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         continue;
     }
 
+    if ($estado == "ESTUDIANTE GRADUADO") {
+        // Omitir a los estudiantes que ya se graduaron
+        continue;
+    }
+
     // Verificar si el estudiante ya existe en la base de datos
     $sql_check_existing = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
     $stmt_check_existing = $conn->prepare($sql_check_existing);
@@ -93,40 +98,39 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     }
 }
 
-// Cerrar la conexión a la base de datos después de haber procesado todos los datos
 
-if($insertion_error){
-//         echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-//         border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
-//         <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
-//         Los estudiantes matriculados con los siguientes ID, ya existe en la tabla ESTUDIANTE. Se omitirá la inserción. ' . $id_estudiante . ' 
-//         <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">③</div>
-//         <div style="position: absolute;  left: 50%;">
-//           <span style="font-size: 4rem;">&#8595;</span>
-//         </div>
-//   </div>';
-}else if($insertion_alert){
+// Mostrar mensaje de éxito si no se encontraron estudiantes duplicados
+if($insertion_alert){
+    echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+        border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
+        <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
+        Los estudiantes matriculados con los siguientes ID, ya existen en la tabla ESTUDIANTE. Se omitirá la inserción.'.$alerts_by_student .'
+        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">④</div>
+        <div style="position: absolute;  left: 50%;">
+        <span style="font-size: 4rem;">&#8595;</span>
+        </div>
+        </div>'; 
+}else if($insertion_error){
     echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
     border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
-    Los estudiantes matriculados con los siguientes ID,no se pueden insertar en la tabla ESTUDIANTE. ' . $errors_by_student . '  <br>
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">➌</div>
-    <div style="position: absolute;  left: 50%;">
-      <span style="font-size: 4rem;">&#8595;</span>
-    </div>
-</div>';
-}
-else if (!$insertion_error) {
-    //echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Estudiantes matriculados en el periodo actual insertados en la tabla ESTUDIANTE. <br>';
-    echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-    border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
-    <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
-    Estudiantes matriculados insertados correctamente en la tabla ESTUDIANTE.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">➌</div>
+    Los estudiantes matriculados con los siguientes ID, no se pueden insertar en la tabla ESTUDIANTE.'.$errors_by_student.'  ","<br>";
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">④</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
-    </div>';
+    </div>'; 
+}
+else if (!$insertion_error) {
+   echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+   border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+   <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
+   Estudiantes matriculados insertados correctamente en la tabla ESTUDIANTES.
+   <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">④</div>
+   <div style="position: absolute;  left: 50%;">
+   <span style="font-size: 4rem;">&#8595;</span>
+   </div>
+   </div>';
 }
 $conn->close();
 ?>

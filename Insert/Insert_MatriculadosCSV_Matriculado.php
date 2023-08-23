@@ -7,7 +7,7 @@ $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
 
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_periodo_actual.csv";
 
 // Obtener la conexión a la base de datos
 // $conn = getDBConnection();
@@ -79,6 +79,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $stmt_check_existing->bind_result($existing_count);
     $stmt_check_existing->fetch();
     $stmt_check_existing->close();
+    
     //Si hay datos vacios no los subimos
     if($id_estudiante!=null||$id_estudiante!=''){
         if ($existing_count > 0) {
@@ -90,13 +91,10 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 
             if (!$stmt_insert->execute()) {
                 $insertion_error= true;
-//   $errors_by_student = $errors_by_student.", ".$id_estudiante. $stmt_insert->error;
-$errors_by_student = $errors_by_student.", ".$id_estudiante;
+                $errors_by_student = $errors_by_student.", ".$id_estudiante. $stmt_insert->error; 
             } else {
                 $insertion_error = false;
             }
-    
-            // Incrementar el valor de $id_matricula para el siguiente registro
             $id_matricula++;
     
             // Cerrar la sentencia
@@ -106,47 +104,44 @@ $errors_by_student = $errors_by_student.", ".$id_estudiante;
             $alerts_by_student = $alerts_by_student.", ".$id_estudiante. $stmt_insert->error;
         }
     }
-        
-    // }
-   
 }
 
 
 // Cerrar la conexión a la base de datos después de haber procesado todos los datos
-if (!$insertion_error) {
-    //echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Estudiantes matriculados en el periodo actual insertados en la tabla MATRICULADO. <br>';
+if($insertion_error){
+    echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+    border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
+    <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
+    Los estudiantes graduados con los siguientes ID, ya existen en la tabla MATRICULADO. Se omitirá la inserción.' .$alerts_by_student.' 
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">⑤</div>
+    <div style="position: absolute;  left: 50%;">
+     <span style="font-size: 4rem;">&#8595;</span>
+    </div>
+    </div>';
+}else if($insertion_alert){
+    echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+    border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
+    <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
+    Los estudiantes matriculados con los siguientes ID, no se pueden insertar en la tabla MATRICULADO porqué la tabla ya cuenta con el id primario' .$errors_by_studenty.',  ". "<br>";
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">⑤</div>
+    <div style="position: absolute;  left: 50%;">
+     <span style="font-size: 4rem;">&#8595;</span>
+    </div>
+    </div>'; 
+     
+}
+else if (!$insertion_error) {
+
     echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
-    Estudiantes matriculados insertados correctamente en la tabla MATRICULADO.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❹</div>
+    Matriculados insertados correctamente en la tabla MATRICULADO.
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⑤</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
     </div>';
 }
-
-if($insertion_error){
-    echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-                border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
-                <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
-                Los estudiantes matriculados con los siguientes ID, no se pueden insertar en la tabla MATRICULADO porqué la tabla ya cuenta con el id primario' .$errors_by_student. ' "., "<br>";
-                <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❹</div>
-                <div style="position: absolute;  left: 50%;">
-                 <span style="font-size: 4rem;">&#8595;</span>
-                </div>
-                </div>'; 
-}else if($insertion_alert){
-    echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-    border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
-    <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
-    Los estudiantes matriculados con ID, no existen en la tabla MATRICULADO o son de otra carrera. Se omitirá la inserción en la tabla MATRICULADO.'.$alerts_by_student.' <br>";
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❹</div>
-    <div style="position: absolute;  left: 50%;">
-     <span style="font-size: 4rem;">&#8595;</span>
-    </div>
-    </div>'; 
-}
-// Cerrar la conexión a la base de datos
+// Cerrar la conexión a la base de datos después de haber procesado todos los datos
 $conn->close();
 ?>

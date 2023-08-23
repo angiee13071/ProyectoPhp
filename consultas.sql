@@ -91,6 +91,7 @@ CREATE TABLE matriculado (
 -- Crear la tabla 'total'
 CREATE TABLE total (
   id_cohorte_total INT PRIMARY KEY auto_increment,
+  admitidos INT,
   primiparos INT,
   matriculados INT,
   graduados INT,
@@ -112,6 +113,7 @@ BEGIN
   DECLARE primiparos INT DEFAULT 0;
   DECLARE graduados INT DEFAULT 0;
   DECLARE retirados INT DEFAULT 0;
+  DECLARE admitidos INT DEFAULT 0;
   DECLARE total_matriculados_periodo_anterior INT DEFAULT 0;
   DECLARE total_graduados_periodo_anterior INT DEFAULT 0;
   DECLARE total_retirados INT DEFAULT 0;
@@ -122,6 +124,13 @@ BEGIN
     SELECT id_periodo, id_programa FROM periodo
     JOIN programa ON 1 = 1;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  
+    -- Reinicio de tablas
+  delete from total;
+  ALTER TABLE total AUTO_INCREMENT = 1;
+  
+  delete from retirado;
+  ALTER TABLE retirado AUTO_INCREMENT = 1;
   
   OPEN cur;
   
@@ -135,7 +144,8 @@ BEGIN
     SELECT COUNT(*) INTO primiparos FROM primiparo WHERE id_periodo = periodo_id;
     SELECT COUNT(*) INTO matriculados FROM matriculado WHERE id_periodo = periodo_id;
     SELECT COUNT(*) INTO graduados FROM graduado WHERE id_periodo = periodo_id;
-    SELECT COUNT(*) INTO retirados FROM matriculado WHERE id_periodo = periodo_id; -- Cambio a matriculados del periodo actual
+    SELECT COUNT(*) INTO admitidos FROM admitido WHERE id_periodo = periodo_id;
+    SELECT COUNT(*) INTO retirados FROM retirado WHERE id_periodo = periodo_id; -- Cambio a matriculados del periodo actual
     
     -- Verificar si el período anterior existe
     IF periodo_id > 1 THEN
@@ -159,8 +169,8 @@ BEGIN
     
     -- Insertar en la tabla retirado y total (según tu lógica)
     INSERT INTO retirado (id_periodo, total) VALUES (periodo_id, total_retirados);
-    INSERT INTO total (primiparos, matriculados, graduados, retirados, id_periodo, id_programa) 
-    VALUES (primiparos, matriculados, graduados, retirados, periodo_id, programa_id);
+    INSERT INTO total (admitidos, primiparos, matriculados, graduados, retirados, id_periodo, id_programa) 
+    VALUES (admitidos, primiparos, matriculados, graduados, retirados, periodo_id, programa_id);
    
   END LOOP;
   
