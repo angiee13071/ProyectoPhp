@@ -50,7 +50,7 @@ if ($result->num_rows > 0) {
     $promedios[] = $row['promedio'];
     $pasantias[] = $row['pasantia'];
     $tipos_icfes[] = $row['tipo_icfes'];
-    $puntajesIcfes[] = $row['puntaje_icfes'];
+    $puntajes_icfes[] = $row['puntaje_icfes'];
     $anios[] = $row['anio'];
     if (isset($row['pasantia'])) {
         $pasantias[] = $row['pasantia'];
@@ -94,7 +94,7 @@ if ($result->num_rows > 0) {
             <option value="promedios">Promedios</option>
             <option value="pasantias">Pasantías</option>
             <option value="tipo_icfes">tipo_icfes</option>
-            <option value="puntajes">Puntaje Icfes</option>
+            <option value="puntaje_icfes">Puntaje Icfes</option>
         </select>
         <select id="chart-type-p" class="oculto" style="display: none;">
             <option value="doughnut">Gráfico de Torta</option>
@@ -156,7 +156,7 @@ if ($result->num_rows > 0) {
                 datos = <?php echo json_encode($tipos_icfes); ?>;
                 break;
             case 'puntaje_icfes':
-                datos = <?php echo json_encode($puntajesIcfes); ?>;
+                datos = <?php echo json_encode($puntajes_icfes); ?>;
                 break;
 
         }
