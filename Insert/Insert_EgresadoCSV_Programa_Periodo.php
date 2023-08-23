@@ -11,7 +11,7 @@ try {
         border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
         <span style="font-size: 2rem;color:#4CAF50"> ✔ INICIO</span><br>
        Conexión a base de datos exitosa.
-        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓪</div>
+        <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓿</div>
         <div style="position: absolute;  left: 50%;">
          <span style="font-size: 4rem;">&#8595;</span>
         </div>
@@ -45,7 +45,7 @@ if (file_exists($url1) && file_exists($url2) && file_exists($url3) && file_exist
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
     Extracción y transformación exitosa de los datos. 
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">①</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❶</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
@@ -56,7 +56,7 @@ if (file_exists($url1) && file_exists($url2) && file_exists($url3) && file_exist
     border: 2px solid  rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color: rgba(255, 99, 132, 1)">X EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
     No se encuentran todos los archivos en su totalidad, por favor validar.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color: rgba(255, 99, 132, 1)">①</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color: rgba(255, 99, 132, 1)">❶</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
@@ -210,7 +210,7 @@ else{
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
     Carreras y periodos insertados correctamente en la tabla PROGRAMA y PERIODO.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">②</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❷</div>
     <div style="position: absolute;  left: 50%;">
     <span style="font-size: 4rem;">&#8595;</span>
     </div>
