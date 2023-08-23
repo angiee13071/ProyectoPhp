@@ -19,7 +19,7 @@
         <div id="table-periodo" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
-                    <th>id_periodo</th>
+                    <th>id periodo</th>
                     <th>anio</th>
                     <th>semestre</th>
                     <th>cohorte</th>
@@ -53,7 +53,7 @@ $conn = $dbConnection->getDBConnection();
         <div id="table-programa" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
-                    <th>id_programa</th>
+                    <th>id programa</th>
                     <th>nombre</th>
                 </tr>
                 <?php
@@ -86,9 +86,9 @@ $conn = $dbConnection->getDBConnection();
                     <th>Localidad</th>
                     <th>Tipo Inscripción</th>
                     <th>Estado</th>
-                    <th>Promedio_grado</th>
+                    <th>Promedio grado</th>
                     <th>Pasantía</th>
-                    <th>Tipo_Icfes</th>
+                    <th>Tipo Icfes</th>
                     <th>Icfes</th>
                 </tr>
                 <?php
@@ -123,8 +123,8 @@ $conn = $dbConnection->getDBConnection();
         <div id="table-retirados" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
-                    <th>id_retiro</th>
-                    <th>id_periodo</th>
+                    <th>id retiro</th>
+                    <th>id periodo</th>
                     <th>total</th>
                 </tr>
                 <?php
@@ -151,10 +151,10 @@ $conn = $dbConnection->getDBConnection();
         <div id="table-graduados" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
-                    <th>id_graduado</th>
-                    <th>id_estudiante</th>
-                    <th>id_periodo</th>
-                    <th>fecha_grado</th>
+                    <th>id graduado</th>
+                    <th>id estudiante</th>
+                    <th>id periodo</th>
+                    <th>fecha grado</th>
                     <th>promedio</th>
                 </tr>
                 <?php
@@ -184,9 +184,9 @@ $conn = $dbConnection->getDBConnection();
         <div id="table-primiparos" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
-                    <th>id_primiparo</th>
-                    <th>id_estudiante</th>
-                    <th>id_periodo</th>
+                    <th>id primiparo</th>
+                    <th>id estudiante</th>
+                    <th>id periodo</th>
                 </tr>
                 <?php
 
@@ -211,12 +211,12 @@ $conn = $dbConnection->getDBConnection();
         <div id="table-admitidos" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
-                    <th>id_graduado</th>
-                    <th>id_estudiante</th>
-                    <th>id_periodo</th>
-                    <th>tipo_inscripcion</th>
-                    <th>tipo_icfes</th>
-                    <th>puntaje_icfes</th>
+                    <th>id graduado</th>
+                    <th>id estudiante</th>
+                    <th>id periodo</th>
+                    <th>tipo inscripcion</th>
+                    <th>tipo icfes</th>
+                    <th>puntaje icfes</th>
                 </tr>
                 <?php
 
@@ -246,10 +246,10 @@ $conn = $dbConnection->getDBConnection();
         <div id="table-matriculados" style="display: none;margin-top:1rem;margin-botoom:1rem">
             <table>
                 <tr>
-                    <th>id_matricula</th>
-                    <th>id_estudiante</th>
-                    <th>id_periodo</th>
-                    <th>estado_matricula</th>
+                    <th>id matricula</th>
+                    <th>id estudiante</th>
+                    <th>id periodo</th>
+                    <th>estado matricula</th>
                 </tr>
                 <?php
 
