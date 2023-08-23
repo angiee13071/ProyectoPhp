@@ -26,10 +26,9 @@ JOIN admitido a ON e.id_estudiante = a.id_estudiante
 JOIN periodo p ON a.id_periodo = p.id_periodo
 ";
 
-
-if ($selectedYear && $selectedYear !== 'all') {
-    $query .= " WHERE p.anio = '$selectedYear'";
-}
+// if ($selectedYear && $selectedYear !== 'all') {
+//     $query .= " WHERE p.anio = '$selectedYear'";
+// }
 
 $result = $conn->query($query);
 $carreras= array();
@@ -40,8 +39,8 @@ $tiposInscripcion = array();
 $estados = array();
 $promedios = array();
 $pasantias = array();
-$tiposIcfes= array();
-$puntajesIcfes= array();
+$tipos_icfes= array();
+$puntajes_icfes= array();
 $anios= array();
 if ($result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
@@ -101,7 +100,7 @@ if ($result->num_rows > 0) {
             <option value="puntaje_icfes">Puntaje Icfes</option>
         </select>
         <div>
-            <select id="data-type">
+            <select id="year-select">
                 <option value="all">Todos los años</option>
                 <?php
     foreach (array_unique($anios) as $anio) {
@@ -123,7 +122,7 @@ if ($result->num_rows > 0) {
     var chartTypeSelectD = document.getElementById('chart-type-p');
     var ctx = document.getElementById('datos-generales-chart').getContext('2d');
     var chart;
-
+    var yearSelect = document.getElementById('year-select');
     // Función para contar la frecuencia de los datos
     function contarFrecuencia(datos) {
         var frecuencia = {};
@@ -148,9 +147,8 @@ if ($result->num_rows > 0) {
     // Función para crear el gráfico de torta
     function createChart() {
         var selectedDataType = dataTypeSelect.value;
-        var selectedYear = dataTypeSelect.options[dataTypeSelect.selectedIndex].value;
-        // var newURL = window.location.pathname + '?year=' + selectedYear;
-        // history.replaceState(null, '', newURL);
+        var selectedYear = yearSelect.options[yearSelect.selectedIndex].value;
+
 
         // Obtener los datos correspondientes al tipo seleccionado
         var datos = [];
@@ -247,7 +245,8 @@ if ($result->num_rows > 0) {
 
     // Evento de cambio de tipo de gráfico
     chartTypeSelectD.addEventListener('change', createChart);
-
+    //Evento de cambio de anio
+    yearSelect.addEventListener('change', createChart);
     // Crear el gráfico inicial
     createChart();
     //$conn->close();
