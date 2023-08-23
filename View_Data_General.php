@@ -5,7 +5,7 @@ $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
 $labels = [];
 $data = [];
-
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : 'all';
 // Obtener los datos generales de la tabla estudiante
 $query = "SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
 p.anio
@@ -23,9 +23,13 @@ SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promed
 p.anio
 FROM estudiante e
 JOIN admitido a ON e.id_estudiante = a.id_estudiante
-JOIN periodo p ON a.id_periodo = p.id_periodo;
-;
+JOIN periodo p ON a.id_periodo = p.id_periodo
 ";
+
+
+if ($selectedYear && $selectedYear !== 'all') {
+    $query .= " WHERE p.anio = '$selectedYear'";
+}
 
 $result = $conn->query($query);
 $carreras= array();
@@ -96,6 +100,17 @@ if ($result->num_rows > 0) {
             <option value="tipo_icfes">tipo_icfes</option>
             <option value="puntaje_icfes">Puntaje Icfes</option>
         </select>
+        <div>
+            <select id="data-type">
+                <option value="all">Todos los años</option>
+                <?php
+    foreach (array_unique($anios) as $anio) {
+        echo '<option value="' . $anio . '">' . $anio . '</option>';
+    }
+    ?>
+            </select>
+        </div>
+
         <select id="chart-type-p" class="oculto" style="display: none;">
             <option value="doughnut">Gráfico de Torta</option>
         </select>
@@ -121,10 +136,21 @@ if ($result->num_rows > 0) {
         });
         return frecuencia;
     }
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     var dataTypeSelect = document.getElementById('data-type');
+    //     var yearSelect = document.getElementById('year');
+    //     var chartTypeSelectD = document.getElementById('chart-type-p');
+    //     var ctx = document.getElementById('datos-generales-chart').getContext('2d');
+    //     var chart;
+    //     createChart();
+    // });
 
     // Función para crear el gráfico de torta
     function createChart() {
         var selectedDataType = dataTypeSelect.value;
+        var selectedYear = dataTypeSelect.options[dataTypeSelect.selectedIndex].value;
+        // var newURL = window.location.pathname + '?year=' + selectedYear;
+        // history.replaceState(null, '', newURL);
 
         // Obtener los datos correspondientes al tipo seleccionado
         var datos = [];
