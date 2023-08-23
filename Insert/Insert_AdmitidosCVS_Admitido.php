@@ -39,7 +39,18 @@ $insertion_alert = false;
 // Insertar los datos en la tabla 'graduado'
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_estudiante = $data_matrix[$i][5];
+    $nombres = $data_matrix[$i][8] . " " . $data_matrix[$i][7];
+    // $genero='NO REGISTRA';
+    $carrera= $data_matrix[$i][1];
+    $documento = $data_matrix[$i][6];
+    $estrato=$data_matrix[$i][13]; 
+    $localidad='NO REGISTRA';
+    // $genero_genero='NO REGISTRA';
     $tipo_inscripcion=$data_matrix[$i][10];
+    $estado = "ESTUDIANTE ADMITIDO";
+    $id_programa= $data_matrix[$i][0];
+    $promedio = 'NO APLICA';
+    $pasantia = 'NO APLICA';
     $tipo_icfes= $data_matrix[$i][11];
     $puntaje_icfes = $data_matrix[$i][12];
     $periodo = $data_matrix[$i][4];
@@ -73,7 +84,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 
 
     // Verificar si el estudiante ya existe en la tabla 'estudiante'
-    $sql_check_student = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
+    $sql_check_student = "SELECT COUNT(*) FROM admitido WHERE id_estudiante = ?";
     $stmt_check_student = $conn->prepare($sql_check_student);
     $stmt_check_student->bind_param("s", $id_estudiante);
     $stmt_check_student->execute();
@@ -86,6 +97,8 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         $alerts_by_student = $alerts_by_student.", ".$id_estudiante;
 
     } else {
+      // Preparar la consulta SQL para insertar el estudiante
+      $sql = "INSERT INTO admitido (id_estudiante, id_periodo, tipo_inscripcion, tipo_icfes, puntaje_icfes) VALUES (?, ?, ?, ?, ?)";
 
 // Para obtener mes y semestre de periodo
 // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
@@ -103,9 +116,6 @@ if ($result_periodo && $result_periodo->num_rows > 0) {
   // Si no se encontró el id_periodo, se coloca por defecto 1
   $id_periodo = 1;
 }
-      // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO admitido (id_estudiante, id_periodo, tipo_inscripcion, tipo_icfes, puntaje_icfes) VALUES (?, ?, ?, ?, ?)";
-
 
 // Preparar la sentencia
 $stmt = $conn->prepare($sql);
@@ -113,7 +123,7 @@ $stmt = $conn->prepare($sql);
 // Asignar los valores a los parámetros de la consulta
 // Ejecutar la consulta
 //i: Entero (integer),s: Cadena (string),d: Número de punto flotante (double),b: Datos binarios (blob)
-$stmt->bind_param("isssisssidssd", $id_estudiante, $nombres, $carrera, $documento, $estrato, $localidad, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia,$tipo_icfes, $puntaje_icfes);
+$stmt->bind_param("iissd", $id_estudiante, $id_periodo, $tipo_inscripcion, $tipo_icfes, $puntaje_icfes);
 
 if (!$stmt->execute()) {
   $insertion_error= true;
@@ -136,7 +146,7 @@ if($insertion_error){
      echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
   border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative; margin-bottom: 2rem;">
   <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X ERROR</span><br>
-  Los estudiantes admitidos con los siguientes ID, no se pueden no se pueden insertar en la tabla ADMITIDOS.' . $errors_by_student . '<br>
+  Los estudiantes admitidos con los siguientes ID, no se pueden no se pueden insertar en la tabla ADMITIDO.' . $errors_by_student . '<br>
   <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❾</div>
   <div style="position: absolute; left: 50%;">
       <span style="font-size: 4rem;">&#8595;</span>
@@ -146,7 +156,7 @@ if($insertion_error){
       echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
               border: 2px solid orange; width: 70rem; position: relative; margin-bottom: 2rem;">
               <span style="font-size: 2rem; color: orange">¡ALERTA!</span><br>
-              Los estudiantes admitidos con los siguientes ID, ya existen en la tabla ADMITIDOS. Se omitirá la inserción: ' . $alerts_by_student . '
+              Los estudiantes admitidos con los siguientes ID, ya existen en la tabla ADMITIDO. Se omitirá la inserción: ' . $alerts_by_student . '
               <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">❾</div>
               <div style="position: absolute; left: 50%;">
                   <span style="font-size: 4rem;">&#8595;</span>
@@ -158,13 +168,14 @@ else if (!$insertion_error) {
     echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
-    Admitidos insertados correctamente en la tabla ADMITIDOS. 
+    Admitidos insertados correctamente en la tabla ADMITIDO. 
     <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❾</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
     </div>';
   }
-// Cerrar la conexión a la base de datos
+  // Cerrar la conexión a la base de datos
 $conn->close();
+
 ?>
