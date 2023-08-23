@@ -13,7 +13,8 @@ $file_data = file($url, FILE_IGNORE_NEW_LINES);
 
 // Crear una matriz para almacenar los datos
 $data_matrix = [];
-
+$errors_by_student = "";
+$alerts_by_student = "";
 // Iterar sobre cada línea del archivo
 foreach ($file_data as $line) {
     // Dividir la línea en sus elementos utilizando la coma como separador
@@ -33,11 +34,8 @@ foreach ($file_data as $line) {
 // $conn = getDBConnection();
 
 // Variable para controlar si hubo algún error durante el proceso de inserción
-$errors_by_student = "";
-$alerts_by_student = "";
 $insertion_error = false;
 $insertion_alert = false;
-
 // Insertar los datos en la tabla 'graduado'
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_estudiante = $data_matrix[$i][5];
@@ -59,7 +57,6 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         }
     }
   
-  //Identificar el Tipo de ICFES
     if ($tipo_icfes) {
       if ($tipo_icfes === "A") {
           $tipo_icfes = "ICFES Saber 11 ";
@@ -74,14 +71,6 @@ for ($i = 2; $i < count($data_matrix); $i++) {
       }
   }
 
-  // Verificar si el estudiante ya existe en la tabla 'graduado'
-  $sql_check_existing = "SELECT COUNT(*) FROM admitido WHERE id_estudiante = ?";
-  $stmt_check_existing = $conn->prepare($sql_check_existing);
-  $stmt_check_existing->bind_param("s", $id_estudiante);
-  $stmt_check_existing->execute();
-  $stmt_check_existing->bind_result($existing_count);
-  $stmt_check_existing->fetch();
-  $stmt_check_existing->close();
 
     // Verificar si el estudiante ya existe en la tabla 'estudiante'
     $sql_check_student = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
@@ -140,18 +129,15 @@ $stmt->close();
    
 }
 
+
+
 // Mostrar mensaje de éxito si no se encontraron estudiantes duplicados
 if($insertion_error){
      echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
   border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative; margin-bottom: 2rem;">
   <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X ERROR</span><br>
-<<<<<<< HEAD
-  Los estudiantes admitidos con los siguientes ID, no se pueden no se pueden insertar en la tabla ADMITIDO.' . $errors_by_student . '<br>
-  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❽</div>
-=======
   Los estudiantes admitidos con los siguientes ID, no se pueden no se pueden insertar en la tabla ADMITIDOS.' . $errors_by_student . '<br>
-  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">⑩</div>
->>>>>>> 690c7bd630cf4eb310df186cab204fe400c8887a
+  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❾</div>
   <div style="position: absolute; left: 50%;">
       <span style="font-size: 4rem;">&#8595;</span>
   </div>
@@ -160,13 +146,8 @@ if($insertion_error){
       echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
               border: 2px solid orange; width: 70rem; position: relative; margin-bottom: 2rem;">
               <span style="font-size: 2rem; color: orange">¡ALERTA!</span><br>
-<<<<<<< HEAD
-              Los estudiantes admitidos con los siguientes ID, ya existen en la tabla ADMITIDO. Se omitirá la inserción: ' . $alerts_by_student . '
-              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">❽</div>
-=======
               Los estudiantes admitidos con los siguientes ID, ya existen en la tabla ADMITIDOS. Se omitirá la inserción: ' . $alerts_by_student . '
-              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">⑩</div>
->>>>>>> 690c7bd630cf4eb310df186cab204fe400c8887a
+              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">❾</div>
               <div style="position: absolute; left: 50%;">
                   <span style="font-size: 4rem;">&#8595;</span>
               </div>
@@ -184,6 +165,6 @@ else if (!$insertion_error) {
     </div>
     </div>';
   }
-  // Cerrar la conexión a la base de datos
+// Cerrar la conexión a la base de datos
 $conn->close();
 ?>

@@ -10,7 +10,7 @@ try {
     echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
         border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
         <span style="font-size: 2rem;color:#4CAF50"> ✔ INICIO</span><br>
-       Conexión a base de datos exitosa.
+       Conexión a base de datos exitosa
         <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓿</div>
         <div style="position: absolute;  left: 50%;">
          <span style="font-size: 4rem;">&#8595;</span>
@@ -25,42 +25,42 @@ try {
     border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X INICIO ERROR</span><br>
     ' . $e->getMessage() . '
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">⓪</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">⓿</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
     </div>';
 }
-
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
+
 $url1 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_de_admitidos.csv";
 $url2 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
-$url3 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_periodo_actual.csv";
-$url4 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_a_primer_semestre.csv";
-
+$url3 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
+$url4 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
 // validar si existen los archivos
 if (file_exists($url1) && file_exists($url2) && file_exists($url3) && file_exists($url4)) {
-    echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-    border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
-    <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
-    Extracción y transformación exitosa de los datos. 
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❶</div>
-    <div style="position: absolute;  left: 50%;">
-     <span style="font-size: 4rem;">&#8595;</span>
-    </div>
-    </div>';
-
+    echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid #4CAF50;width: 63rem;
+     height: 10rem; transform: skew(150deg);margin-bottom: 0rem;">
+         <div style="font-size: 3rem; color: #4CAF50;text-align: initial;">❶</div>
+         <span style="font-size: 2rem;color:#4CAF50">✔ EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
+         <div>Extracción y transformación exitosa de los datos.</div>
+         <div style="position: absolute;  left: 50%;">
+       
+        </div>
+     </div>';
+     echo' <span style="font-size: 4rem;margin-bottom: 0.5rem;">&#8595;</span>';
     } else{
-        echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-    border: 2px solid  rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
-    <span style="font-size: 2rem;color: rgba(255, 99, 132, 1)">X EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
-    No se encuentran todos los archivos en su totalidad, por favor validar.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color: rgba(255, 99, 132, 1)">❶</div>
-    <div style="position: absolute;  left: 50%;">
-     <span style="font-size: 4rem;">&#8595;</span>
-    </div>
-    </div>';
+        echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid rgba(255, 99, 132, 1);width: 63rem;
+        height: 10rem; transform: skew(150deg);margin-bottom: 0rem;">
+            <div style="font-size: 3rem; color: rgba(255, 99, 132, 1);text-align: initial;">❶</div>
+            <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X EXTRACCIÓN Y TRANSFORMACIÓN</span><br>
+            <div>No se encuentran todos los archivos en su totalidad, por favor validar.</div>
+            <div style="position: absolute;  left: 50%;">
+          
+           </div>
+        </div>';
+        echo' <span style="font-size: 4rem;margin-bottom: 0.5rem;">&#8595;</span>';
     }
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
@@ -86,8 +86,6 @@ foreach ($file_data as $line) {
 // Obtener los datos únicos de "CRA. COD" y "CARRERA"
 $cra_cod_values = array_unique(array_column(array_slice($data_matrix, 2), 1));
 $carrera_values = array_unique(array_column(array_slice($data_matrix, 2), 2));
-$periodo_values = array_unique(array_column(array_slice($data_matrix, 2), 9));
-
 
 // Función para validar y obtener el id_programa según el nombre del programa
 function obtenerIdPrograma($nombre_programa)
@@ -117,7 +115,6 @@ $insertion_error = false;
 // Insertar los datos en la tabla "programa"
 $sql_insert_programa = "INSERT INTO programa (id_programa, nombre) VALUES (?, ?)";
 $stmt_insert_programa = $conn->prepare($sql_insert_programa);
-
 // Insertar los datos en la tabla periodo
 $sql_insert_periodo = "INSERT INTO periodo (anio, semestre, cohorte) VALUES (?, ?, ?)";
 $stmt_insert_periodo = $conn->prepare($sql_insert_periodo);
@@ -127,6 +124,7 @@ foreach ($carrera_values as $carrera) {
 
     // Verificar si $id_programa es null y asignar el valor adecuado según $carrera
     if ($id_programa === null) {
+        // El programa no es válido, continuar con la siguiente iteración
         continue;
     }
 
@@ -154,20 +152,14 @@ foreach ($carrera_values as $carrera) {
     }
 }
 // Ejecutar la inserción para cada fila de datos
-
-foreach ($periodo_values as $row) {
-    
-    // Si hay un dato nulo, omitir la inserción
-    $fecha_grado = isset($row) ? $row : null;
-    if ($fecha_grado == null) { 
-        continue;
-    }
-
+foreach ($data_matrix as $row) {
+    // Calcular el semestre según el mes y el id_periodo
+    $fecha_grado = isset($row[9]) ? $row[9] : null;
     $year = date('Y', strtotime($fecha_grado));
     $month = date('n', strtotime($fecha_grado));
     $semestre = ($month <= 6) ? 1 : 2;
     $cohorte = ($month <= 6) ? 1 : 3;
-  
+
     // Verificar si el período ya existe en la tabla periodo
     $sql_check_periodo = "SELECT COUNT(*) FROM periodo WHERE anio = ? AND semestre = ?";
     $stmt_check_periodo = $conn->prepare($sql_check_periodo);
@@ -181,7 +173,7 @@ foreach ($periodo_values as $row) {
         // El período ya existe, omitir la inserción
         continue;
     }
-    
+
     // Insertar en la tabla periodo
     $stmt_insert_periodo->bind_param("iii", $year, $semestre, $cohorte);
     if (!$stmt_insert_periodo->execute()) {
@@ -194,27 +186,21 @@ $stmt_insert_programa->close();
 $stmt_insert_periodo->close();
 $conn->close();
 
-if ($insertion_error == true) {
-    echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-    border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
-    <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X CARGA FALLIDA</span><br>
-    Por favor verificar los datos a ingresar.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">②</div>
-    <div style="position: absolute;  left: 50%;">
-    <span style="font-size: 4rem;">&#8595;</span>
-    </div>
-    </div>';
-}
-else{
-    echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
-    border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
-    <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
-    Carreras y periodos insertados correctamente en la tabla PROGRAMA y PERIODO.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❷</div>
-    <div style="position: absolute;  left: 50%;">
-    <span style="font-size: 4rem;">&#8595;</span>
-    </div>
-    </div>';
+if (!$insertion_error) {
+    //echo '<span style="font-size: 24px; color: green;">✔ CARGA EXITOSA</span> Datos de programas insertados correctamente en la tabla PROGRAMA. <br>' ;
+//     echo '<div style="background-color: #4CAF50; color: white; padding: 10px; text-align: center;">
+//     <span style="font-size: 24px;">✔ CARGA EXITOSA</span><br>
+//     Datos de programas insertados correctamente en la tabla PROGRAMA.
+// </div>';
+echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+<span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
+Carreras insertadas correctamente en la tabla PROGRAMA.
+<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❷</div>
+<div style="position: absolute;  left: 50%;">
+ <span style="font-size: 4rem;">&#8595;</span>
+</div>
+</div>';
 }
 
 ?>

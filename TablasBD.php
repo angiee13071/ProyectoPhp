@@ -215,8 +215,8 @@ $conn = $dbConnection->getDBConnection();
                     <th>id_estudiante</th>
                     <th>id_periodo</th>
                     <th>tipo_inscripcion</th>
-                    <th>tipo_Icfes</th>
-                    <th>puntaje_Icfes</th>
+                    <th>tipo_icfes</th>
+                    <th>puntaje_icfes</th>
                 </tr>
                 <?php
 
