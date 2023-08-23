@@ -214,8 +214,9 @@ $conn = $dbConnection->getDBConnection();
                     <th>id_graduado</th>
                     <th>id_estudiante</th>
                     <th>id_periodo</th>
-                    <th>fecha_grado</th>
-                    <th>promedio</th>
+                    <th>tipo_inscripcion</th>
+                    <th>tipo_Icfes</th>
+                    <th>puntaje_Icfes</th>
                 </tr>
                 <?php
 
@@ -229,7 +230,7 @@ $conn = $dbConnection->getDBConnection();
     echo "<td>" . $row['id_admitido'] . "</td>";
     echo "<td>" . $row['id_estudiante'] . "</td>";
     echo "<td>" . $row['id_periodo'] . "</td>";
-    echo "<td>" . $row['tipo_incripcion'] . "</td>";
+    echo "<td>" . $row['tipo_inscripcion'] . "</td>";
     echo "<td>" . $row['tipo_icfes'] . "</td>";
     echo "<td>" . $row['puntaje_icfes'] . "</td>";
     echo "</tr>";

@@ -145,8 +145,13 @@ if($insertion_error){
      echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
   border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative; margin-bottom: 2rem;">
   <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X ERROR</span><br>
+<<<<<<< HEAD
+  Los estudiantes admitidos con los siguientes ID, no se pueden no se pueden insertar en la tabla ADMITIDO.' . $errors_by_student . '<br>
+  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❽</div>
+=======
   Los estudiantes admitidos con los siguientes ID, no se pueden no se pueden insertar en la tabla ADMITIDOS.' . $errors_by_student . '<br>
-  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❾</div>
+  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">⑩</div>
+>>>>>>> 690c7bd630cf4eb310df186cab204fe400c8887a
   <div style="position: absolute; left: 50%;">
       <span style="font-size: 4rem;">&#8595;</span>
   </div>
@@ -155,8 +160,13 @@ if($insertion_error){
       echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
               border: 2px solid orange; width: 70rem; position: relative; margin-bottom: 2rem;">
               <span style="font-size: 2rem; color: orange">¡ALERTA!</span><br>
+<<<<<<< HEAD
+              Los estudiantes admitidos con los siguientes ID, ya existen en la tabla ADMITIDO. Se omitirá la inserción: ' . $alerts_by_student . '
+              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">❽</div>
+=======
               Los estudiantes admitidos con los siguientes ID, ya existen en la tabla ADMITIDOS. Se omitirá la inserción: ' . $alerts_by_student . '
-              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">❾</div>
+              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">⑩</div>
+>>>>>>> 690c7bd630cf4eb310df186cab204fe400c8887a
               <div style="position: absolute; left: 50%;">
                   <span style="font-size: 4rem;">&#8595;</span>
               </div>
