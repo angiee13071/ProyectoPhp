@@ -7,17 +7,28 @@ $labels = [];
 $data = [];
 $selectedYear = isset($_GET['year']) ? $_GET['year'] : 'all';
 // Obtener los datos generales de la tabla estudiante
+
 $query = "SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
 p.anio
 FROM estudiante e
 JOIN graduado g ON e.id_estudiante = g.id_estudiante
-JOIN periodo p ON g.id_periodo = p.id_periodo
+JOIN periodo p ON g.id_periodo = p.id_periodo";
+if ($selectedYear && $selectedYear !== 'all') {
+    $query .= " WHERE p.anio = '$selectedYear'";
+   
+}
+$query .= "
 UNION ALL
 SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
 p.anio
 FROM estudiante e
 JOIN matriculado m ON e.id_estudiante = m.id_estudiante
-JOIN periodo p ON m.id_periodo = p.id_periodo
+JOIN periodo p ON m.id_periodo = p.id_periodo";
+if ($selectedYear && $selectedYear !== 'all') {
+    $query .= " WHERE p.anio = '$selectedYear'";
+   
+}
+$query .= "
 UNION ALL
 SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
 p.anio
@@ -25,10 +36,11 @@ FROM estudiante e
 JOIN admitido a ON e.id_estudiante = a.id_estudiante
 JOIN periodo p ON a.id_periodo = p.id_periodo
 ";
-
-// if ($selectedYear && $selectedYear !== 'all') {
-//     $query .= " WHERE p.anio = '$selectedYear'";
-// }
+if ($selectedYear && $selectedYear !== 'all') {
+    $query .= " WHERE p.anio = '$selectedYear'";
+   
+}
+// echo "$query";
 
 $result = $conn->query($query);
 $carreras= array();

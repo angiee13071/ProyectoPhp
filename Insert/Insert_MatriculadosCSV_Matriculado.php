@@ -119,7 +119,7 @@ if (!$insertion_error) {
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
     Estudiantes matriculados insertados correctamente en la tabla MATRICULADO.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❹</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❺</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
@@ -131,7 +131,7 @@ if($insertion_error){
                 border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
                 <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
                 Los estudiantes matriculados con los siguientes ID, no se pueden insertar en la tabla MATRICULADO porqué la tabla ya cuenta con el id primario' .$errors_by_student. ' "., "<br>";
-                <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❹</div>
+                <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❺</div>
                 <div style="position: absolute;  left: 50%;">
                  <span style="font-size: 4rem;">&#8595;</span>
                 </div>
@@ -141,7 +141,7 @@ if($insertion_error){
     border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
     Los estudiantes matriculados con ID, no existen en la tabla MATRICULADO o son de otra carrera. Se omitirá la inserción en la tabla MATRICULADO.'.$alerts_by_student.' <br>";
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❹</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❺</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>

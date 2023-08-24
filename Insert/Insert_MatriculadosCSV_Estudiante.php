@@ -100,17 +100,26 @@ if($insertion_error){
 //         border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
 //         <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
 //         Los estudiantes matriculados con los siguientes ID, ya existe en la tabla ESTUDIANTE. Se omitirá la inserción. ' . $id_estudiante . ' 
-//         <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">③</div>
+//         <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❹</div>
 //         <div style="position: absolute;  left: 50%;">
 //           <span style="font-size: 4rem;">&#8595;</span>
 //         </div>
 //   </div>';
+echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
+border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
+<span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
+Estudiantes matriculados insertados correctamente en la tabla ESTUDIANTE.
+<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❹</div>
+<div style="position: absolute;  left: 50%;">
+ <span style="font-size: 4rem;">&#8595;</span>
+</div>
+</div>';
 }else if($insertion_alert){
     echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
     border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
     Los estudiantes matriculados con los siguientes ID,no se pueden insertar en la tabla ESTUDIANTE. ' . $errors_by_student . '  <br>
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">➌</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❹</div>
     <div style="position: absolute;  left: 50%;">
       <span style="font-size: 4rem;">&#8595;</span>
     </div>
@@ -122,7 +131,7 @@ else if (!$insertion_error) {
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
     Estudiantes matriculados insertados correctamente en la tabla ESTUDIANTE.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">➌</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❹</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>

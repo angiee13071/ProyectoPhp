@@ -151,11 +151,26 @@ foreach ($carrera_values as $carrera) {
         }
     }
 }
+$skipLines = 2;
 // Ejecutar la inserción para cada fila de datos
 foreach ($data_matrix as $row) {
+    if ($skipLines > 0) {
+        // Omitir las primeras líneas
+        $skipLines--;
+        continue;
+    }
     // Calcular el semestre según el mes y el id_periodo
-    $fecha_grado = isset($row[9]) ? $row[9] : null;
-    $year = date('Y', strtotime($fecha_grado));
+    // $fecha_grado = !empty($row[9]) ? $row[9] : "0";
+    // $fecha_grado = isset($row[9]) ? $row[9] : null;
+    $currentDateTime = date('Y-m-d H:i:s');
+    $fecha_grado = isset($row[9]) && !empty($row[9]) ? $row[9] : $currentDateTime;
+// $year = ($fecha_grado !== "0") ? date('Y', strtotime($fecha_grado)) : 0;
+
+// $year = ($fecha_grado !== "0") ? date('Y', strtotime($fecha_grado)) : 0;
+
+ $year = date('Y', strtotime($fecha_grado));
+
+   
     $month = date('n', strtotime($fecha_grado));
     $semestre = ($month <= 6) ? 1 : 2;
     $cohorte = ($month <= 6) ? 1 : 3;

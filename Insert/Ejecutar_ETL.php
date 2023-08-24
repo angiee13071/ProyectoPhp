@@ -50,31 +50,31 @@
 
 
 
-// Tomar el archivo de egresados para subir los programas academicos y periodos:
+//#2 Tomar el archivo de egresados para subir los programas academicos y periodos:
 require 'Insert_EgresadoCSV_Programa_Periodo.php';
 
- //Tomar el archivo egresado para subirlo a la tabla estudiantes:
+ //#3 Tomar el archivo egresado para subirlo a la tabla estudiantes:
 require 'Insert_EgresadoCSV_Estudiante.php';
 
-//Tomar el archivo de matriculados actualmente para subirlos a la tabla estudiante:
+//#4 Tomar el archivo de matriculados actualmente para subirlos a la tabla estudiante:
 require 'Insert_MatriculadosCSV_Estudiante.php';
     
-// Tomar el archivo de matriculados actualmente para subirlos a la tabla matriculados:
+//#5 Tomar el archivo de matriculados actualmente para subirlos a la tabla matriculados:
 require 'Insert_MatriculadosCSV_Matriculado.php';
 
-// Tomar el archivo de primiparos y llenar la tabla estudiante
+//#6 Tomar el archivo de primiparos y llenar la tabla estudiante
 require 'Insert_PrimiparosCSV_Estudiante.php';
 
-// Tomar el archivo de primiparos y llenar la tabla primiparo:
+//#7 Tomar el archivo de primiparos y llenar la tabla primiparo:
 require 'Insert_PrimiparosCSV_Primiparo.php';
 
-// Llamar y ejecutar el archivo EgresadoGraduadoCSV.php
+//#8  Llamar y ejecutar el archivo EgresadoGraduadoCSV.php
  require 'Insert_EgresadoCSV_Graduado.php';
- //Tomar el archivo admitidos para subirlo a la tabla estudiantes:
+ //#9 Tomar el archivo admitidos para subirlo a la tabla estudiantes:
  require 'Insert_AdmitidosCSV_Estudiante.php';
- //Tomar archivo admitidos y llenar talbla admitido
+ //#10 Tomar archivo admitidos y llenar talbla admitido
  require 'Insert_AdmitidosCVS_Admitido.php';
-// Llamar y ejecutar procedimiento almacenado para llenar tablas total y retirado
+//#11 Llamar y ejecutar procedimiento almacenado para llenar tablas total y retirado
 require 'CalcularTotal.php';
 
 
@@ -82,7 +82,7 @@ echo '<div style="background-color: #efffef; color: black; padding: 10px; text-a
 border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
 <span style="font-size: 2rem;color:#4CAF50">✔ FIN</span><br>
 Proceso de importación completado
-<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">⓫</div>
+<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3.6rem;color:#4CAF50">⓫</div>
 <div style="position: absolute;  left: 50%;">
 </div>
 </div>';
