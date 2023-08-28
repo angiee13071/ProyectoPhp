@@ -107,75 +107,75 @@ CREATE TABLE total (
 DELIMITER $$
 CREATE PROCEDURE fill_total()
 BEGIN
+  DECLARE done INT DEFAULT FALSE;
   DECLARE periodo_id INT;
   DECLARE programa_id INT;
-  DECLARE matriculados INT DEFAULT 0;
-  DECLARE primiparos INT DEFAULT 0;
-  DECLARE graduados INT DEFAULT 0;
-  DECLARE retirados INT DEFAULT 0;
-  DECLARE admitidos INT DEFAULT 0;
-  DECLARE total_matriculados_periodo_anterior INT DEFAULT 0;
-  DECLARE total_graduados_periodo_anterior INT DEFAULT 0;
-  DECLARE total_retirados INT DEFAULT 0;
-  
-  DECLARE done INT DEFAULT FALSE;
-  
+  DECLARE matriculados_count INT;
+  DECLARE graduados_count INT;
+  DECLARE primiparos_count INT;
+  DECLARE total_retirados INT;
+
+  -- Declare cursor for periodos and programas
   DECLARE cur CURSOR FOR
-    SELECT id_periodo, id_programa FROM periodo
-    JOIN programa ON 1 = 1;
+    SELECT p.id_periodo, pr.id_programa
+    FROM periodo p
+    CROSS JOIN programa pr;
+
+  -- Declare handlers for NOT FOUND condition
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-  
-    -- Reinicio de tablas
-  delete from total;
-  ALTER TABLE total AUTO_INCREMENT = 1;
-  
-  delete from retirado;
-  ALTER TABLE retirado AUTO_INCREMENT = 1;
-  
+
+  -- Clear the table 'total'
+  TRUNCATE TABLE total;
+
+  -- Open cursor and start loop
   OPEN cur;
-  
   read_loop: LOOP
     FETCH cur INTO periodo_id, programa_id;
-    
     IF done THEN
-        LEAVE read_loop;
+      LEAVE read_loop;
     END IF;
 
-    SELECT COUNT(*) INTO primiparos FROM primiparo WHERE id_periodo = periodo_id;
-    SELECT COUNT(*) INTO matriculados FROM matriculado WHERE id_periodo = periodo_id;
-    SELECT COUNT(*) INTO graduados FROM graduado WHERE id_periodo = periodo_id;
-    SELECT COUNT(*) INTO admitidos FROM admitido WHERE id_periodo = periodo_id;
-    SELECT COUNT(*) INTO retirados FROM retirado WHERE id_periodo = periodo_id; -- Cambio a matriculados del periodo actual
-    
-    -- Verificar si el período anterior existe
-    IF periodo_id > 1 THEN
-        SET total_matriculados_periodo_anterior = 0;
-        SET total_graduados_periodo_anterior = 0;
-        
-        SELECT COUNT(*) INTO total_matriculados_periodo_anterior FROM matriculado WHERE id_periodo = periodo_id - 1;
-        SELECT COUNT(*) INTO total_graduados_periodo_anterior FROM graduado WHERE id_periodo = periodo_id - 1;
-        
-        IF total_matriculados_periodo_anterior > 0 AND total_graduados_periodo_anterior > 0 THEN
-            -- Calcular el valor de total_retirados solo si el período anterior existe
-            SET total_retirados = GREATEST(((total_matriculados_periodo_anterior - total_graduados_periodo_anterior + primiparos) - matriculados), 0);
-        ELSE
-            -- Si el período anterior no existe, asignar 0 al valor de total_retirados
-            SET total_retirados = 0;
-        END IF;
-    ELSE
-        -- Si estamos en el primer período, asignar 0 al valor de total_retirados
-        SET total_retirados = 0;
-    END IF;
-    
-    -- Insertar en la tabla retirado y total (según tu lógica)
-    INSERT INTO retirado (id_periodo, total) VALUES (periodo_id, total_retirados);
-    INSERT INTO total (admitidos, primiparos, matriculados, graduados, retirados, id_periodo, id_programa) 
-    VALUES (admitidos, primiparos, matriculados, graduados, retirados, periodo_id, programa_id);
-   
+    -- Calculate matriculados
+    SELECT COUNT(*) INTO matriculados_count
+    FROM matriculado m
+    JOIN estudiante e ON m.id_estudiante = e.id_estudiante
+    WHERE m.id_periodo = periodo_id AND e.id_programa = programa_id;
+
+    -- Calculate graduados
+    SELECT COUNT(*) INTO graduados_count
+    FROM graduado g
+    JOIN estudiante e ON g.id_estudiante = e.id_estudiante
+    WHERE g.id_periodo = periodo_id AND e.id_programa = programa_id;
+
+    -- Calculate primiparos
+    SELECT COUNT(*) INTO primiparos_count
+    FROM primiparo p
+    JOIN estudiante e ON p.id_estudiante = e.id_estudiante
+    WHERE p.id_periodo = periodo_id AND e.id_programa = programa_id;
+
+    -- Calculate retirados using the formula
+   SET total_retirados = (
+  (
+    (SELECT IFNULL(matriculados_count_prev, 0) FROM (
+      SELECT matriculados AS matriculados_count_prev
+      FROM total
+      WHERE id_periodo = periodo_id - 1 AND id_programa = programa_id
+    ) AS prev) -
+    graduados_count + primiparos_count
+  ) -
+  matriculados_count
+);
+
+    -- Ensure retirados is not negative
+    SET total_retirados = CASE WHEN total_retirados < 0 THEN 0 ELSE total_retirados END;
+
+    -- Insert calculated values into 'total' table
+    INSERT INTO total (admitidos, primiparos, matriculados, graduados, retirados, id_periodo, id_programa)
+    VALUES (0, primiparos_count, matriculados_count, graduados_count, total_retirados, periodo_id, programa_id);
+    INSERT INTO retirado (id_periodo,total)
+    VALUES (periodo_id,total_retirados);
   END LOOP;
-  
-  CLOSE cur;
-  
+
 END$$
 DELIMITER ;
 
