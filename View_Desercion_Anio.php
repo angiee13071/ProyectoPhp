@@ -58,104 +58,69 @@ $conn = $dbConnection->getDBConnection();
         global $conn, $periodo,$desercion,$periodoTec,$desercionTec,$periodoIng,$desercionIng;
         if ($carrera === 'all') {
             $query .= "
-            
-    CONCAT(periodo.anio) AS periodos,
-    CASE
-        WHEN (
-            (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
-            (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
-            (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
-        ) < 0 THEN 0
-        ELSE (
-            (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
-            (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
-            (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
-        )
-    END AS desertores,
-    (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos,
-    ROUND(
-        CASE
-            WHEN (
-                (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
-                (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
-                (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
-            ) < 0 THEN 0
-            ELSE (
-                (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo) / (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)
-            ) * 100
-        END
-    , 2) AS tasa_desercion
-FROM periodo
-ORDER BY periodos
-LIMIT 0, 1000;
+            CONCAT(periodo.anio) AS periodos,
+            NULL AS id_programa, -- Usamos NULL para representar a nivel general
+            SUM(t.retirados) AS desertores_total,
+            SUM(t.matriculados) AS matriculados_total, -- Sumamos todos los matriculados
+            ROUND(
+              COALESCE(
+                CASE
+                  WHEN SUM(t.retirados) < 0 THEN 0
+                  ELSE (SUM(t.retirados) / NULLIF(SUM(t.matriculados), 0)) * 100 -- División por NULLIF para manejar 0
+                END,
+                0
+              ),
+              2
+            ) AS tasa_desercion
+          FROM total t
+          JOIN periodo ON t.id_periodo = periodo.id_periodo
+          GROUP BY periodo.anio
+          ORDER BY periodos
+          LIMIT 0, 1000;
 ";
         }elseif($carrera === 'tec'){
             $query .=  " CONCAT(periodo.anio) AS periodos,
-            CASE
-                WHEN (
-                    (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
-                    (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
-                    (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
-                ) < 0 THEN 0
-                ELSE (
-                    (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
-                    (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
-                    (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
-                )
-            END AS desertores,
-            (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos,
-            ROUND(
-                CASE
-                    WHEN (
-                        (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
-                        (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
-                        (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
-                    ) < 0 THEN 0
-                    ELSE (
-                        (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo) / (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)
-                    ) * 100
-                END
-            , 2) AS tasa_desercion
-        FROM periodo
-        WHERE periodo.id_periodo IN (
-            SELECT id_periodo FROM estudiante WHERE carrera = 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)'
-        )
-        ORDER BY periodos
-        LIMIT 0, 1000;";
+            id_programa,
+                SUM(t.retirados) AS desertores_total,
+                SUM(t.matriculados) AS matriculados_total, -- Sumamos todos los matriculados
+                ROUND(
+                  COALESCE(
+                    CASE
+                      WHEN SUM(t.retirados) < 0 THEN 0
+                      ELSE (SUM(t.retirados) / NULLIF(SUM(t.matriculados), 0)) * 100 -- División por NULLIF para manejar 0
+                    END,
+                    0
+                  ),
+                  2
+                ) AS tasa_desercion
+              FROM total t
+              JOIN periodo ON t.id_periodo = periodo.id_periodo
+              WHERE id_programa='578'
+              GROUP BY periodo.anio
+              ORDER BY periodos
+              LIMIT 0, 1000;";
     
         }elseif($carrera === 'ing'){
             $query .=  " CONCAT(periodo.anio) AS periodos,
-            CASE
-                WHEN (
-                    (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
-                    (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
-                    (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
-                ) < 0 THEN 0
-                ELSE (
-                    (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
-                    (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
-                    (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
-                )
-            END AS desertores,
-            (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) AS primiparos,
-            ROUND(
-                CASE
-                    WHEN (
-                        (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo) -
-                        (SELECT COUNT(*) FROM graduado WHERE id_periodo = periodo.id_periodo) -
-                        (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo)
-                    ) < 0 THEN 0
-                    ELSE (
-                        (SELECT COUNT(*) FROM retirado WHERE id_periodo = periodo.id_periodo) / (SELECT COUNT(*) FROM primiparo WHERE id_periodo = periodo.id_periodo)
-                    ) * 100
-                END
-            , 2) AS tasa_desercion
-        FROM periodo
-        WHERE periodo.id_periodo IN (
-            SELECT id_periodo FROM estudiante WHERE carrera = 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)'
-        )
-        ORDER BY periodos
-        LIMIT 0, 1000;";
+            id_programa,
+                SUM(t.retirados) AS desertores_total,
+                SUM(t.matriculados) AS matriculados_total, -- Sumamos todos los matriculados
+                ROUND(
+                  COALESCE(
+                    CASE
+                      WHEN SUM(t.retirados) < 0 THEN 0
+                      ELSE (SUM(t.retirados) / NULLIF(SUM(t.matriculados), 0)) * 100 -- División por NULLIF para manejar 0
+                    END,
+                    0
+                  ),
+                  2
+                ) AS tasa_desercion
+              FROM total t
+              JOIN periodo ON t.id_periodo = periodo.id_periodo
+              WHERE id_programa='678'
+              GROUP BY periodo.anio
+              ORDER BY periodos
+              LIMIT 0, 1000;";
     
         }
        

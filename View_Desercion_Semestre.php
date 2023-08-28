@@ -74,7 +74,7 @@ $conn = $dbConnection->getDBConnection();
             ) AS tasa_desercion
           FROM total t
           JOIN periodo ON t.id_periodo = periodo.id_periodo
-          GROUP BY periodo.anio, periodo.cohorte
+          GROUP BY periodo.anio, periodo.semestre
           ORDER BY periodos
           LIMIT 0, 1000;
 ";
@@ -97,7 +97,7 @@ $conn = $dbConnection->getDBConnection();
           FROM total t
           JOIN periodo ON t.id_periodo = periodo.id_periodo
           WHERE id_programa='578'
-          GROUP BY periodo.anio, periodo.cohorte
+          GROUP BY periodo.anio, periodo.semestre
           ORDER BY periodos
           LIMIT 0, 1000;
           ";
@@ -120,7 +120,7 @@ $conn = $dbConnection->getDBConnection();
           FROM total t
           JOIN periodo ON t.id_periodo = periodo.id_periodo
           WHERE id_programa='678'
-          GROUP BY periodo.anio, periodo.cohorte
+          GROUP BY periodo.anio, periodo.semestre
           ORDER BY periodos
           LIMIT 0, 1000;";
     
