@@ -57,46 +57,38 @@ $conn = $dbConnection->getDBConnection();
      $query="SELECT ";
         global $conn, $periodo,$desercion,$periodoTec,$desercionTec,$periodoIng,$desercionIng;
         if ($carrera === 'all') {
-            $query .= "
-            CONCAT(periodo.anio, '-', periodo.semestre) AS periodos,
+            $query .= "  CONCAT(t1.anio, '-', t1.semestre) AS periodos,
             CASE
-                WHEN SUM(r.cantidad_retirados) > 0 THEN
-                    ROUND((SUM(r.cantidad_retirados) / SUM(p.cantidad_primiparos)) * 100, 2)
+                WHEN t2.acum_matriculados > 0 THEN
+                    ROUND((t2.acum_retirados / t2.acum_matriculados) * 100, 2)
                 ELSE
                     0
             END AS tasa_desercion
         FROM
-            periodo
+            periodo t1
         LEFT JOIN (
             SELECT
-                id_periodo,
-                COUNT(*) AS cantidad_retirados
+                m.id_periodo,
+                COUNT(DISTINCT m.id_estudiante) AS acum_matriculados,
+                COUNT(DISTINCT r.id_retiro) AS acum_retirados
             FROM
-                retirado
+                matriculado m
+            LEFT JOIN retirado r ON m.id_periodo = r.id_periodo
             GROUP BY
-                id_periodo
-        ) r ON periodo.id_periodo = r.id_periodo
-        LEFT JOIN (
-            SELECT
-                id_periodo,
-                COUNT(*) AS cantidad_primiparos
-            FROM
-                primiparo
-            GROUP BY
-                id_periodo
-        ) p ON periodo.id_periodo = p.id_periodo
+                m.id_periodo
+        ) t2 ON t1.id_periodo = t2.id_periodo
         ORDER BY
-            periodos
+            t1.anio, t1.semestre
         LIMIT 0, 1000;
+           
         
 ";
         }elseif($carrera === 'tec'){
-            $query .=  "
-            CONCAT(t1.anio, '-', t1.semestre) AS periodos,
+            $query .=  " CONCAT(t1.anio, '-', t1.semestre) AS periodos,
             pr.nombre AS carrera,
             CASE
-                WHEN t2.acum_primiparos > 0 THEN
-                    ROUND((t2.acum_retirados / t2.acum_primiparos) * 100, 2)
+                WHEN t2.acum_matriculados > 0 THEN
+                    ROUND((t2.acum_retirados / t2.acum_matriculados) * 100, 2)
                 ELSE
                     0
             END AS tasa_desercion
@@ -105,11 +97,11 @@ $conn = $dbConnection->getDBConnection();
         LEFT JOIN (
             SELECT
                 p.id_periodo,
-                SUM(DISTINCT pr.id_primiparo) AS acum_primiparos,
+                SUM(DISTINCT pr.id_matricula) AS acum_matriculados,
                 SUM(DISTINCT r.id_retiro) AS acum_retirados
             FROM
                 periodo p
-            LEFT JOIN primiparo pr ON p.id_periodo = pr.id_periodo
+            LEFT JOIN matriculado pr ON p.id_periodo = pr.id_periodo
             LEFT JOIN retirado r ON p.id_periodo = r.id_periodo
             GROUP BY
                 p.id_periodo
@@ -121,6 +113,7 @@ $conn = $dbConnection->getDBConnection();
         ORDER BY
             t1.anio, t1.semestre
         LIMIT 0, 1000;
+           
 ";
     
         }elseif($carrera === 'ing'){
@@ -128,8 +121,8 @@ $conn = $dbConnection->getDBConnection();
             CONCAT(t1.anio, '-', t1.semestre) AS periodos,
             pr.nombre AS carrera,
             CASE
-                WHEN t2.acum_primiparos > 0 THEN
-                    ROUND((t2.acum_retirados / t2.acum_primiparos) * 100, 2)
+                WHEN t2.acum_matriculados > 0 THEN
+                    ROUND((t2.acum_retirados / t2.acum_matriculados) * 100, 2)
                 ELSE
                     0
             END AS tasa_desercion
@@ -138,11 +131,11 @@ $conn = $dbConnection->getDBConnection();
         LEFT JOIN (
             SELECT
                 p.id_periodo,
-                SUM(DISTINCT pr.id_primiparo) AS acum_primiparos,
+                SUM(DISTINCT pr.id_matricula) AS acum_matriculados,
                 SUM(DISTINCT r.id_retiro) AS acum_retirados
             FROM
                 periodo p
-            LEFT JOIN primiparo pr ON p.id_periodo = pr.id_periodo
+            LEFT JOIN matriculado pr ON p.id_periodo = pr.id_periodo
             LEFT JOIN retirado r ON p.id_periodo = r.id_periodo
             GROUP BY
                 p.id_periodo
@@ -154,8 +147,6 @@ $conn = $dbConnection->getDBConnection();
         ORDER BY
             t1.anio, t1.semestre
         LIMIT 0, 1000;
-           
-        
         ";
     
         }
