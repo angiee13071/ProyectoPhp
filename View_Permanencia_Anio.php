@@ -57,37 +57,36 @@ $conn = $dbConnection->getDBConnection();
             global $conn, $cohortes, $permanencias,$cohortesTec,$permanenciasTec,$cohortesIng,$permanenciasIng;
 
             $query = "SELECT
-            anio_actual,
-            SUM(matriculado_anterior) AS suma_matriculados_anterior,
-            SUM(matriculado_actual) AS suma_matriculados_actual,
-            FORMAT((SUM(matriculado_anterior) / SUM(matriculado_actual)) * 100, 1) AS promedio_permanencia,
-            carrera 
-        FROM (
-            SELECT
-                CONCAT(p.anio) AS anio_actual,
-                CONCAT(p.anio-1) AS anio_anterior,
-                COUNT(DISTINCT m_actual.id_estudiante) AS matriculado_actual,
-                LAG(COUNT(DISTINCT m_actual.id_estudiante)) OVER (ORDER BY p.anio, p.semestre) AS matriculado_anterior,
-                e.carrera 
-            FROM
-                periodo p
-            LEFT JOIN matriculado m_actual ON p.id_periodo = m_actual.id_periodo
-            LEFT JOIN estudiante e ON m_actual.id_estudiante = e.id_estudiante 
-            WHERE
-                m_actual.estado_matricula = 'ESTUDIANTE MATRICULADO'";
+            p_anterior.anio AS anio_actual,
+              p_actual.anio AS periodo_anterior,
+          
+              SUM(t_actual.matriculados) AS matriculados_actual,
+              LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) AS matriculados_anterior,
+              FORMAT((LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100, 1) AS promedio_permanencia
+          FROM
+              total t_actual  
+          JOIN
+              periodo p_actual ON t_actual.id_periodo = p_actual.id_periodo
+          LEFT JOIN
+              periodo p_anterior ON p_actual.id_periodo = p_anterior.id_periodo + 1
+            
+           -- where t_actual.id_programa='578'
+         
+          
+          ";
 
             if ($carrera === 'all') {
               
             }elseif($carrera === 'tec'){
-                $query .= " AND e.carrera = 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)'";
+                $query .= " where t_actual.id_programa='578'";
             }elseif($carrera === 'ing'){
-                $query .= " AND e.carrera = 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)'";
+                $query .= "where t_actual.id_programa='678'";
             }
 
-            $query .= "   GROUP BY p.anio, p.semestre, e.carrera
-            ) AS subquery
-            GROUP BY anio_actual, carrera
-            ORDER BY anio_actual;";
+            $query .= "   GROUP BY
+            p_actual.id_periodo, p_anterior.id_periodo
+        ORDER BY
+            p_actual.id_periodo;";
 
             $result = $conn->query($query);
 
