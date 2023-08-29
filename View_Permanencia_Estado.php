@@ -71,7 +71,7 @@ $conn = $dbConnection->getDBConnection();
             $query .= "'Todas las carreras' AS programa,
             ROUND((t.matriculados / (LAG(t.matriculados, 1) OVER (ORDER BY p.id_periodo)) * 100), 2) AS tasa_retencion,
 
-            ROUND((SUM(t.graduados) / NULLIF(SUM(t.primiparos), 0)) * 100, 2) AS tasa_graduacion
+            ROUND((SUM(t.graduados) / NULLIF(SUM(t.matriculados), 0)) * 100, 2) AS tasa_graduacion
         FROM
             total t
         JOIN
@@ -85,7 +85,7 @@ $conn = $dbConnection->getDBConnection();
             pr.nombre AS programa,
             ROUND((t.matriculados / (LAG(t.matriculados, 1) OVER (ORDER BY p.id_periodo)) * 100), 2) AS tasa_retencion,
 
-            ROUND((t.graduados / NULLIF(t.primiparos, 0)) * 100, 2) AS tasa_graduacion
+            ROUND((t.graduados / NULLIF(t.matriculados, 0)) * 100, 2) AS tasa_graduacion
         FROM
             total t
         JOIN
@@ -101,7 +101,7 @@ $conn = $dbConnection->getDBConnection();
             $query .=  "
             pr.nombre AS programa,
             ROUND((t.matriculados / (LAG(t.matriculados, 1) OVER (ORDER BY p.id_periodo)) * 100), 2) AS tasa_retencion,
-            ROUND((t.graduados / NULLIF(t.primiparos, 0)) * 100, 2) AS tasa_graduacion
+            ROUND((t.graduados / NULLIF(t.matriculados, 0)) * 100, 2) AS tasa_graduacion
         FROM
             total t
         JOIN
