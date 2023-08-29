@@ -108,7 +108,7 @@ if($insertion_error){
     border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:rgba(255, 99, 132, 1)">X ERROR</span><br>
     Los estudiantes nuevos con los siguientes ID, no se pueden insertar en la tabla PRIMIPARO:' .$errors_by_studenty.',  ". "<br>";
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❻</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:rgba(255, 99, 132, 1)">❼</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
@@ -119,7 +119,7 @@ if($insertion_error){
     border: 2px solid orange; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:orange">¡ALERTA!</span><br>
     Los estudiantes nuevos con los siguientes ID, ya existen en la tabla PRIMIPARO. Se omitirá la inserción.: ' .$alerts_by_student.' 
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❻</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:orange">❼</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
@@ -132,7 +132,7 @@ else if (!$insertion_error) {
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
     Primiparos insertados correctamente en la tabla PRIMIPARO.
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❻</div>
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❼</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
