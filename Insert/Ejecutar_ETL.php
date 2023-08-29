@@ -76,13 +76,13 @@ require 'Insert_PrimiparosCSV_Primiparo.php';
  require 'Insert_AdmitidosCVS_Admitido.php';
 //#10 Llamar y ejecutar procedimiento almacenado para llenar tablas total y retirado
 require 'CalcularTotal.php';
-
+//#fin
 
 echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
 border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
 <span style="font-size: 2rem;color:#4CAF50">✔ FIN</span><br>
 Proceso de importación completado
-<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3.6rem;color:#4CAF50">⓫</div>
+<div style="position: absolute; top: 1rem; left: 1rem; font-size: 3.6rem;color:#4CAF50">⓬</div>
 <div style="position: absolute;  left: 50%;">
 </div>
 </div>';
