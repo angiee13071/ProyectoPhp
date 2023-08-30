@@ -58,8 +58,8 @@ $conn = $dbConnection->getDBConnection();
             global $conn, $cohortes, $permanencias,$cohortesTec,$permanenciasTec,$cohortesIng,$permanenciasIng;
 
             $query = "SELECT
-            CONCAT(p_actual.anio, '-', p_actual.cohorte) AS periodo_actual,
-            CONCAT(p_anterior.anio, '-', p_anterior.cohorte) AS periodo_anterior,
+            CONCAT(p_actual.anio, '-', p_actual.semestre) AS periodo_actual,
+            CONCAT(p_anterior.anio, '-', p_anterior.semestre) AS periodo_anterior,
             SUM(t_actual.matriculados) AS matriculados_actual,
             LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) AS matriculados_anterior,
             FORMAT((LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100, 1) AS permanencia

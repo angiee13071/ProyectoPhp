@@ -59,7 +59,7 @@ $conn = $dbConnection->getDBConnection();
 
             $query = "SELECT
             CONCAT(p_actual.anio, '-', p_actual.cohorte) AS periodo_actual,
-            p_actual.cohorte AS cohorte,
+             CONCAT(p_actual.anio, '-', p_actual.cohorte) AS cohorte,
             CONCAT(p_anterior.anio, '-', p_anterior.cohorte) AS periodo_anterior,
             SUM(t_actual.matriculados) AS matriculados_actual,
             LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) AS matriculados_anterior,
@@ -70,7 +70,6 @@ $conn = $dbConnection->getDBConnection();
             periodo p_actual ON t_actual.id_periodo = p_actual.id_periodo
         LEFT JOIN
             periodo p_anterior ON p_actual.id_periodo = p_anterior.id_periodo + 1
-          
          -- where t_actual.id_programa='578'
          ";
 
