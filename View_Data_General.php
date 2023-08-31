@@ -134,7 +134,7 @@ if ($result->num_rows > 0) {
     var chartTypeSelectD = document.getElementById('chart-type-p');
     var ctx = document.getElementById('datos-generales-chart').getContext('2d');
     var chart;
-    var yearSelect = document.getElementById('year-select');
+    // var yearSelect = document.getElementById('year-select');
     // Función para contar la frecuencia de los datos
     function contarFrecuencia(datos) {
         var frecuencia = {};
@@ -159,7 +159,7 @@ if ($result->num_rows > 0) {
     // Función para crear el gráfico de torta
     function createChart() {
         var selectedDataType = dataTypeSelect.value;
-        var selectedYear = yearSelect.options[yearSelect.selectedIndex].value;
+        // var selectedYear = yearSelect.options[yearSelect.selectedIndex].value;
 
 
         // Obtener los datos correspondientes al tipo seleccionado
@@ -258,7 +258,7 @@ if ($result->num_rows > 0) {
     // Evento de cambio de tipo de gráfico
     chartTypeSelectD.addEventListener('change', createChart);
     //Evento de cambio de anio
-    yearSelect.addEventListener('change', createChart);
+    // yearSelect.addEventListener('change', createChart);
     // Crear el gráfico inicial
     createChart();
     //$conn->close();
