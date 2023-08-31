@@ -116,8 +116,8 @@ $insertion_error = false;
 $sql_insert_programa = "INSERT INTO programa (id_programa, nombre) VALUES (?, ?)";
 $stmt_insert_programa = $conn->prepare($sql_insert_programa);
 // Insertar los datos en la tabla periodo
-$sql_insert_periodo = "INSERT INTO periodo (anio, semestre, cohorte) VALUES (?, ?, ?)";
-$stmt_insert_periodo = $conn->prepare($sql_insert_periodo);
+// $sql_insert_periodo = "INSERT INTO periodo (anio, semestre, cohorte) VALUES (?, ?, ?)";
+// $stmt_insert_periodo = $conn->prepare($sql_insert_periodo);
 // Insertar los datos de "CRA. COD" y "CARRERA" en la tabla "programa"
 foreach ($carrera_values as $carrera) {
     $id_programa = obtenerIdPrograma($carrera);
@@ -151,51 +151,51 @@ foreach ($carrera_values as $carrera) {
         }
     }
 }
+
 $skipLines = 2;
 // Ejecutar la inserción para cada fila de datos
+$unique_years = [];
+
 foreach ($data_matrix as $row) {
     if ($skipLines > 0) {
         // Omitir las primeras líneas
         $skipLines--;
         continue;
     }
-    // Calcular el semestre según el mes y el id_periodo
-    // $fecha_grado = !empty($row[9]) ? $row[9] : "0";
-    // $fecha_grado = isset($row[9]) ? $row[9] : null;
-    $currentDateTime = date('Y-m-d H:i:s');
-    $fecha_grado = isset($row[9]) && !empty($row[9]) ? $row[9] : $currentDateTime;
-// $year = ($fecha_grado !== "0") ? date('Y', strtotime($fecha_grado)) : 0;
 
-// $year = ($fecha_grado !== "0") ? date('Y', strtotime($fecha_grado)) : 0;
+    $fecha_grado = isset($row[9]) && !empty($row[9]) ? $row[9] : date('Y-m-d H:i:s');
+    $year = date('Y', strtotime($fecha_grado));
 
- $year = date('Y', strtotime($fecha_grado));
-
-   
-    $month = date('n', strtotime($fecha_grado));
-    $semestre = ($month <= 6) ? 1 : 2;
-    $cohorte = ($month <= 6) ? 1 : 3;
-
-    // Verificar si el período ya existe en la tabla periodo
-    $sql_check_periodo = "SELECT COUNT(*) FROM periodo WHERE anio = ? AND semestre = ?";
-    $stmt_check_periodo = $conn->prepare($sql_check_periodo);
-    $stmt_check_periodo->bind_param("ii", $year, $semestre);
-    $stmt_check_periodo->execute();
-    $stmt_check_periodo->bind_result($existing_count);
-    $stmt_check_periodo->fetch();
-    $stmt_check_periodo->close();
-
-    if ($existing_count > 0) {
-        // El período ya existe, omitir la inserción
-        continue;
+    if (!in_array($year, $unique_years)) {
+        $unique_years[] = $year;
     }
+}
 
-    // Insertar en la tabla periodo
+sort($unique_years);
+
+$sql_insert_periodo = "INSERT INTO periodo (anio, semestre, cohorte) VALUES (?, ?, ?)";
+$stmt_insert_periodo = $conn->prepare($sql_insert_periodo);
+
+
+foreach ($unique_years as $year) {
+    $cohorte = 1;
+    $semestre=1;
     $stmt_insert_periodo->bind_param("iii", $year, $semestre, $cohorte);
     if (!$stmt_insert_periodo->execute()) {
         $insertion_error = true;
-        echo "Error al insertar datos en la tabla PERIODO: " . $stmt_insert_periodo->error, "<br>";
+      
+    }
+
+    $cohorte = 3;
+    $semestre=2;
+    $stmt_insert_periodo->bind_param("iii", $year, $semestre, $cohorte);
+    if (!$stmt_insert_periodo->execute()) {
+        $insertion_error = true;
+      
     }
 }
+
+
 // Cerrar la sentencia de inserción y la conexión a la base de datos
 $stmt_insert_programa->close();
 $stmt_insert_periodo->close();
