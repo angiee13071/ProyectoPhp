@@ -112,14 +112,14 @@ if ($result->num_rows > 0) {
             <option value="puntaje_icfes">Puntaje Icfes</option>
         </select>
         <div>
-            <select id="year-select">
+            <!-- <select id="year-select">
                 <option value="all">Todos los años</option>
                 <?php
-    foreach (array_unique($anios) as $anio) {
-        echo '<option value="' . $anio . '">' . $anio . '</option>';
-    }
+    // foreach (array_unique($anios) as $anio) {
+    //     echo '<option value="' . $anio . '">' . $anio . '</option>';
+    // }
     ?>
-            </select>
+            </select> -->
         </div>
 
         <select id="chart-type-p" class="oculto" style="display: none;">
