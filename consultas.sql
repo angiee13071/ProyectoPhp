@@ -154,14 +154,18 @@ BEGIN
     WHERE p.id_periodo = periodo_id AND e.id_programa = programa_id;
 
     -- Calculate retirados using the formula
-   SET total_retirados = (
+SET total_retirados = (
   (
     (SELECT IFNULL(matriculados_count_prev, 0) FROM (
       SELECT matriculados AS matriculados_count_prev
       FROM total
       WHERE id_periodo = periodo_id - 1 AND id_programa = programa_id
     ) AS prev) -
-    graduados_count + primiparos_count
+    (SELECT IFNULL(graduados_count_prev, 0) FROM (
+      SELECT graduados AS graduados_count_prev
+      FROM total
+      WHERE id_periodo = periodo_id - 1 AND id_programa = programa_id
+    ) AS prev) + primiparos_count
   ) -
   matriculados_count
 );
