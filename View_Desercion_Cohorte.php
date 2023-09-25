@@ -59,70 +59,81 @@ $conn = $dbConnection->getDBConnection();
         if ($carrera === 'all') {
             $query .= "
             CONCAT(periodo.anio, '-', periodo.cohorte) AS periodos,
-            NULL AS id_programa, -- Usamos NULL para representar a nivel general
+            NULL AS id_programa,
             SUM(t.retirados) AS desertores_total,
-            SUM(t.matriculados) AS matriculados_total, -- Sumamos todos los matriculados
-            ROUND(
+            SUM(t.matriculados) AS matriculados_total,
+            CAST(
               COALESCE(
                 CASE
-                  WHEN SUM(t.retirados) < 0 THEN 0
-                  ELSE (SUM(t.retirados) / NULLIF(SUM(t.matriculados), 0)) * 100 -- División por NULLIF para manejar 0
+                  WHEN SUM(t.retirados) = 0 OR SUM(t.matriculados) = 0 THEN 0
+                  ELSE (SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100
                 END,
                 0
-              ),
-              2
+              ) AS UNSIGNED
             ) AS tasa_desercion
           FROM total t
           JOIN periodo ON t.id_periodo = periodo.id_periodo
+          LEFT JOIN (
+            SELECT id_programa, matriculados, id_periodo
+            FROM total
+          ) AS t_anterior ON t.id_programa = t_anterior.id_programa AND t.id_periodo = t_anterior.id_periodo + 1
           GROUP BY periodo.anio, periodo.cohorte
           ORDER BY periodos
           LIMIT 0, 1000;
 ";
         }elseif($carrera === 'tec'){
-            $query .=  " CONCAT(periodo.anio, '-', periodo.cohorte) AS periodos,
+            $query .=  "
             CONCAT(periodo.anio, '-', periodo.cohorte) AS periodos,
-            id_programa, 
+            NULL AS id_programa,
             SUM(t.retirados) AS desertores_total,
-            SUM(t.matriculados) AS matriculados_total, -- Sumamos todos los matriculados
-            ROUND(
+            SUM(t.matriculados) AS matriculados_total,
+            CAST(
               COALESCE(
                 CASE
-                  WHEN SUM(t.retirados) < 0 THEN 0
-                  ELSE (SUM(t.retirados) / NULLIF(SUM(t.matriculados), 0)) * 100 -- División por NULLIF para manejar 0
+                  WHEN SUM(t.retirados) = 0 OR SUM(t.matriculados) = 0 THEN 0
+                  ELSE (SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100
                 END,
                 0
-              ),
-              2
+              ) AS UNSIGNED
             ) AS tasa_desercion
           FROM total t
           JOIN periodo ON t.id_periodo = periodo.id_periodo
-          WHERE id_programa='578'
+          LEFT JOIN (
+            SELECT id_programa, matriculados, id_periodo
+            FROM total
+          ) AS t_anterior ON t.id_programa = t_anterior.id_programa AND t.id_periodo = t_anterior.id_periodo + 1
+          WHERE t.id_programa = 578 -- Filtrar por id_programa igual a 578
           GROUP BY periodo.anio, periodo.cohorte
           ORDER BY periodos
-          LIMIT 0, 1000;";
+          LIMIT 0, 1000;
+          ";
     
         }elseif($carrera === 'ing'){
-            $query .=  " CONCAT(periodo.anio, '-', periodo.cohorte) AS periodos,
+            $query .=  "
             CONCAT(periodo.anio, '-', periodo.cohorte) AS periodos,
-            id_programa, 
+            NULL AS id_programa,
             SUM(t.retirados) AS desertores_total,
-            SUM(t.matriculados) AS matriculados_total, -- Sumamos todos los matriculados
-            ROUND(
+            SUM(t.matriculados) AS matriculados_total,
+            CAST(
               COALESCE(
                 CASE
-                  WHEN SUM(t.retirados) < 0 THEN 0
-                  ELSE (SUM(t.retirados) / NULLIF(SUM(t.matriculados), 0)) * 100 -- División por NULLIF para manejar 0
+                  WHEN SUM(t.retirados) = 0 OR SUM(t.matriculados) = 0 THEN 0
+                  ELSE (SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100
                 END,
                 0
-              ),
-              2
+              ) AS UNSIGNED
             ) AS tasa_desercion
           FROM total t
           JOIN periodo ON t.id_periodo = periodo.id_periodo
-          WHERE id_programa='678'
+          LEFT JOIN (
+            SELECT id_programa, matriculados, id_periodo
+            FROM total
+          ) AS t_anterior ON t.id_programa = t_anterior.id_programa AND t.id_periodo = t_anterior.id_periodo + 1
+          WHERE t.id_programa = 678 -- Filtrar por id_programa igual a 578
           GROUP BY periodo.anio, periodo.cohorte
           ORDER BY periodos
-          LIMIT 0, 1000;";
+          LIMIT 0, 1000;
+          ";
     
         }
        

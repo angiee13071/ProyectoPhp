@@ -101,6 +101,13 @@ CREATE TABLE total (
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo),
   FOREIGN KEY (id_programa) REFERENCES programa(id_programa)
 );
+SELECT * FROM total;
+SELECT 
+  t.id_cohorte_total,
+  (t.retirados / (SELECT matriculados FROM total WHERE id_cohorte_total = t.id_cohorte_total - 1)) * 100 AS ratio_retirados
+FROM total t
+WHERE t.id_cohorte_total > 1;
+
 -- Procedimiento almacenado para calcular totales:
 -- procedimiento almacenado totales:
 -- procedimiento almacenado totales:
@@ -188,6 +195,7 @@ DELIMITER ;
 -- CALL fill_total();
 -- Consultar tablas:
 SELECT * FROM total;
+
 SELECT * FROM total LIMIT 0, 1000;
 select * from programa;
 
