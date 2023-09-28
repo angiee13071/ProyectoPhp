@@ -64,54 +64,81 @@ $conn = $dbConnection->getDBConnection();
     $graduacionIng = [];
     
     function fetchData($carrera) {
-     $query="SELECT
-     CONCAT(p.anio, '-', p.semestre) AS periodo,";
+     $query="";
         global $conn, $periodo,$retencion,$graduacion,$retencionTec,$graduacionTec,$retencionIng,$graduacionIng,$periodoTec,$periodoIng;
         if ($carrera === 'all') {
-            $query .= "'Todas las carreras' AS programa,
-            ROUND((t.matriculados / (LAG(t.matriculados, 1) OVER (ORDER BY p.id_periodo)) * 100), 2) AS tasa_retencion,
-
-            ROUND((SUM(t.graduados) / NULLIF(SUM(t.matriculados), 0)) * 100, 2) AS tasa_graduacion
+            $query = "SELECT
+   
+            CONCAT(p_actual.anio, '-', p_actual.semestre) AS periodo,
+            CONCAT(p_anterior.anio, '-', p_anterior.semestre) AS periodo_anterior,
+            SUM(t_actual.matriculados) AS matriculados_actual,
+            
+            IFNULL(LAG(t_anterior.matriculados) OVER (ORDER BY p_actual.id_periodo), 0) AS matriculados_anterior,
+            LEAST((SUM(t_actual.matriculados) / IFNULL(LAG(t_anterior.matriculados) OVER (ORDER BY p_actual.id_periodo), 1)) * 100, 100) AS tasa_retencion,
+         LEAST((SUM(t_actual.graduados) / IFNULL(LAG(t_anterior.matriculados) OVER (ORDER BY p_actual.id_periodo), 1)) * 100, 100) AS tasa_graduacion,
+            t_actual.id_programa
         FROM
-            total t
+            total t_actual  
         JOIN
-            periodo p ON t.id_periodo = p.id_periodo
+            periodo p_actual ON t_actual.id_periodo = p_actual.id_periodo
+        LEFT JOIN
+            periodo p_anterior ON p_actual.id_periodo = p_anterior.id_periodo + 1
+        LEFT JOIN
+            total t_anterior ON t_anterior.id_periodo = p_anterior.id_periodo AND t_actual.id_programa = t_anterior.id_programa
         GROUP BY
-            p.anio, p.semestre
+            p_actual.id_periodo, p_anterior.id_periodo, t_actual.id_programa
         ORDER BY
-            p.id_periodo;";
+            p_actual.id_periodo;
+        ";
         }elseif($carrera === 'tec'){
-            $query .= "
-            pr.nombre AS programa,
-            ROUND((t.matriculados / (LAG(t.matriculados, 1) OVER (ORDER BY p.id_periodo)) * 100), 2) AS tasa_retencion,
-
-            ROUND((t.graduados / NULLIF(t.matriculados, 0)) * 100, 2) AS tasa_graduacion
+            $query = "
+            SELECT
+            CONCAT(p_actual.anio, '-', p_actual.semestre) AS periodo,
+            CONCAT(p_anterior.anio, '-', p_anterior.semestre) AS periodo_anterior,
+            SUM(t_actual.matriculados) AS matriculados_actual,
+            IFNULL(LAG(t_anterior.matriculados) OVER (ORDER BY p_actual.id_periodo), 0) AS matriculados_anterior,
+            LEAST((SUM(t_actual.matriculados) / IFNULL(LAG(t_anterior.matriculados) OVER (ORDER BY p_actual.id_periodo), 1)) * 100, 100) AS tasa_retencion,
+            LEAST((SUM(t_actual.graduados) / IFNULL(LAG(t_anterior.matriculados) OVER (ORDER BY p_actual.id_periodo), 1)) * 100, 100) AS tasa_graduacion,
+            t_actual.id_programa
         FROM
-            total t
+            total t_actual   
         JOIN
-            programa pr ON t.id_programa = pr.id_programa
-        JOIN
-            periodo p ON t.id_periodo = p.id_periodo
+            periodo p_actual ON t_actual.id_periodo = p_actual.id_periodo
+        LEFT JOIN
+            periodo p_anterior ON p_actual.id_periodo = p_anterior.id_periodo + 1
+        LEFT JOIN
+            total t_anterior ON t_anterior.id_periodo = p_anterior.id_periodo AND t_actual.id_programa = t_anterior.id_programa
         WHERE
-            pr.nombre = 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)'
+            t_actual.id_programa = 578
+        GROUP BY
+            p_actual.id_periodo, p_anterior.id_periodo, t_actual.id_programa
         ORDER BY
-            t.id_programa, t.id_cohorte_total;
+            p_actual.id_periodo;
         ";
         }elseif($carrera === 'ing'){
-            $query .=  "
-            pr.nombre AS programa,
-            ROUND((t.matriculados / (LAG(t.matriculados, 1) OVER (ORDER BY p.id_periodo)) * 100), 2) AS tasa_retencion,
-            ROUND((t.graduados / NULLIF(t.matriculados, 0)) * 100, 2) AS tasa_graduacion
-        FROM
-            total t
-        JOIN
-            programa pr ON t.id_programa = pr.id_programa
-        JOIN
-            periodo p ON t.id_periodo = p.id_periodo
-        WHERE
-            pr.nombre = 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)'
-        ORDER BY
-            t.id_programa, t.id_cohorte_total;
+            $query =  "
+            SELECT
+    CONCAT(p_actual.anio, '-', p_actual.semestre) AS periodo,
+    CONCAT(p_anterior.anio, '-', p_anterior.semestre) AS periodo_anterior,
+    SUM(t_actual.matriculados) AS matriculados_actual,
+    IFNULL(LAG(t_anterior.matriculados) OVER (ORDER BY p_actual.id_periodo), 0) AS matriculados_anterior,
+    LEAST((SUM(t_actual.matriculados) / IFNULL(LAG(t_anterior.matriculados) OVER (ORDER BY p_actual.id_periodo), 1)) * 100, 100) AS tasa_retencion,
+    LEAST((SUM(t_actual.graduados) / IFNULL(LAG(t_anterior.matriculados) OVER (ORDER BY p_actual.id_periodo), 1)) * 100, 100) AS tasa_graduacion,
+    t_actual.id_programa
+FROM
+    total t_actual   
+JOIN
+    periodo p_actual ON t_actual.id_periodo = p_actual.id_periodo
+LEFT JOIN
+    periodo p_anterior ON p_actual.id_periodo = p_anterior.id_periodo + 1
+LEFT JOIN
+    total t_anterior ON t_anterior.id_periodo = p_anterior.id_periodo AND t_actual.id_programa = t_anterior.id_programa
+WHERE
+    t_actual.id_programa = 678
+GROUP BY
+    p_actual.id_periodo, p_anterior.id_periodo, t_actual.id_programa
+ORDER BY
+    p_actual.id_periodo;
         ";
     
         }
