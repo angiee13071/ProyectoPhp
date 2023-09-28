@@ -60,7 +60,7 @@ $conn = $dbConnection->getDBConnection();
             periodo_actual,
             matriculado_actual,
             matriculado_anterior,
-            ROUND((matriculado_anterior / matriculado_actual) * 100) AS promedio_tasa_permanencia
+            ROUND((matriculado_anterior / matriculado_actual) ) AS promedio_tasa_permanencia
         FROM (
             SELECT
                 CONCAT(p.anio, '-', p.semestre) AS periodo_actual,

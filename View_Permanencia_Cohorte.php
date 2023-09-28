@@ -59,11 +59,15 @@ $conn = $dbConnection->getDBConnection();
 
             $query = "SELECT
             CONCAT(p_actual.anio, '-', p_actual.cohorte) AS periodo_actual,
-             CONCAT(p_actual.anio, '-', p_actual.cohorte) AS cohorte,
+            CONCAT(p_actual.anio, '-', p_actual.cohorte) AS cohorte,
             CONCAT(p_anterior.anio, '-', p_anterior.cohorte) AS periodo_anterior,
             SUM(t_actual.matriculados) AS matriculados_actual,
             LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) AS matriculados_anterior,
-            FORMAT((LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100, 1) AS permanencia
+            CASE
+                WHEN (LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100 > 100
+                THEN 100
+                ELSE (LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100
+            END AS permanencia
         FROM
             total t_actual  
         JOIN

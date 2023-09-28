@@ -62,14 +62,17 @@ $conn = $dbConnection->getDBConnection();
             CONCAT(p_anterior.anio, '-', p_anterior.semestre) AS periodo_anterior,
             SUM(t_actual.matriculados) AS matriculados_actual,
             LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) AS matriculados_anterior,
-            FORMAT((LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100, 1) AS permanencia
+            CASE
+                WHEN (LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100 > 100
+                THEN 100
+                ELSE (LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100
+            END AS permanencia
         FROM
             total t_actual  
         JOIN
             periodo p_actual ON t_actual.id_periodo = p_actual.id_periodo
         LEFT JOIN
             periodo p_anterior ON p_actual.id_periodo = p_anterior.id_periodo + 1
-          
          -- where t_actual.id_programa='578'
          ";
 
