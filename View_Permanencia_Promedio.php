@@ -5,17 +5,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promedio Acumulado</title>
+    <title>Promedio permanencia</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <?php include 'header.html'; ?>
 
 <body>
     <div class="card">
         <div class="title">
-            <h1>Promedio Acumulado</h1>
+            <h1>Promedio ponderado de permanencia</h1>
         </div>
         <div class="chart-container">
             <canvas id="permanencia-chart"></canvas>
@@ -34,102 +33,94 @@
             </select>
         </div>
         <button class="arrow-button" onclick="goBack()">&#8592;</button>
+    </div>
 
-
-        <!-- Mostrar el promedio ponderado -->
-        <?php
+    <script>
+    // Obtener los datos de la tabla 'graduado' y 'estudiante'
+    <?php
         include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
-         //grafica 1
-       $cohortes = [];
-       $permanencias = [];
-       //grafica 2
-       $cohortesTec = [];
-       $permanenciasTec = [];
-       //grafica 3
-       $cohortesIng = [];
-       $permanenciasIng = [];
+        //grafica 1
+        $cohortes = [];
+        $permanencias = [];
+        //grafica 2
+        $cohortesTec = [];
+        $permanenciasTec = [];
+        //grafica 3
+        $cohortesIng = [];
+        $permanenciasIng = [];
+ 
 
-        // Realiza la consulta con la condición de carrera
-        // $carrera = isset($_GET['carrera']) ? $_GET['carrera'] : 'all';
+        // Función para obtener los datos dependiendo de la carrera seleccionada
         function fetchData($carrera) {
             global $conn, $cohortes, $permanencias,$cohortesTec,$permanenciasTec,$cohortesIng,$permanenciasIng;
+
             $query = "SELECT
-            periodo_actual,
-            matriculado_actual,
-            matriculado_anterior,
-            ROUND((matriculado_anterior / matriculado_actual) ) AS promedio_tasa_permanencia
-        FROM (
-            SELECT
-                CONCAT(p.anio, '-', p.semestre) AS periodo_actual,
-                COUNT(DISTINCT m.id_estudiante) AS matriculado_actual,
-                LAG(COUNT(DISTINCT m.id_estudiante)) OVER (ORDER BY p.anio, p.semestre) AS matriculado_anterior
-            FROM
-                periodo p
-            LEFT JOIN matriculado m ON p.id_periodo = m.id_periodo
-            LEFT JOIN estudiante e ON m.id_estudiante = e.id_estudiante ";
+            CONCAT(p_actual.anio, '-', p_actual.semestre) AS periodo_actual,
+            CONCAT(p_anterior.anio, '-', p_anterior.semestre) AS periodo_anterior,
+            SUM(t_actual.matriculados) AS matriculados_actual,
+            LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) AS matriculados_anterior,
+            CASE
+                WHEN (LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100 > 100
+                THEN 100
+                ELSE (LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100
+            END AS permanencia
+        FROM
+            total t_actual  
+        JOIN
+            periodo p_actual ON t_actual.id_periodo = p_actual.id_periodo
+        LEFT JOIN
+            periodo p_anterior ON p_actual.id_periodo = p_anterior.id_periodo + 1
+         -- where t_actual.id_programa='578'
+         ";
 
-        if ($carrera === 'all') {
-            $query .= "WHERE m.estado_matricula = 'ESTUDIANTE MATRICULADO' ";
-        } elseif ($carrera === 'tec') {
-            $query .= "WHERE m.estado_matricula = 'ESTUDIANTE MATRICULADO' AND e.carrera = 'TECNOLOGIA EN SISTEMATIZACION DE DATOS (CICLOS PROPEDEUTICOS)' ";
-        } elseif ($carrera === 'ing') {
-            $query .= "WHERE m.estado_matricula = 'ESTUDIANTE MATRICULADO' AND e.carrera = 'INGENIERIA EN TELEMATICA (CICLOS PROPEDEUTICOS)' ";
-        }
-
-        $query .= "GROUP BY p.anio, p.semestre
-        ) AS subquery
-        ORDER BY periodo_actual;";
-
-        $result = $conn->query($query);
-        if ($result->num_rows > 0) {
-            $sumaPonderada = 0;
-            $totalPeriodos = 0;
-            while ($row = $result->fetch_assoc()) {
-                // $totalPeriodos++;
-                // $sumaPonderada += floatval($row['permanencia']); // Suma de las permanencias
-                // $promedioPonderado = ($totalPeriodos > 0) ? ($sumaPonderada / $totalPeriodos) : 0;
-                if($carrera=== 'all'){
-                    $cohortes[] = $row['periodo_actual'];
-                    $permanencias[] = $row['promedio_tasa_permanencia'];
-                }else if($carrera === 'tec'){
-                    $cohortesTec[] = $row['periodo_actual'];
-                    $permanenciasTec[] =$row['promedio_tasa_permanencia'];
-              }else if($carrera === 'ing'){
-                $cohortesIng[] = $row['periodo_actual'];
-                $permanenciasIng[] = $row['promedio_tasa_permanencia'];
+            if ($carrera === 'all') {
+              
+            }elseif($carrera === 'tec'){
+                $query .= " where t_actual.id_programa='578'";
+            }elseif($carrera === 'ing'){
+                $query .= "where t_actual.id_programa='678'";
             }
-               
+
+            $query .= "  GROUP BY
+            p_actual.id_periodo, p_anterior.id_periodo
+        ORDER BY
+            p_actual.id_periodo;";
+
+            $result = $conn->query($query);
+
+          
+            if ($result->num_rows > 0) {
+                $sumaPonderada = 0;
+                $totalPeriodos = 0;
+                while ($row = $result->fetch_assoc()) {
+                    $totalPeriodos++;
+                    $sumaPonderada += floatval($row['permanencia']); 
+                    $promedioPonderado = ($totalPeriodos > 0) ? ($sumaPonderada / $totalPeriodos) : 0;
+                    if($carrera=== 'all'){
+                        $cohortes[] = $row['periodo_actual'];
+                        $permanencias[] = $promedioPonderado;
+                    }else if($carrera === 'tec'){
+                        $cohortesTec[] = $row['periodo_actual'];
+                        $permanenciasTec[] = $promedioPonderado;
+                  }else if($carrera === 'ing'){
+                    $cohortesIng[] = $row['periodo_actual'];
+                    $permanenciasIng[] = $promedioPonderado;
+                }
+                   
+                }
+             
             }
-         
         }
-        // if ($result->num_rows > 0) {
-        //     $sumaPonderada = 0;
-        //     $totalPeriodos = 0;
-        
-        //     while ($row = $result->fetch_assoc()) {
-        //         $totalPeriodos++;
-        //         $sumaPonderada += floatval($row['permanencia']); // Suma de las permanencias
-        //         $promedioPonderado = ($totalPeriodos > 0) ? ($sumaPonderada / $totalPeriodos) : 0;
-        
-        //         $cohortes[] = $row['periodo_actual'];
-        //         $promediosPonderados[] = floatval($promedioPonderado); // Convertir el valor a número usando floatval()
-        //     }
-        // }
-        }
+
+        // Obtener datos por defecto (Todas las carreras)
         fetchData('all');
         fetchData('tec');
         fetchData('ing');
-
-        // $conn->close();
         ?>
 
-        <!-- Fin del bloque para mostrar el promedio ponderado -->
-    </div>
-
-    <script>
     // Crear la gráfica inicial
     var ctx = document.getElementById('permanencia-chart').getContext('2d');
     var chartTypeSelect = document.getElementById('chart-type');
