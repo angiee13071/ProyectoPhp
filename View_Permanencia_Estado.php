@@ -73,8 +73,7 @@ $conn = $dbConnection->getDBConnection();
         global $conn, $periodo,$retencion,$graduacion,$retencionTec,$graduacionTec,$retencionIng,$graduacionIng,$periodoTec,$periodoIng;
         if ($carrera === 'all') {
             $query = "SELECT
-   
-            CONCAT(p_actual.anio, '-', p_actual.semestre) AS periodo,
+   CONCAT(p_actual.anio, '-', p_actual.semestre) AS periodo,
             CONCAT(p_anterior.anio, '-', p_anterior.semestre) AS periodo_anterior,
             SUM(t_actual.matriculados) AS matriculados_actual,
             
@@ -91,13 +90,12 @@ $conn = $dbConnection->getDBConnection();
         LEFT JOIN
             total t_anterior ON t_anterior.id_periodo = p_anterior.id_periodo AND t_actual.id_programa = t_anterior.id_programa
         GROUP BY
-            p_actual.id_periodo, p_anterior.id_periodo, t_actual.id_programa
+            p_actual.id_periodo, p_anterior.id_periodo
         ORDER BY
             p_actual.id_periodo;
         ";
         }elseif($carrera === 'tec'){
-            $query = "
-            SELECT
+            $query = "      SELECT
             CONCAT(p_actual.anio, '-', p_actual.semestre) AS periodo,
             CONCAT(p_anterior.anio, '-', p_anterior.semestre) AS periodo_anterior,
             SUM(t_actual.matriculados) AS matriculados_actual,
