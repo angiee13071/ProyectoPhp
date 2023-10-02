@@ -111,6 +111,25 @@ SELECT
 FROM
   total;
 
+SELECT
+  t.id_cohorte_total,
+  (
+    t.retirados / (
+      SELECT
+        matriculados
+      FROM
+        total
+      WHERE
+        id_cohorte_total = t.id_cohorte_total - 1
+    )
+  ) * 100 AS ratio_retirados
+FROM
+  total t
+WHERE
+  t.id_cohorte_total > 1;
+
+-- Procedimiento almacenado para calcular totales:
+-- procedimiento almacenado totales:
 -- procedimiento almacenado totales:
 DELIMITER $ $ CREATE PROCEDURE fill_total() BEGIN DECLARE done INT DEFAULT FALSE;
 
@@ -263,6 +282,13 @@ SELECT
 FROM
   total;
 
+SELECT
+  *
+FROM
+  total
+LIMIT
+  0, 1000;
+
 select
   *
 from
@@ -307,3 +333,219 @@ select
   *
 from
   total;
+
+SELECT
+  DISTINCT estado
+FROM
+  estudiante;
+
+-- graduado
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN graduado g ON e.id_estudiante = g.id_estudiante
+  JOIN periodo p ON g.id_periodo = p.id_periodo;
+
+-- matriculado
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN matriculado g ON e.id_estudiante = g.id_estudiante
+  JOIN periodo p ON g.id_periodo = p.id_periodo;
+
+-- 
+-- admitido
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN admitido g ON e.id_estudiante = g.id_estudiante
+  JOIN periodo p ON g.id_periodo = p.id_periodo;
+
+-- union
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN graduado g ON e.id_estudiante = g.id_estudiante
+  JOIN periodo p ON g.id_periodo = p.id_periodo
+UNION
+ALL
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN matriculado m ON e.id_estudiante = m.id_estudiante
+  JOIN periodo p ON m.id_periodo = p.id_periodo
+UNION
+ALL
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN admitido a ON e.id_estudiante = a.id_estudiante
+  JOIN periodo p ON a.id_periodo = p.id_periodo;
+
+-- union prueba
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN graduado g ON e.id_estudiante = g.id_estudiante
+  JOIN periodo p ON g.id_periodo = p.id_periodo
+UNION
+ALL
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN matriculado m ON e.id_estudiante = m.id_estudiante
+  JOIN periodo p ON m.id_periodo = p.id_periodo
+UNION
+ALL
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN admitido a ON e.id_estudiante = a.id_estudiante
+  JOIN periodo p ON a.id_periodo = p.id_periodo;
+
+-- torta
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN graduado g ON e.id_estudiante = g.id_estudiante
+  JOIN periodo p ON g.id_periodo = p.id_periodo
+WHERE
+  p.anio = 2023
+UNION
+ALL
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN matriculado m ON e.id_estudiante = m.id_estudiante
+  JOIN periodo p ON m.id_periodo = p.id_periodo
+WHERE
+  p.anio = 2023
+UNION
+ALL
+SELECT
+  e.carrera,
+  e.estrato,
+  e.localidad,
+  e.tipo_inscripcion,
+  e.estado,
+  e.promedio,
+  e.pasantia,
+  e.tipo_icfes,
+  e.puntaje_icfes,
+  p.anio
+FROM
+  estudiante e
+  JOIN admitido a ON e.id_estudiante = a.id_estudiante
+  JOIN periodo p ON a.id_periodo = p.id_periodo
+WHERE
+  p.anio = 2023;
