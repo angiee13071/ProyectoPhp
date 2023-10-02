@@ -1,12 +1,12 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
-require_once '../ConexionBD.php';
+require_once 'ConexionBD.php';
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Lista_de_Egresados_por_Proyecto.csv";
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);

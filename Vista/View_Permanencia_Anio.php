@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promedio permanencia</title>
+    <title>Permanencia por Año</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -17,7 +17,7 @@
 <body>
     <div class="card">
         <div class="title">
-            <h1>Promedio ponderado de permanencia</h1>
+            <h1>Permanencia por Año</h1>
         </div>
         <div class="chart-container">
             <canvas id="permanencia-chart"></canvas>
@@ -44,43 +44,44 @@
     <script>
     // Obtener los datos de la tabla 'graduado' y 'estudiante'
     <?php
-        include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
+        include "../Modelo/ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
-        //grafica 1
-        $cohortes = [];
-        $permanencias = [];
-        //grafica 2
-        $cohortesTec = [];
-        $permanenciasTec = [];
-        //grafica 3
-        $cohortesIng = [];
-        $permanenciasIng = [];
- 
+       //grafica 1
+       $cohortes = [];
+       $permanencias = [];
+       //grafica 2
+       $cohortesTec = [];
+       $permanenciasTec = [];
+       //grafica 3
+       $cohortesIng = [];
+       $permanenciasIng = [];
 
         // Función para obtener los datos dependiendo de la carrera seleccionada
         function fetchData($carrera) {
             global $conn, $cohortes, $permanencias,$cohortesTec,$permanenciasTec,$cohortesIng,$permanenciasIng;
 
             $query = "SELECT
-            CONCAT(p_actual.anio, '-', p_actual.semestre) AS periodo_actual,
-            CONCAT(p_anterior.anio, '-', p_anterior.semestre) AS periodo_anterior,
+            p_anterior.anio AS anio_actual,
+            p_actual.anio AS periodo_anterior,
             SUM(t_actual.matriculados) AS matriculados_actual,
-            LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) AS matriculados_anterior,
             CASE
                 WHEN (LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100 > 100
                 THEN 100
                 ELSE (LAG(SUM(t_actual.matriculados)) OVER (ORDER BY p_actual.id_periodo) / SUM(t_actual.matriculados)) * 100
-            END AS permanencia
+            END AS promedio_permanencia
         FROM
             total t_actual  
         JOIN
             periodo p_actual ON t_actual.id_periodo = p_actual.id_periodo
         LEFT JOIN
             periodo p_anterior ON p_actual.id_periodo = p_anterior.id_periodo + 1
-         -- where t_actual.id_programa='578'
-         ";
+            
+           -- where t_actual.id_programa='578'
+         
+          
+          ";
 
             if ($carrera === 'all') {
               
@@ -90,30 +91,24 @@ $conn = $dbConnection->getDBConnection();
                 $query .= "where t_actual.id_programa='678'";
             }
 
-            $query .= "  GROUP BY
+            $query .= "   GROUP BY
             p_actual.id_periodo, p_anterior.id_periodo
         ORDER BY
             p_actual.id_periodo;";
 
             $result = $conn->query($query);
 
-          
             if ($result->num_rows > 0) {
-                $sumaPonderada = 0;
-                $totalPeriodos = 0;
                 while ($row = $result->fetch_assoc()) {
-                    $totalPeriodos++;
-                    $sumaPonderada += floatval($row['permanencia']); 
-                    $promedioPonderado = ($totalPeriodos > 0) ? ($sumaPonderada / $totalPeriodos) : 0;
                     if($carrera=== 'all'){
-                        $cohortes[] = $row['periodo_actual'];
-                        $permanencias[] = $promedioPonderado;
+                        $cohortes[] = $row['anio_actual'];
+                        $permanencias[] = floatval($row['promedio_permanencia']);
                     }else if($carrera === 'tec'){
-                        $cohortesTec[] = $row['periodo_actual'];
-                        $permanenciasTec[] = $promedioPonderado;
+                        $cohortesTec[] = $row['anio_actual'];
+                        $permanenciasTec[] = floatval($row['promedio_permanencia']);
                   }else if($carrera === 'ing'){
-                    $cohortesIng[] = $row['periodo_actual'];
-                    $permanenciasIng[] = $promedioPonderado;
+                    $cohortesIng[] = $row['anio_actual'];
+                    $permanenciasIng[] = floatval($row['promedio_permanencia']);
                 }
                    
                 }
@@ -162,7 +157,7 @@ $conn = $dbConnection->getDBConnection();
             var downloadLink = document.createElement('a');
             downloadLink.href = canvas.toDataURL(
                 'image/png');
-            downloadLink.download = 'Permanencia_promedio.png';
+            downloadLink.download = 'Permanencia_anio.png';
             downloadLink.click();
         });
     }

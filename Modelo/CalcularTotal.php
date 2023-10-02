@@ -1,7 +1,7 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
-require_once '../ConexionBD.php';
+require_once 'ConexionBD.php';
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
@@ -9,14 +9,6 @@ $conn = $dbConnection->getDBConnection();
   
 //Llamar al procedimiento almacenado
     $sql = "CALL fill_total()";
-
-    // // Ejecutar la consulta
-    // if ($conn->query($sql) === TRUE) {
-    //     echo "Tabla total y retirado llenada correctamente.";
-    // } else {
-    //     echo "Error al ejecutar el procedimiento almacenado: " . $conn->error;
-    // }
-
     
     // Preparar la sentencia
     $stmt = $conn->prepare($sql);

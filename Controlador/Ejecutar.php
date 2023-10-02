@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Importación de Datos</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../Vista/styles.css">
     <!-- Agregar referencia a la fuente Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
 
                 </ul>
             </nav>
-            <img src="Assets/images/uploads/logo_ud.png" alt="Logo" class="logo">
+            <img src="../Vista/Assets/uploads/logo_ud.png" alt="Logo" class="logo">
         </header>
     </div>
     <div class="ETL">
@@ -51,31 +51,31 @@
 
 
 //#1 Tomar el archivo de egresados para subir los programas academicos y periodos:
-require 'Insert_EgresadoCSV_Programa_Periodo.php';
+require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_EgresadoCSV_Programa_Periodo.php';
 
  //#2 Tomar el archivo egresado para subirlo a la tabla estudiantes:
-require 'Insert_EgresadoCSV_Estudiante.php';
+require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_EgresadoCSV_Estudiante.php';
 
 //#3 Tomar el archivo de matriculados actualmente para subirlos a la tabla estudiante:
-require 'Insert_MatriculadosCSV_Estudiante.php';
+require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_MatriculadosCSV_Estudiante.php';
     
 //#4 Tomar el archivo de matriculados actualmente para subirlos a la tabla matriculados:
-require 'Insert_MatriculadosCSV_Matriculado.php';
+require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_MatriculadosCSV_Matriculado.php';
 
 //#5 Tomar el archivo de primiparos y llenar la tabla estudiante
-require 'Insert_PrimiparosCSV_Estudiante.php';
+require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_PrimiparosCSV_Estudiante.php';
 
 //#6 Tomar el archivo de primiparos y llenar la tabla primiparo:
-require 'Insert_PrimiparosCSV_Primiparo.php';
+require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_PrimiparosCSV_Primiparo.php';
 
 //#7  Llamar y ejecutar el archivo EgresadoGraduadoCSV.php
- require 'Insert_EgresadoCSV_Graduado.php';
+ require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_EgresadoCSV_Graduado.php';
  //#8 Tomar el archivo admitidos para subirlo a la tabla estudiantes:
- require 'Insert_AdmitidosCSV_Estudiante.php';
+ require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_AdmitidosCSV_Estudiante.php';
  //#9 Tomar archivo admitidos y llenar talbla admitido
- require 'Insert_AdmitidosCVS_Admitido.php';
+ require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_AdmitidosCVS_Admitido.php';
 //#10 Llamar y ejecutar procedimiento almacenado para llenar tablas total y retirado
-require 'CalcularTotal.php';
+require 'C:\xampp\htdocs\ProyectoPhp\Modelo\CalcularTotal.php';
 //#fin
 
 echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;

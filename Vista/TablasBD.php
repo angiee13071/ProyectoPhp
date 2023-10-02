@@ -8,6 +8,16 @@
     <title>Base de datos</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    function toggleTable(tableId) {
+        var table = document.getElementById(tableId);
+        if (table.style.display === "none") {
+            table.style.display = "table";
+        } else {
+            table.style.display = "none";
+        }
+    }
+    </script>
 </head>
 
 <body>
@@ -26,7 +36,7 @@
                 </tr>
                 <?php
 // Incluir el archivo de conexión a la base de datos
-include "ConexionBD.php";
+include "../Modelo/ConexionBD.php";
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
@@ -277,20 +287,11 @@ $conn = $dbConnection->getDBConnection();
 
     </div>
     <button class="arrow-button" onclick="goBack()">&#8592;</button>
-    <script>
-    function toggleTable(tableId) {
-        var table = document.getElementById(tableId);
-        if (table.style.display === "none") {
-            table.style.display = "table";
-        } else {
-            table.style.display = "none";
-        }
-    }
-    </script>
+
     <script>
     function goBack() {
         // window.history.back();
-        window.location.href = 'http://localhost/ProyectoPhp/Home.php#';
+        window.location.href = 'Home.php';
     }
     </script>
 </body>

@@ -3,11 +3,11 @@ set_time_limit(300);
 
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
-require_once '../ConexionBD.php';
+require_once 'ConexionBD.php';
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Listado_matriculados_período_actual.csv";
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);

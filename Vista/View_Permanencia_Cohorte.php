@@ -45,7 +45,7 @@
     <script>
     // Obtener los datos de la tabla 'graduado' y 'estudiante'
     <?php
-        include "ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
+        include "../Modelo/ConexionBD.php"; // Incluye el archivo de conexión a la base de datos
         // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();

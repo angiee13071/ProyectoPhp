@@ -1,7 +1,7 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
-require_once '../ConexionBD.php';
+require_once 'ConexionBD.php';
 // include "conexion.php";
 
 try {
@@ -32,12 +32,12 @@ try {
     </div>';
 }
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Lista_de_Egresados_por_Proyecto.csv";
 
-$url1 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_de_admitidos.csv";
-$url2 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Lista_de_Egresados_por_Proyecto.csv";
-$url3 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matriculados_período_actual.csv";
-$url4 = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_matrículados_a_primer_semestre.csv";
+$url1 = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Listado_de_admitidos.csv";
+$url2 = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Lista_de_Egresados_por_Proyecto.csv";
+$url3 = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Listado_matriculados_período_actual.csv";
+$url4 = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Listado_matrículados_a_primer_semestre.csv";
 // validar si existen los archivos
 if (file_exists($url1) && file_exists($url2) && file_exists($url3) && file_exists($url4)) {
     echo' <div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border: 2px solid #4CAF50;width: 63rem;

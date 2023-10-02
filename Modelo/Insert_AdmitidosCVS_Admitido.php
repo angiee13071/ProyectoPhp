@@ -1,12 +1,12 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
 // require_once 'ConexionBD.php';
-require_once '../ConexionBD.php';
+require_once 'ConexionBD.php';
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
 // URL del archivo CSV
-$url = "file:///C:/xampp/htdocs/ProyectoPhp/Insert/Listado_de_admitidos.csv";
+$url = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Listado_de_admitidos.csv";
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
@@ -84,7 +84,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 
 
     // Verificar si el estudiante ya existe en la tabla 'estudiante'
-    $sql_check_student = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
+    $sql_check_student = "SELECT COUNT(*) FROM admitido WHERE id_estudiante = ?";
     $stmt_check_student = $conn->prepare($sql_check_student);
     $stmt_check_student->bind_param("s", $id_estudiante);
     $stmt_check_student->execute();
@@ -98,7 +98,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
 
     } else {
       // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, estrato, localidad, tipo_inscripcion, estado, id_programa, promedio, pasantia, tipo_icfes, puntaje_icfes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $sql = "INSERT INTO admitido (id_estudiante, id_periodo, tipo_inscripcion, tipo_icfes, puntaje_icfes) VALUES (?, ?, ?, ?, ?)";
 
 // Para obtener mes y semestre de periodo
 // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
@@ -123,7 +123,7 @@ $stmt = $conn->prepare($sql);
 // Asignar los valores a los parámetros de la consulta
 // Ejecutar la consulta
 //i: Entero (integer),s: Cadena (string),d: Número de punto flotante (double),b: Datos binarios (blob)
-$stmt->bind_param("isssisssidssd", $id_estudiante, $nombres, $carrera, $documento, $estrato, $localidad, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia,$tipo_icfes, $puntaje_icfes);
+$stmt->bind_param("iissd", $id_estudiante, $id_periodo, $tipo_inscripcion, $tipo_icfes, $puntaje_icfes);
 
 if (!$stmt->execute()) {
   $insertion_error= true;
@@ -146,8 +146,8 @@ if($insertion_error){
      echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
   border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative; margin-bottom: 2rem;">
   <span style="font-size: 2rem; color: rgba(255, 99, 132, 1)">X ERROR</span><br>
-  Los estudiantes admitidos con los siguientes ID, no se pueden no se pueden insertar en la tabla ESTUDIANTE.' . $errors_by_student . '<br>
-  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❾</div>
+  Los estudiantes admitidos con los siguientes ID, no se pueden no se pueden insertar en la tabla ADMITIDO.' . $errors_by_student . '<br>
+  <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: rgba(255, 99, 132, 1)">❿</div>
   <div style="position: absolute; left: 50%;">
       <span style="font-size: 4rem;">&#8595;</span>
   </div>
@@ -156,8 +156,8 @@ if($insertion_error){
       echo '<div style="background-color: #FBFFBA; color: black; padding: 10px; text-align: center; border-radius: 0.8rem;
               border: 2px solid orange; width: 70rem; position: relative; margin-bottom: 2rem;">
               <span style="font-size: 2rem; color: orange">¡ALERTA!</span><br>
-              Los estudiantes admitidos con los siguientes ID, ya existen en la tabla ESTUDIANTE. Se omitirá la inserción: ' . $alerts_by_student . '
-              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">❾</div>
+              Los estudiantes admitidos con los siguientes ID, ya existen en la tabla ADMITIDO. Se omitirá la inserción: ' . $alerts_by_student . '
+              <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem; color: orange">❿</div>
               <div style="position: absolute; left: 50%;">
                   <span style="font-size: 4rem;">&#8595;</span>
               </div>
@@ -168,8 +168,8 @@ else if (!$insertion_error) {
     echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;
     border: 2px solid #4CAF50; width: 70rem; position: relative;margin-bottom: 2rem;">
     <span style="font-size: 2rem;color:#4CAF50">✔ CARGA EXITOSA</span><br>
-    Admitidos insertados correctamente en la tabla ESTUDIANTE. 
-    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❾</div>
+    Admitidos insertados correctamente en la tabla ADMITIDO. 
+    <div style="position: absolute; top: 1rem; left: 1rem; font-size: 3rem;color:#4CAF50">❿</div>
     <div style="position: absolute;  left: 50%;">
      <span style="font-size: 4rem;">&#8595;</span>
     </div>
