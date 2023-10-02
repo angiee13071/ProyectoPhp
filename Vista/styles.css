@@ -19,6 +19,8 @@ body {
 /* Estilos para el contenedor del encabezado */
 .header-container {
   background: linear-gradient(95deg, #FEFBFB, #FFBF58, #FF8F46, #FCD96C);
+  height: 7rem;
+  width: calc(100vw);
 }
 
 /* Estilos para el encabezado */
@@ -28,6 +30,7 @@ header {
   flex-direction: row-reverse;
   justify-content: flex-end;
   align-items: center;
+  width: calc(100vw - 1rem);
 }
 
 .logo {
@@ -59,11 +62,13 @@ nav {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   background-color: white;
   padding: 100px 180px 100px 180px;
   border-radius: 10px;
   position: relative;
+  width: calc(100vw);
+  height: calc(100vh);
 }
 
 .chart-container {
@@ -140,7 +145,11 @@ nav {
   margin-top: 30px;
   border: 4px solid #ebeba2;
 }
-
+.button:hover{
+  width: 255px;
+  height: 55px;
+  text-decoration: underline;
+}
 .button1 {
   display: block;
   width: 250px;
@@ -156,7 +165,11 @@ nav {
   margin-top: 30px;
   border: 4px solid #f1b47f;
 }
-
+.button1:hover{
+  width: 255px;
+  height: 55px;
+  text-decoration: underline;
+}
 .buttonBD {
   display: block;
     width: 250px;
@@ -173,6 +186,11 @@ nav {
     border: 1.8px solid #999999;
     
 }
+.buttonBD:hover {
+  width: 255px;
+  height: 55px;
+  text-decoration: underline;
+  }
 .buttonETL{
   display: block;
   width: 250px;
@@ -188,6 +206,11 @@ nav {
   margin-top: 30px;
   border: 1.8px solid #999999;
 }
+.buttonETL:hover{
+  width: 255px;
+  height: 55px;
+  text-decoration: underline;
+}
 .buttonData{
   display: block;
     width: 250px;
@@ -202,6 +225,12 @@ nav {
     border-radius: 9px;
     margin-top: 30px;
     border: 1.8px solid #ff8f46;
+}
+.buttonData:hover{
+  width: 255px;
+  height: 55px;
+  text-decoration: underline;
+  line-break: normal;
 }
 .export-button {
   background-color: #ffffff;
@@ -240,7 +269,10 @@ nav {
   top: 2rem;
   right: 3rem;
 }
-
+.arrow-button:hover {
+width: 55px;
+height: 55px;
+}
 #chart-type {
   /* margin-right: 20rem; */
 
@@ -345,6 +377,10 @@ text-decoration: none;
   right: 3rem;
 
 }
+.button_ETL:hover {
+  width: 55px;
+  height: 55px;
+  }
 .two{
   display: flex;
   flex-direction: row;
