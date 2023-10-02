@@ -75,7 +75,7 @@ $conn = $dbConnection->getDBConnection();
                 COALESCE(
                   CASE
                     WHEN SUM(t.retirados) = 0 OR SUM(t.matriculados) = 0 THEN 0
-                    ELSE (SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100
+                    ELSE LEAST((SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100, 100)
                   END,
                   0
                 ) AS UNSIGNED
@@ -98,7 +98,7 @@ $conn = $dbConnection->getDBConnection();
                   COALESCE(
                     CASE
                       WHEN SUM(t.retirados) = 0 OR SUM(t.matriculados) = 0 THEN 0
-                      ELSE (SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100
+                      ELSE LEAST((SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100, 100)
                     END,
                     0
                   ) AS UNSIGNED
@@ -123,7 +123,7 @@ $conn = $dbConnection->getDBConnection();
                   COALESCE(
                     CASE
                       WHEN SUM(t.retirados) = 0 OR SUM(t.matriculados) = 0 THEN 0
-                      ELSE (SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100
+                      ELSE LEAST((SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100, 100)
                     END,
                     0
                   ) AS UNSIGNED

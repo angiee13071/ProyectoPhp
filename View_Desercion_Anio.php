@@ -71,7 +71,7 @@ $conn = $dbConnection->getDBConnection();
               COALESCE(
                 CASE
                   WHEN SUM(t.retirados) = 0 OR SUM(t.matriculados) = 0 THEN 0
-                  ELSE (SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100
+                  ELSE LEAST((SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100, 100)
                 END,
                 0
               ) AS UNSIGNED
@@ -96,7 +96,7 @@ $conn = $dbConnection->getDBConnection();
               COALESCE(
                 CASE
                   WHEN SUM(t.retirados) = 0 OR SUM(t.matriculados) = 0 THEN 0
-                  ELSE (SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100
+                  ELSE LEAST((SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100, 100)
                 END,
                 0
               ) AS UNSIGNED
@@ -122,7 +122,7 @@ $conn = $dbConnection->getDBConnection();
               COALESCE(
                 CASE
                   WHEN SUM(t.retirados) = 0 OR SUM(t.matriculados) = 0 THEN 0
-                  ELSE (SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100
+                  ELSE LEAST((SUM(t.retirados) / NULLIF(SUM(t_anterior.matriculados), 0)) * 100, 100)
                 END,
                 0
               ) AS UNSIGNED
@@ -205,9 +205,9 @@ $conn = $dbConnection->getDBConnection();
         html2canvas(chartContainer).then(function(canvas) {
             var downloadLink = document.createElement('a');
             downloadLink.href = canvas.toDataURL(
-                'image/png'); 
-            downloadLink.download = 'Deserción_año.png'; 
-            downloadLink.click(); 
+                'image/png');
+            downloadLink.download = 'Deserción_año.png';
+            downloadLink.click();
         });
     }
 
