@@ -212,17 +212,13 @@ ORDER BY
     }
 
     function exportChart() {
-        // Obtener el contenedor del gráfico
         var chartContainer = document.querySelector('.chart-container');
-
-        // Utilizar html2canvas para capturar el contenedor como una imagen
         html2canvas(chartContainer).then(function(canvas) {
-            // Crear un enlace para descargar la imagen
             var downloadLink = document.createElement('a');
             downloadLink.href = canvas.toDataURL(
-                'image/png'); // Convertir el lienzo en una URL de datos en formato PNG
-            downloadLink.download = 'Permanencia_Estado.png'; // Nombre del archivo a descargar
-            downloadLink.click(); // Simular un clic en el enlace para iniciar la descarga
+                'image/png');
+            downloadLink.download = 'Permanencia_Estado.png';
+            downloadLink.click();
         });
     }
     // Función para actualizar el gráfico con la carrera seleccionada
