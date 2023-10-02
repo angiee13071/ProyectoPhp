@@ -1,9 +1,6 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
-// require_once 'ConexionBD.php';
 require_once 'ConexionBD.php';
-// include "conexion.php";
-
 try {
     $db = new DatabaseConnection();
     $conn = $db->getDBConnection();
@@ -16,10 +13,7 @@ try {
          <span style="font-size: 4rem;">&#8595;</span>
         </div>
     </div>';
-    
-    // Aquí puedes realizar operaciones con la base de datos
-    
-    // $db->closeConnection();
+  
 } catch (Exception $e) {
     echo '<div style="background-color: #efffef; color: black; padding: 10px; text-align: center;border-radius: 50rem;
     border: 2px solid rgba(255, 99, 132, 1); width: 70rem; position: relative;margin-bottom: 2rem;">
@@ -115,10 +109,7 @@ $insertion_error = false;
 // Insertar los datos en la tabla "programa"
 $sql_insert_programa = "INSERT INTO programa (id_programa, nombre) VALUES (?, ?)";
 $stmt_insert_programa = $conn->prepare($sql_insert_programa);
-// Insertar los datos en la tabla periodo
-// $sql_insert_periodo = "INSERT INTO periodo (anio, semestre, cohorte) VALUES (?, ?, ?)";
-// $stmt_insert_periodo = $conn->prepare($sql_insert_periodo);
-// Insertar los datos de "CRA. COD" y "CARRERA" en la tabla "programa"
+
 foreach ($carrera_values as $carrera) {
     $id_programa = obtenerIdPrograma($carrera);
 

@@ -30,9 +30,6 @@ foreach ($file_data as $line) {
     $data_matrix[] = $row;
 }
 
-// // Obtener la conexión a la base de datos
-// $conn = getDBConnection();
-
 // Variable para controlar si hubo algún error durante el proceso de inserción
 $insertion_error = false;
 $insertion_alert = false;
@@ -43,8 +40,8 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     // $genero='NO REGISTRA';
     $carrera= $data_matrix[$i][1];
     $documento = $data_matrix[$i][6];
-    $estrato=$data_matrix[$i][13]; 
-    $localidad='NO REGISTRA';
+    $estrato=$data_matrix[$i][13]?$data_matrix[$i][13]:"No registra"; 
+    $localidad='No registra';
     // $genero_genero='NO REGISTRA';
     $tipo_inscripcion=$data_matrix[$i][10];
     $estado = "ESTUDIANTE ADMITIDO";
@@ -77,9 +74,12 @@ for ($i = 2; $i < count($data_matrix); $i++) {
         $tipo_icfes = "ICFES Validación del Bachillerato";
     } 
       else {
-        $tipo_icfes = "NO REGISTRA";
-          continue;
+        $tipo_icfes = "NO APLICA";
+         
       }
+  }else {
+    $tipo_icfes = "NO APLICA";
+    
   }
 
 

@@ -1,7 +1,6 @@
 <?php
 set_time_limit(300);
 // Incluir el archivo de conexión a la base de datos
-// require_once 'ConexionBD.php';
 require_once 'ConexionBD.php';
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
@@ -19,10 +18,6 @@ $alerts_by_student = "";
 $insertion_error = false;
 $insertion_alert = false;
 
-
-// Abrir la conexión a la base de datos
-// $conn = getDBConnection();
-
 // Insertar los datos en la tabla 'primiparo'
 for ($i = 2; $i < count($file_data); $i++) {
     // Dividir la línea en sus elementos utilizando la coma como separador
@@ -37,7 +32,7 @@ for ($i = 2; $i < count($file_data); $i++) {
     $id_primiparo = $i-1;
     $id_estudiante = $row[4];
    
-    $periodo = $row[2];; // Asigna el ID del periodo correspondiente
+    $periodo = $row[2];
   
  // Extraer el año y el semestre del periodo
  $year_semester = explode('-', $periodo);
@@ -48,8 +43,7 @@ for ($i = 2; $i < count($file_data); $i++) {
  
     continue; // Saltar a la siguiente iteración del bucle
 }
-//  $anio = $year_semester[0];
-//  $semestre = $year_semester[1];
+
 
  // Buscar el id_periodo en la tabla 'periodo' utilizando el año y el semestre
  $sql_get_id_periodo = "SELECT id_periodo FROM periodo WHERE anio = ? AND semestre = ?";
@@ -100,8 +94,6 @@ for ($i = 2; $i < count($file_data); $i++) {
     }
    
 }
-
-
 
 if($insertion_error){
     echo '<div style="background-color: #FFE1E1; color: black; padding: 10px; text-align: center;border-radius: 0.8rem;

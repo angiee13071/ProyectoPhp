@@ -1,5 +1,6 @@
 -- Se crea el drop database 
 drop database if exists Permanencia_Desercion;
+
 -- Crear la base de datos
 CREATE DATABASE Permanencia_Desercion;
 
@@ -54,11 +55,12 @@ CREATE TABLE graduado (
   id_estudiante BIGINT,
   id_periodo INT,
   fecha_grado DATE,
-   promedio FLOAT,
+  promedio FLOAT,
   pasantia VARCHAR(255),
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
 );
+
 -- Crear la tabla 'primiparo'
 CREATE TABLE primiparo (
   id_primiparo INT AUTO_INCREMENT PRIMARY KEY,
@@ -67,6 +69,7 @@ CREATE TABLE primiparo (
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
 );
+
 -- Crear la tabla 'admitidos'
 CREATE TABLE admitido (
   id_admitido INT AUTO_INCREMENT PRIMARY KEY,
@@ -78,6 +81,7 @@ CREATE TABLE admitido (
   FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo)
 );
+
 -- Crear la tabla 'matriculado'
 CREATE TABLE matriculado (
   id_matricula INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,188 +105,205 @@ CREATE TABLE total (
   FOREIGN KEY (id_periodo) REFERENCES periodo(id_periodo),
   FOREIGN KEY (id_programa) REFERENCES programa(id_programa)
 );
-SELECT * FROM total;
-SELECT 
-  t.id_cohorte_total,
-  (t.retirados / (SELECT matriculados FROM total WHERE id_cohorte_total = t.id_cohorte_total - 1)) * 100 AS ratio_retirados
-FROM total t
-WHERE t.id_cohorte_total > 1;
 
--- Procedimiento almacenado para calcular totales:
+SELECT
+  *
+FROM
+  total;
+
 -- procedimiento almacenado totales:
--- procedimiento almacenado totales:
-DELIMITER $$
-CREATE PROCEDURE fill_total()
-BEGIN
-  DECLARE done INT DEFAULT FALSE;
-  DECLARE periodo_id INT;
-  DECLARE programa_id INT;
-  DECLARE matriculados_count INT;
-  DECLARE graduados_count INT;
-  DECLARE primiparos_count INT;
-  DECLARE total_retirados INT;
+DELIMITER $ $ CREATE PROCEDURE fill_total() BEGIN DECLARE done INT DEFAULT FALSE;
 
-  -- Declare cursor for periodos and programas
-  DECLARE cur CURSOR FOR
-    SELECT p.id_periodo, pr.id_programa
-    FROM periodo p
-    CROSS JOIN programa pr;
+DECLARE periodo_id INT;
 
-  -- Declare handlers for NOT FOUND condition
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+DECLARE programa_id INT;
 
-  -- Clear the table 'total'
-  TRUNCATE TABLE total;
+DECLARE matriculados_count INT;
 
-  -- Open cursor and start loop
-  OPEN cur;
-  read_loop: LOOP
-    FETCH cur INTO periodo_id, programa_id;
-    IF done THEN
-      LEAVE read_loop;
-    END IF;
+DECLARE graduados_count INT;
 
-    -- Calculate matriculados
-    SELECT COUNT(*) INTO matriculados_count
-    FROM matriculado m
-    JOIN estudiante e ON m.id_estudiante = e.id_estudiante
-    WHERE m.id_periodo = periodo_id AND e.id_programa = programa_id;
+DECLARE primiparos_count INT;
 
-    -- Calculate graduados
-    SELECT COUNT(*) INTO graduados_count
-    FROM graduado g
-    JOIN estudiante e ON g.id_estudiante = e.id_estudiante
-    WHERE g.id_periodo = periodo_id AND e.id_programa = programa_id;
+DECLARE total_retirados INT;
 
-    -- Calculate primiparos
-    SELECT COUNT(*) INTO primiparos_count
-    FROM primiparo p
-    JOIN estudiante e ON p.id_estudiante = e.id_estudiante
-    WHERE p.id_periodo = periodo_id AND e.id_programa = programa_id;
+-- Declare cursor for periodos and programas
+DECLARE cur CURSOR FOR
+SELECT
+  p.id_periodo,
+  pr.id_programa
+FROM
+  periodo p
+  CROSS JOIN programa pr;
 
-    -- Calculate retirados using the formula
-SET total_retirados = (
+-- Declare handlers for NOT FOUND condition
+DECLARE CONTINUE HANDLER FOR NOT FOUND
+SET
+  done = TRUE;
+
+-- Clear the table 'total'
+TRUNCATE TABLE total;
+
+-- Open cursor and start loop
+OPEN cur;
+
+read_loop: LOOP FETCH cur INTO periodo_id,
+programa_id;
+
+IF done THEN LEAVE read_loop;
+
+END IF;
+
+-- Calculate matriculados
+SELECT
+  COUNT(*) INTO matriculados_count
+FROM
+  matriculado m
+  JOIN estudiante e ON m.id_estudiante = e.id_estudiante
+WHERE
+  m.id_periodo = periodo_id
+  AND e.id_programa = programa_id;
+
+-- Calculate graduados
+SELECT
+  COUNT(*) INTO graduados_count
+FROM
+  graduado g
+  JOIN estudiante e ON g.id_estudiante = e.id_estudiante
+WHERE
+  g.id_periodo = periodo_id
+  AND e.id_programa = programa_id;
+
+-- Calculate primiparos
+SELECT
+  COUNT(*) INTO primiparos_count
+FROM
+  primiparo p
+  JOIN estudiante e ON p.id_estudiante = e.id_estudiante
+WHERE
+  p.id_periodo = periodo_id
+  AND e.id_programa = programa_id;
+
+-- Calculate retirados using the formula
+SET
+  total_retirados = (
+    (
+      (
+        SELECT
+          IFNULL(matriculados_count_prev, 0)
+        FROM
+          (
+            SELECT
+              matriculados AS matriculados_count_prev
+            FROM
+              total
+            WHERE
+              id_periodo = periodo_id - 1
+              AND id_programa = programa_id
+          ) AS prev
+      ) - (
+        SELECT
+          IFNULL(graduados_count_prev, 0)
+        FROM
+          (
+            SELECT
+              graduados AS graduados_count_prev
+            FROM
+              total
+            WHERE
+              id_periodo = periodo_id - 1
+              AND id_programa = programa_id
+          ) AS prev
+      ) + primiparos_count
+    ) - matriculados_count
+  );
+
+-- Ensure retirados is not negative
+SET
+  total_retirados = CASE
+    WHEN total_retirados < 0 THEN 0
+    ELSE total_retirados
+  END;
+
+-- Insert calculated values into 'total' table
+INSERT INTO
+  total (
+    admitidos,
+    primiparos,
+    matriculados,
+    graduados,
+    retirados,
+    id_periodo,
+    id_programa
+  )
+VALUES
   (
-    (SELECT IFNULL(matriculados_count_prev, 0) FROM (
-      SELECT matriculados AS matriculados_count_prev
-      FROM total
-      WHERE id_periodo = periodo_id - 1 AND id_programa = programa_id
-    ) AS prev) -
-    (SELECT IFNULL(graduados_count_prev, 0) FROM (
-      SELECT graduados AS graduados_count_prev
-      FROM total
-      WHERE id_periodo = periodo_id - 1 AND id_programa = programa_id
-    ) AS prev) + primiparos_count
-  ) -
-  matriculados_count
-);
+    0,
+    primiparos_count,
+    matriculados_count,
+    graduados_count,
+    total_retirados,
+    periodo_id,
+    programa_id
+  );
 
-    -- Ensure retirados is not negative
-    SET total_retirados = CASE WHEN total_retirados < 0 THEN 0 ELSE total_retirados END;
+INSERT INTO
+  retirado (id_periodo, total)
+VALUES
+  (periodo_id, total_retirados);
 
-    -- Insert calculated values into 'total' table
-    INSERT INTO total (admitidos, primiparos, matriculados, graduados, retirados, id_periodo, id_programa)
-    VALUES (0, primiparos_count, matriculados_count, graduados_count, total_retirados, periodo_id, programa_id);
-    INSERT INTO retirado (id_periodo,total)
-    VALUES (periodo_id,total_retirados);
-  END LOOP;
+END LOOP;
 
-END$$
-DELIMITER ;
-
+END $ $ DELIMITER;
 
 -- Llamar al procedimiento almacenado para llenar la tabla 'total'
 -- CALL fill_total();
 -- Consultar tablas:
-SELECT * FROM total;
+SELECT
+  *
+FROM
+  total;
 
-SELECT * FROM total LIMIT 0, 1000;
-select * from programa;
+select
+  *
+from
+  programa;
 
-select * from periodo;
-select * from estudiante;
-select * from retirado;
-select * from graduado;
-select * from primiparo;
-select * from matriculado;
-select * from admitido;
-select * from total;
+select
+  *
+from
+  periodo;
 
-SELECT DISTINCT estado FROM estudiante;
--- graduado
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-       p.anio
-FROM estudiante e
-JOIN graduado g ON e.id_estudiante = g.id_estudiante
-JOIN periodo p ON g.id_periodo = p.id_periodo;
--- matriculado
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-       p.anio
-FROM estudiante e
-JOIN matriculado g ON e.id_estudiante = g.id_estudiante
-JOIN periodo p ON g.id_periodo = p.id_periodo;
--- 
--- admitido
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-       p.anio
-FROM estudiante e
-JOIN admitido g ON e.id_estudiante = g.id_estudiante
-JOIN periodo p ON g.id_periodo = p.id_periodo;
+select
+  *
+from
+  estudiante;
 
--- union
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-       p.anio
-FROM estudiante e
-JOIN graduado g ON e.id_estudiante = g.id_estudiante
-JOIN periodo p ON g.id_periodo = p.id_periodo
-UNION ALL
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-       p.anio
-FROM estudiante e
-JOIN matriculado m ON e.id_estudiante = m.id_estudiante
-JOIN periodo p ON m.id_periodo = p.id_periodo
-UNION ALL
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-       p.anio
-FROM estudiante e
-JOIN admitido a ON e.id_estudiante = a.id_estudiante
-JOIN periodo p ON a.id_periodo = p.id_periodo;
--- union prueba
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-       p.anio
-FROM estudiante e
-JOIN graduado g ON e.id_estudiante = g.id_estudiante
-JOIN periodo p ON g.id_periodo = p.id_periodo
-UNION ALL
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-       p.anio
-FROM estudiante e
-JOIN matriculado m ON e.id_estudiante = m.id_estudiante
-JOIN periodo p ON m.id_periodo = p.id_periodo
-UNION ALL
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-       p.anio
-FROM estudiante e
-JOIN admitido a ON e.id_estudiante = a.id_estudiante
-JOIN periodo p ON a.id_periodo = p.id_periodo;
--- torta
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-p.anio
-FROM estudiante e
-JOIN graduado g ON e.id_estudiante = g.id_estudiante
-JOIN periodo p ON g.id_periodo = p.id_periodo
-WHERE p.anio = 2023
-UNION ALL
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-p.anio
-FROM estudiante e
-JOIN matriculado m ON e.id_estudiante = m.id_estudiante
-JOIN periodo p ON m.id_periodo = p.id_periodo
-WHERE p.anio = 2023
-UNION ALL
-SELECT e.carrera, e.estrato, e.localidad, e.tipo_inscripcion, e.estado, e.promedio, e.pasantia, e.tipo_icfes, e.puntaje_icfes,
-p.anio
-FROM estudiante e
-JOIN admitido a ON e.id_estudiante = a.id_estudiante
-JOIN periodo p ON a.id_periodo = p.id_periodo
-WHERE p.anio = 2023;
+select
+  *
+from
+  retirado;
+
+select
+  *
+from
+  graduado;
+
+select
+  *
+from
+  primiparo;
+
+select
+  *
+from
+  matriculado;
+
+select
+  *
+from
+  admitido;
+
+select
+  *
+from
+  total;

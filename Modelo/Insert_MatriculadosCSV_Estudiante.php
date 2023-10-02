@@ -2,7 +2,7 @@
 set_time_limit(300);
 
 // Incluir el archivo de conexión a la base de datos
-// require_once 'ConexionBD.php';
+
 require_once 'ConexionBD.php';
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
@@ -35,9 +35,7 @@ $errors_by_student = "";
 $alerts_by_student = "";
 $insertion_error = false;
 $insertion_alert = false;
-
-// Abrir la conexión a la base de datos
-// $conn = getDBConnection();
+$tipo_icfes="ICFES Saber 11";
 
 // Insertar los datos en la tabla 'estudiante'
 for ($i = 2; $i < count($data_matrix); $i++) {
@@ -46,7 +44,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $carrera = $data_matrix[$i][3];
     $documento = $data_matrix[$i][7];
     $id_programa = $data_matrix[$i][2];
-    $estrato = $data_matrix[$i][15];
+    $estrato = $data_matrix[$i][15]?$data_matrix[$i][15]:"No registra";
     $tipo_inscripcion = $data_matrix[$i][10];
     $estado = $data_matrix[$i][12]; // Se obtiene el valor de la columna "Estado"
     $localidad = $data_matrix[$i][16]; // Se obtiene el valor de la columna "Localidad"
@@ -73,13 +71,13 @@ for ($i = 2; $i < count($data_matrix); $i++) {
   
     } else {
         // Preparar la consulta SQL para insertar el estudiante
-        $sql_insert = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, estrato, localidad, tipo_inscripcion, estado, id_programa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql_insert = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, estrato, localidad, tipo_inscripcion, estado, id_programa,tipo_icfes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // Preparar la sentencia
         $stmt_insert = $conn->prepare($sql_insert);
 
         // Asignar los valores a los parámetros
-        $stmt_insert->bind_param("isssisssi", $id_estudiante, $nombres, $carrera, $documento, $estrato, $localidad, $tipo_inscripcion, $estado, $id_programa);
+        $stmt_insert->bind_param("isssisssis", $id_estudiante, $nombres, $carrera, $documento, $estrato, $localidad, $tipo_inscripcion, $estado, $id_programa,$tipo_icfes);
 
         // Ejecutar la consulta
         if (!$stmt_insert->execute()) {

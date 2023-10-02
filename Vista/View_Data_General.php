@@ -70,7 +70,7 @@ if ($result->num_rows > 0) {
     if (isset($row['pasantia'])) {
         $pasantias[] = $row['pasantia'];
     } else {
-        $pasantias[] = ''; // O puedes asignarle un valor predeterminado en caso de que no exista.
+        $pasantias[] = 'No aplica'; 
     }
   }
 }

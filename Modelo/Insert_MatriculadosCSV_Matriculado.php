@@ -1,6 +1,5 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
-// require_once 'ConexionBD.php';
 require_once 'ConexionBD.php';
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
@@ -8,9 +7,6 @@ $conn = $dbConnection->getDBConnection();
 
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Listado_matriculados_período_actual.csv";
-
-// Obtener la conexión a la base de datos
-// $conn = getDBConnection();
 
 // Obtener el contenido del archivo en un array
 $file_data = file($url, FILE_IGNORE_NEW_LINES);
@@ -50,10 +46,6 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     $id_estudiante = isset($data_matrix[$i][5]) ? $data_matrix[$i][5] : null;
     if (!empty($id_estudiante) && isset($data_matrix[$i][1]) && isset($data_matrix[$i][12])) {
         $periodo = $data_matrix[$i][1];
-        // echo "ID Matrícula: $id_matricula<br>";
-        // echo "ID Estudiante: $id_estudiante<br>";
-        // echo "Periodo: $periodo<br>";
-        // Extraer el año y el semestre del periodo
         $year_semester = explode('-', $periodo);
         $anio = $year_semester[0];
         $semestre = $year_semester[1];
@@ -106,9 +98,7 @@ $errors_by_student = $errors_by_student.", ".$id_estudiante;
             $alerts_by_student = $alerts_by_student.", ".$id_estudiante. $stmt_insert->error;
         }
     }
-        
-    // }
-   
+      
 }
 
 

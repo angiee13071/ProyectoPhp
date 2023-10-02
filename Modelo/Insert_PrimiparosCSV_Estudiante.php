@@ -1,7 +1,7 @@
 <?php
 set_time_limit(300);
 // Incluir el archivo de conexión a la base de datos
-// require_once 'ConexionBD.php';
+
 require_once 'ConexionBD.php';
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
@@ -35,18 +35,15 @@ $errors_by_student = "";
 $alerts_by_student = "";
 $insertion_error = false;
 $insertion_alert = false;
-// // Abrir la conexión a la base de datos
-// $conn = getDBConnection();
+$tipo_icfes = "ICFES Saber 11"; 
 
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_estudiante = $data_matrix[$i][4];
     $nombres = $data_matrix[$i][5];
     $carrera = $data_matrix[$i][1];
     $documento = $data_matrix[$i][6];
-    // $estrato = null;
-    // $localidad = null; // Se obtiene el valor de la columna "Localidad"
     $tipo_inscripcion = $data_matrix[$i][8];
-    $estado = $data_matrix[$i][12]; // Se obtiene el valor de la columna "Estado"
+    $estado = $data_matrix[$i][12];
     $id_programa = $data_matrix[$i][0];
     // $genero = null; // Define la variable $genero
 
@@ -86,14 +83,14 @@ for ($i = 2; $i < count($data_matrix); $i++) {
   
     } else {
         // Preparar la consulta SQL para insertar el estudiante
-        $sql_insert = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, estrato, localidad, tipo_inscripcion, estado, id_programa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql_insert = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, estrato, localidad, tipo_inscripcion, estado, id_programa,tipo_icfes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // Preparar la sentencia
         $stmt_insert = $conn->prepare($sql_insert);
 
         // Asignar los valores a los parámetros
         // Ejecutar la consulta
-        $stmt_insert->bind_param("isssisssi", $id_estudiante, $nombres, $carrera, $documento, $estrato, $localidad, $tipo_inscripcion, $detalle_estado, $id_programa); // Se asigna $estado como valor del campo "estado"
+        $stmt_insert->bind_param("isssisssis", $id_estudiante, $nombres, $carrera, $documento, $estrato, $localidad, $tipo_inscripcion, $detalle_estado, $id_programa,$tipo_icfes); // Se asigna $estado como valor del campo "estado"
         if (!$stmt_insert->execute()) {
             $insertion_error= true;
             $errors_by_student = $errors_by_student.", ".$id_estudiante. $stmt_insert->error;
@@ -102,7 +99,6 @@ for ($i = 2; $i < count($data_matrix); $i++) {
             $insertion_error = false;
         }
 
-        // Cerrar la sentencia (no es necesario cerrar la conexión en este punto)
         $stmt_insert->close();
     }
 }

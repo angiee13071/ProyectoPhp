@@ -1,14 +1,9 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
-// require_once 'ConexionBD.php';
 require_once 'ConexionBD.php';
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
-
-// Resto del código ...
-
-
 // URL del archivo CSV
 $url = "file:///C:/xampp/htdocs/ProyectoPhp/Modelo/Insert/Lista_de_Egresados_por_Proyecto.csv";
 
@@ -41,6 +36,8 @@ $errors_by_student = "";
 $alerts_by_student = "";
 $insertion_error = false;
 $insertion_alert = false;
+$estrato="No registra";
+$tipo_icfes = "ICFES Saber Pro (antes ECAES)"; 
 // Insertar los datos en la tabla 'graduado'
 for ($i = 2; $i < count($data_matrix); $i++) {
     $id_estudiante = $data_matrix[$i][6];
@@ -48,7 +45,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
     // $genero='NO REGISTRA';
     $carrera= $data_matrix[$i][2];
     $documento = $data_matrix[$i][8];
-    $localidad='NO APLICA';
+    $localidad='No registra';
     // $genero_genero='NO REGISTRA';
     $tipo_inscripcion='NO APLICA';
     $estado = "ESTUDIANTE GRADUADO";
@@ -73,7 +70,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
           continue;
       }
   }
-   
+ 
 
     // Verificar si el estudiante ya existe en la tabla 'estudiante'
     $sql_check_student = "SELECT COUNT(*) FROM estudiante WHERE id_estudiante = ?";
@@ -90,7 +87,7 @@ for ($i = 2; $i < count($data_matrix); $i++) {
    
     } else {
       // Preparar la consulta SQL para insertar el estudiante
-      $sql = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, localidad, tipo_inscripcion, estado, id_programa, promedio, pasantia, tipo_icfes,puntaje_icfes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+      $sql = "INSERT INTO estudiante (id_estudiante, nombres, carrera, documento, localidad, tipo_inscripcion, estado, id_programa, promedio, pasantia, tipo_icfes,puntaje_icfes, estrato) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 // Para obtener mes y semestre de periodo
 // Escapar los valores para evitar inyecciones SQL (esto depende del tipo de base de datos que estés utilizando)
@@ -115,7 +112,7 @@ $stmt = $conn->prepare($sql);
 // Asignar los valores a los parámetros de la consulta
 // Ejecutar la consulta
 // $stmt->bind_param("issiisssidsd", $id_estudiante, $nombres, $carrera, $documento, $estrato, $localidad, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia,$puntaje_icfes);
-$stmt->bind_param("issssssidssd", $id_estudiante, $nombres, $carrera, $documento, $localidad, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia, $tipo_icfes, $puntaje_icfes);
+$stmt->bind_param("issssssidssdi", $id_estudiante, $nombres, $carrera, $documento, $localidad, $tipo_inscripcion, $estado, $id_programa, $promedio, $pasantia, $tipo_icfes, $puntaje_icfes, $estrato);
 
 if (!$stmt->execute()) {
   $insertion_error= true;
@@ -130,8 +127,6 @@ if (!$stmt->execute()) {
 $stmt->close();
     }
 }
-
-
 
 // Mostrar mensaje de éxito si no se encontraron estudiantes duplicados
 if($insertion_error){

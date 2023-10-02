@@ -5,11 +5,8 @@ require_once 'ConexionBD.php';
 // Crear una instancia de la clase DatabaseConnection
 $dbConnection = new DatabaseConnection();
 $conn = $dbConnection->getDBConnection();
-  //Crear procedimiento almacenado:
-  
 //Llamar al procedimiento almacenado
     $sql = "CALL fill_total()";
-    
     // Preparar la sentencia
     $stmt = $conn->prepare($sql);
 
@@ -28,5 +25,4 @@ $conn = $dbConnection->getDBConnection();
    // Cerrar la sentencia y la conexión
  $stmt->close();
  $conn->close();
-
     ?>

@@ -17,7 +17,6 @@
         <header>
             <nav>
                 <ul class="nav-list">
-
                     <li class="nav-item"><a href="https://www.udistrital.edu.co/inicio"
                             style="text-decoration: none;">Inicio ▼</a></li>
                     <li class="nav-item"><a href="https://ftecnologica.udistrital.edu.co/"
@@ -28,46 +27,31 @@
                     <li class="nav-item"><a
                             href="https://www.udistrital.edu.co/admisiones/index.php/oferta/programas/tecnologia-en-sistematizacion-de-datos-por-ciclos-propedeuticos"
                             style="text-decoration: none;">Tecnología▼</a></li>
-
                 </ul>
             </nav>
             <img src="../Vista/Assets/uploads/logo_ud.png" alt="Logo" class="logo">
         </header>
     </div>
     <div class="ETL">
-
         <div>
             <h1>Importación de Datos</h1>
             <button class="button_ETL" style=" " onclick="goBack()">&#8592;</button>
         </div>
 
         <?php
-        // error_reporting(E_ALL);
-        // ini_set('display_errors', 1);
-
 // paso 0 :Validar si existe BD
-
-
-
-
 //#1 Tomar el archivo de egresados para subir los programas academicos y periodos:
 require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_EgresadoCSV_Programa_Periodo.php';
-
  //#2 Tomar el archivo egresado para subirlo a la tabla estudiantes:
 require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_EgresadoCSV_Estudiante.php';
-
 //#3 Tomar el archivo de matriculados actualmente para subirlos a la tabla estudiante:
-require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_MatriculadosCSV_Estudiante.php';
-    
+require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_MatriculadosCSV_Estudiante.php'; 
 //#4 Tomar el archivo de matriculados actualmente para subirlos a la tabla matriculados:
 require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_MatriculadosCSV_Matriculado.php';
-
 //#5 Tomar el archivo de primiparos y llenar la tabla estudiante
 require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_PrimiparosCSV_Estudiante.php';
-
 //#6 Tomar el archivo de primiparos y llenar la tabla primiparo:
 require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_PrimiparosCSV_Primiparo.php';
-
 //#7  Llamar y ejecutar el archivo EgresadoGraduadoCSV.php
  require 'C:\xampp\htdocs\ProyectoPhp\Modelo\Insert_EgresadoCSV_Graduado.php';
  //#8 Tomar el archivo admitidos para subirlo a la tabla estudiantes:
@@ -87,9 +71,6 @@ Proceso de importación completado
 </div>
 </div>';
 ?>
-        <!-- <h2>Proceso de importación completado</h2> -->
-        <!-- <p>Todos los archivos CSV se han procesado exitosamente.</p>
-        <p>Los datos se han insertado en las respectivas tablas en la base de datos.</p> -->
     </div>
     <script>
     function goBack() {
