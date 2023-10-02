@@ -88,6 +88,9 @@ if ($result->num_rows > 0) {
     <title>Estadísticas Estudiantiles</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 
 <body>
@@ -125,6 +128,9 @@ if ($result->num_rows > 0) {
         <select id="chart-type-p" class="oculto" style="display: none;">
             <option value="doughnut">Gráfico de Torta</option>
         </select>
+        <button class="export-button" onclick="exportChart()">
+            Exportar Gráfica <i class="fas fa-download"></i>
+        </button>
         <button class="arrow-button" onclick="goBack()">&#8592;</button>
     </div>
 
@@ -252,6 +258,16 @@ if ($result->num_rows > 0) {
         });
     }
 
+    function exportChart() {
+        var chartContainer = document.querySelector('.chart-container');
+        html2canvas(chartContainer).then(function(canvas) {
+            var downloadLink = document.createElement('a');
+            downloadLink.href = canvas.toDataURL(
+                'image/png');
+            downloadLink.download = 'Deserción_año.png';
+            downloadLink.click();
+        });
+    }
     // Evento de cambio de tipo de dato
     dataTypeSelect.addEventListener('change', createChart);
 
