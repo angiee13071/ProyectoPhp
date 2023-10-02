@@ -8,6 +8,9 @@
     <title>Promedio desercion</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 <?php include 'header.html'; ?>
 
@@ -32,6 +35,9 @@
                 <option value="ing">Ingeniería telemática</option>
             </select>
         </div>
+        <button class="export-button" onclick="exportChart()">
+            Exportar Gráfica <i class="fas fa-download"></i>
+        </button>
         <button class="arrow-button" onclick="goBack()">&#8592;</button>
     </div>
 
@@ -200,7 +206,20 @@ $conn = $dbConnection->getDBConnection();
     options: options
     });
     }
+    function exportChart() {
+    // Obtener el contenedor del gráfico
+    var chartContainer = document.querySelector('.chart-container');
 
+    // Utilizar html2canvas para capturar el contenedor como una imagen
+    html2canvas(chartContainer).then(function(canvas) {
+    // Crear un enlace para descargar la imagen
+    var downloadLink = document.createElement('a');
+    downloadLink.href = canvas.toDataURL(
+    'image/png'); // Convertir el lienzo en una URL de datos en formato PNG
+    downloadLink.download = 'Deserción_promedio.png'; // Nombre del archivo a descargar
+    downloadLink.click(); // Simular un clic en el enlace para iniciar la descarga
+    });
+    }
     // Función para actualizar el gráfico con la carrera seleccionada
     // Función para actualizar el gráfico con la carrera seleccionada
     function updateChart() {

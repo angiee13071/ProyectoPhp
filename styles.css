@@ -120,7 +120,7 @@ nav {
 .title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: .5rem;
   color: rgb(0, 0, 0);
   font-family: "Times New Roman", Times, serif;
 }
@@ -202,6 +202,27 @@ nav {
     border-radius: 9px;
     margin-top: 30px;
     border: 1.8px solid #ff8f46;
+}
+.export-button {
+  background-color: #ffffff;
+  color: #939393;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 1rem;
+ 
+}
+
+.export-button:hover {
+  background-color: #FF8F46; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px;
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 16px;
 }
 .arrow-button {
   position: absolute;
