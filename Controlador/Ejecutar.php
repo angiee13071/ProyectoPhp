@@ -10,6 +10,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <script>
+    function goBack() {
+        window.history.back();
+    }
+    </script>
 </head>
 
 <body>
@@ -72,11 +77,7 @@ Proceso de importación completado
 </div>';
 ?>
     </div>
-    <script>
-    function goBack() {
-        window.history.back();
-    }
-    </script>
+
 </body>
 
 </html>
