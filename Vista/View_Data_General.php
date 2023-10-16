@@ -111,7 +111,7 @@ if ($result->num_rows > 0) {
             <option value="estado">Estado del Estudiante</option>
             <option value="promedios">Promedios</option>
             <option value="pasantias">Pasantías</option>
-            <option value="tipo_icfes">tipo_icfes</option>
+            <option value="tipo_icfes">tipo icfes</option>
             <option value="puntaje_icfes">Puntaje Icfes</option>
         </select>
         <div>
