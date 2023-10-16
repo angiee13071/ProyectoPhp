@@ -17,7 +17,7 @@
 <body>
     <div class="card">
         <div class="title">
-            <h1>Promedio ponderado de permanencia</h1>
+            <h1>Promedio acumulado de permanencia</h1>
         </div>
         <div class="chart-container">
             <canvas id="permanencia-chart"></canvas>
