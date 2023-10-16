@@ -157,7 +157,7 @@ $conn = $dbConnection->getDBConnection();
             var downloadLink = document.createElement('a');
             downloadLink.href = canvas.toDataURL(
                 'image/png');
-            downloadLink.download = 'Permanencia_anio.png';
+            downloadLink.download = 'Permanencia_año.png';
             downloadLink.click();
         });
     }

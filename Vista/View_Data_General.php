@@ -264,7 +264,7 @@ if ($result->num_rows > 0) {
             var downloadLink = document.createElement('a');
             downloadLink.href = canvas.toDataURL(
                 'image/png');
-            downloadLink.download = 'Deserción_año.png';
+            downloadLink.download = 'Estadisticas_estudiantiles.png';
             downloadLink.click();
         });
     }
