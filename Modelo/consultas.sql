@@ -131,9 +131,12 @@ WHERE
 -- Procedimiento almacenado para calcular totales:
 -- procedimiento almacenado totales:
 -- procedimiento almacenado totales:
-DELIMITER $ $ CREATE PROCEDURE fill_total() BEGIN DECLARE done INT DEFAULT FALSE;
+DELIMITER $$
 
-DECLARE periodo_id INT;
+CREATE PROCEDURE fill_total()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE periodo_id INT;
 
 DECLARE programa_id INT;
 
@@ -272,7 +275,8 @@ VALUES
 
 END LOOP;
 
-END $ $ DELIMITER;
+END $$
+DELIMITER ;
 
 -- Llamar al procedimiento almacenado para llenar la tabla 'total'
 -- CALL fill_total();
